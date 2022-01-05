@@ -1,40 +1,76 @@
 <script>
 import { onMount } from "svelte";
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+//Decaling a new scene object
+const scene = new THREE.Scene();
+
+//Defining camera and propeties
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.setZ(3);
+
+// Geometry
+const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+const material = new THREE.MeshBasicMaterial( {color: 0xFF6347, wireframe: true } );
+const torus = new THREE.Mesh( geometry, material );
+
+//Add light
+const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( light );
 
 
 
-	onMount(() => {
-		//Decaling a new scene object
-		const scene = new THREE.Scene();
+const loader = new GLTFLoader();
 
-		//Defining camera and propeties
-		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000);
+loader.load( 'assets/test_model.glb', function ( gltf ) {
 
-		const renderer = new THREE.WebGL1Renderer({
-			canvas: document.querySelector('#model')
-		});
+	console.log("Added model to scene");
+	scene.add( gltf.scene );
 
-		renderer.setPixelRatio( window.devicePixelRatio );
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		camera.position.setZ(30);
+}, undefined, function ( error ) {
 
+	console.error( error );
+
+} );
+
+//scene.add(torus);
+
+onMount(() => {
+
+	//On mount connect render to canvas element
+	const renderer = new THREE.WebGL1Renderer({
+		canvas: document.querySelector('#model')
+	});
+
+	//Set size and pixel ratio
+	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	
+	//Define clock from three.js
+	const clock = new THREE.Clock();
+
+	//Animation tick
+	const tick = () => {
+		//Gets time between animation tick, to run at same speed across different hardware
+		const elapsedTime = clock.getElapsedTime();
+
+		//Define animation relative to time between ticks
+		torus.rotation.x = 0.8 * elapsedTime;
+		torus.rotation.y = 1 * elapsedTime;
+		torus.rotation.z = 1.2 * elapsedTime;
+
+		//render scene
 		renderer.render( scene, camera );
 
-		const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-		const material = new THREE.MeshBasicMaterial( {color: 0xFF6347, wireframe: true } );
-		const torus = new THREE.Mesh( geometry, material );
+		//Tell browser to call tick function on next animation frame
+		requestAnimationFrame( tick );
+	} 
 
-		scene.add(torus);
-
-		function animate() {
-			requestAnimationFrame( animate );
-			renderer.render( scene, camera );
-		}
-
-		animate();
-		
-	})
+	//Call function
+	tick();
+	
+})
 
 </script>
 
