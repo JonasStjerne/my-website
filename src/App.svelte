@@ -1,10 +1,40 @@
 <script>
-	export let name;
+import { onMount } from "svelte";
+
+	let todos = [];
+	let toDoInput = "";
+
+	function addToDo(newToDo) {
+		todos = [...todos, newToDo];
+		localStorage.setItem("todos", JSON.stringify(todos))
+	}
+
+	function removeToDo(id) {
+		console.log("test");
+		
+		todos.splice(id, 1);
+		todos = todos;
+	}
+
+	onMount(() => {
+		todos = JSON.parse(localStorage.getItem("todos")) || [];
+	})
+
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<h1>To Do App</h1>
+	<form on:submit|preventDefault={addToDo(toDoInput)}>
+		<input type="text" bind:value="{toDoInput}" placeholder="Write new todo here">
+		<button type="submit" >Add</button>
+	</form>
+
+	<ul style="list-style-type: none;">
+		{#each todos as todoItem, i}
+		<button on:click|once="{removeToDo(i)}"><li>{todoItem}</li></button> <br>
+		{/each}
+	</ul>
+	<button on:click|once="{removeToDo}"><li>test</li></button> <br>
 </main>
 
 <style>
