@@ -28,10 +28,18 @@ directionalLight.position.set(0,1,0);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
+
+//Colored light
+// const pointLight = new THREE.PointLight(0x0000ff, 5);
+// pointLight.position.set(0, 100, 250);
+// scene.add(pointLight);
+
 //Load custom object
 const loader = new GLTFLoader();
 loader.load( 'assets/test_model.glb', function ( gltf ) {
-	scene.add( gltf.scene );
+	const obj = gltf.scene.children[0];
+	scene.add( obj );
+	obj.position.setY(-1);
 }, undefined, function ( error ) {
 	console.error( error );
 } );
@@ -45,6 +53,7 @@ onMount(() => {
 	// });
 	const renderer = new THREE.WebGLRenderer({ 
 		antialias: true,
+		alpha: true,
 		canvas: document.querySelector('#model')
 	 });
 
