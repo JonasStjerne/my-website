@@ -3,13 +3,15 @@ import { onMount } from "svelte";
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as AOS from 'aos';
+import '/node_modules/aos/dist/aos.css';
 
 //Decaling a new scene object
 const scene = new THREE.Scene();
 
 //Defining camera and propeties
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.setZ(3);
+var camera = new THREE.PerspectiveCamera( 75, 1 / 2, 0.1, 1000);
+camera.position.setZ(2);
 
 // Geometry
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
@@ -46,7 +48,7 @@ loader.load( 'assets/test_model.glb', function ( gltf ) {
 
 
 onMount(() => {
-
+	AOS.init();
 	//On mount connect render to canvas element
 	// const renderer = new THREE.WebGL1Renderer({
 	// 	canvas: document.querySelector('#model')
@@ -63,7 +65,7 @@ onMount(() => {
 
 	//Set size and pixel ratio
 	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize( 200, 400 );
 	
 	 
 	//Define clock from three.js
@@ -94,7 +96,63 @@ onMount(() => {
 </script>
 
 <main>
-	<h1>3D view</h1>
-	<canvas id="model"></canvas>
+	<div id="header">
+		<a href="https://github.com/JonasStjerne">
+			<img src="assets/github.svg" alt="Github logo" height="30">
+		</a>
+		<a href="https://www.linkedin.com/in/jonas-stjerne-974860150/">
+			<img src="assets/linkedin.svg" alt="Github logo" height="30">
+		</a>
+	</div>
+	<div class="homeContent">
+		<div class="content" data-aos="fade-up">
+			<div class="introContainer">
+				<h1>Hi</h1>
+				<div class="nameContainer">
+					<h2 class="nameEl"> I’m Jonas</h2>
+				</div>
+				<p>Currently studing IT at Aalborg University and working at <a href="https://openomic.dk/">Openomic</a> as a full stack developer</p>
+			</div>
+		</div>
+		<canvas id="model"></canvas>
+	</div>
 </main>
+
+<style>
+	#header {
+		display: flex;
+		justify-content: right;
+		gap: 20px;
+		margin-right: 20px;
+	}
+
+	.content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	.introContainer {
+		width: 66%;
+	}
+
+	.homeContent {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	.nameEl {
+		margin-right: 20px;
+		padding: 10px;
+		color: white;
+	}
+
+	.nameContainer {
+		background-image: var(--gradient);
+		width: fit-content;
+		margin-bottom: 10px;
+	}
+</style>
 

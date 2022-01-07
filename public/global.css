@@ -1,6 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;900&display=swap');
+
 * {
 	padding: 0;
 	margin: 0;
+	font-family: 'Montserrat', sans-serif;
+}
+
+:root {
+	--gradient: linear-gradient(90.15deg, #FF9900 0.13%, #FF00A8 99.89%);
+	--mainColor: #000000;
 }
 
 html, body {
@@ -10,7 +18,8 @@ html, body {
 }
 
 body {
-	color: #333;
+	color: var(--mainColor);
+	background-color: #FBFBFB;
 	margin: 0;
 	padding: 8px;
 	box-sizing: border-box;
@@ -18,16 +27,8 @@ body {
 }
 
 a {
-	color: rgb(0,100,200);
-	text-decoration: none;
-}
-
-a:hover {
+	color: var(--mainColor);
 	text-decoration: underline;
-}
-
-a:visited {
-	color: rgb(0,80,160);
 }
 
 label {
