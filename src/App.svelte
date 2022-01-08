@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as AOS from 'aos';
-import '/node_modules/aos/dist/aos.css';
+import "../node_modules/aos/dist/aos.css";
 
 //Decaling a new scene object
 const scene = new THREE.Scene();
