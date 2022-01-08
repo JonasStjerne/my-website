@@ -65532,7 +65532,7 @@ var app = (function () {
     var initialRadius = 10,
         initialAngle = Math.PI * (3 - Math.sqrt(5));
 
-    function forceSimulation(nodes) {
+    function simulation(nodes) {
       var simulation,
           alpha = 1,
           alphaMin = 0.001,
@@ -76575,7 +76575,7 @@ var app = (function () {
         forceLink: link$2,
         forceManyBody: manyBody,
         forceRadial: radial$1,
-        forceSimulation: forceSimulation,
+        forceSimulation: simulation,
         forceX: x$2,
         forceY: y$1,
         formatDefaultLocale: defaultLocale$1,
@@ -76977,21 +76977,16 @@ var app = (function () {
     function create_fragment$1(ctx) {
     	let div;
     	let svg;
-    	let t0;
-    	let h1;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			svg = svg_element("svg");
-    			t0 = space();
-    			h1 = element("h1");
-    			h1.textContent = "test";
-    			attr_dev(svg, "width", "400");
-    			attr_dev(svg, "height", "400");
-    			add_location(svg, file$1, 122, 4, 2643);
-    			add_location(h1, file$1, 123, 4, 2685);
-    			add_location(div, file$1, 121, 0, 2632);
+    			attr_dev(svg, "id", "tech-skills");
+    			add_location(svg, file$1, 93, 4, 3511);
+    			attr_dev(div, "id", "mainContainer");
+    			attr_dev(div, "class", "svelte-4e31wc");
+    			add_location(div, file$1, 92, 0, 3481);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -76999,8 +76994,6 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, svg);
-    			append_dev(div, t0);
-    			append_dev(div, h1);
     		},
     		p: noop$4,
     		i: noop$4,
@@ -77026,78 +77019,37 @@ var app = (function () {
     	validate_slots('Dots', slots, []);
 
     	onMount(() => {
-    		var svg = select("svg");
-    		var width = svg.attr("width");
-    		var height = svg.attr("height");
+    		const nodes = [{ "id": "Alice" }, { "id": "Bob" }, { "id": "Carol" }];
 
-    		//intialize data
-    		var graph = {
-    			nodes: [
-    				{ name: "Alice" },
-    				{ name: "Bob" },
-    				{ name: "Chen" },
-    				{ name: "Dawg" },
-    				{ name: "Ethan" },
-    				{ name: "George" },
-    				{ name: "Frank" },
-    				{ name: "Hanes" }
-    			],
-    			links: [
-    				{ source: "Alice", target: "Bob" },
-    				{ source: "Chen", target: "Bob" },
-    				{ source: "Dawg", target: "Chen" },
-    				{ source: "Hanes", target: "Frank" },
-    				{ source: "Hanes", target: "George" },
-    				{ source: "Dawg", target: "Ethan" }
-    			]
-    		};
+    		const links = [
+    			{ "source": 0, "target": 1 },
+    			{
+    				"source": 1, // Alice → Bob
+    				"target": 2
+    			}
+    		]; // Bob → Carol
 
-    		var simulation = forceSimulation(graph.nodes).force("link", link$2().id(function (d) {
-    			return d.name;
-    		}).links(graph.links)).force("charge", manyBody().strength(-30)).force("center", center(width / 2, height / 2)).on("tick", ticked);
+    		const chartHeight = 800, chartWidth = 900, nodeWidth = 16;
+    		const svg = select("#tech-skills");
+    		svg.attr("height", chartHeight).attr("width", chartWidth);
 
-    		var link = svg.append("g").attr("class", "links").selectAll("line").data(graph.links).enter().append("line").attr("stroke-width", function (d) {
-    			return 3;
+    		// create a new simulation (a simulation starts with alpha = 1 and decrese it slowly to 0):
+    		const simulation$1 = simulation().// many-body force (force applied amongst all nodes, negative strength for repulsion):
+    		force("charge", manyBody().strength(-40).distanceMax(150)).// centering force (mean position of all nodes):
+    		force("center", center(chartWidth / 2, chartHeight / 2)).// link force (pushes linked nodes together or apart according to the desired link distance):
+    		force("link", link$2()).// prevent nodes from ovelapping, treating them as circles with the given radius:
+    		force("collide", collide((nodeWidth + 2) / 2));
+    		const nodeElements = svg.append('g').selectAll('circle').data(nodes).enter().append('circle').attr('r', 10).attr('fill', "gray");
+    		const textElements = svg.append('g').selectAll('text').data(nodes).enter().append('text').text(node => node.label).attr('font-size', 15).attr('dx', 15).attr('dy', 4);
+
+    		simulation$1.nodes(nodes).on("tick", () => {
+    			nodeElements.attr("cx", node => node.x).attr("cy", node => node.y);
+    			textElements.attr("x", node => node.x).attr("y", node => node.y);
     		});
 
-    		var node = svg.append("g").attr("class", "nodes").selectAll("circle").data(graph.nodes).enter().append("circle").attr("r", 5).attr("fill", function (d) {
-    			return "red";
-    		}).call(drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
-
-    		function ticked() {
-    			link.attr("x1", function (d) {
-    				return d.source.x;
-    			}).attr("y1", function (d) {
-    				return d.source.y;
-    			}).attr("x2", function (d) {
-    				return d.target.x;
-    			}).attr("y2", function (d) {
-    				return d.target.y;
-    			});
-
-    			node.attr("cx", function (d) {
-    				return d.x;
-    			}).attr("cy", function (d) {
-    				return d.y;
-    			});
-    		}
-
-    		function dragstarted(d) {
-    			if (!undefined) simulation.alphaTarget(0.3).restart();
-    			d.fx = d.x;
-    			d.fy = d.y;
-    		}
-
-    		function dragged(d) {
-    			d.fx = undefined;
-    			d.fy = undefined;
-    		}
-
-    		function dragended(d) {
-    			if (!undefined) simulation.alphaTarget(0);
-    			d.fx = null;
-    			d.fy = null;
-    		}
+    		simulation$1.force('link', link$2().id(link => link.id).strength(1));
+    		const linkElements = svg.append('g').selectAll('line').data(links).enter().append('line').attr('stroke-width', 1).attr('stroke', '#E5E5E5');
+    		linkElements.attr('x1', link => link.source.x).attr('y1', link => link.source.y).attr('x2', link => link.target.x).attr('y2', link => link.target.y);
     	});
 
     	const writable_props = [];
@@ -77106,7 +77058,7 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Dots> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ onMount, d3, forceSimulation });
+    	$$self.$capture_state = () => ({ onMount, d3 });
     	return [];
     }
 
