@@ -12,7 +12,7 @@ const scene = new THREE.Scene();
 
 //Defining camera and propeties
 var camera = new THREE.PerspectiveCamera( 75, 1 / 2, 0.1, 1000);
-camera.position.setZ(2);
+camera.position.setZ(1.5);
 
 // Geometry
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
@@ -26,8 +26,8 @@ const light = new THREE.AmbientLight( 0x404040, 2 ); // soft white light
 scene.add( light );
 
 //Add directional light
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 5 );
-directionalLight.position.set(0,1,0);
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
+directionalLight.position.set(0,1,2);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
@@ -66,7 +66,7 @@ onMount(() => {
 
 	//Set size and pixel ratio
 	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( 200, 400 );
+	renderer.setSize( 300, 600 );
 	
 	 
 	//Define clock from three.js
@@ -106,13 +106,13 @@ onMount(() => {
 		</a>
 	</div>
 	<div class="homeContent">
-		<div class="content" data-aos="fade-up">
+		<div class="content">
 			<div class="introContainer">
-				<h1>Hi</h1>
-				<div class="nameContainer">
+				<h1 data-aos="fade-right" data-aos-duration="800">Hi</h1>
+				<div data-aos="fade-right" data-aos-delay="100" data-aos-duration="800" class="nameContainer">
 					<h2 class="nameEl"> I’m Jonas</h2>
 				</div>
-				<p>Currently studing IT at Aalborg University and working at <a href="https://openomic.dk/">Openomic</a> as a full stack developer</p>
+				<p data-aos="fade-right" data-aos-delay="200" data-aos-duration="800">Currently studing IT at Aalborg University and working at <a href="https://openomic.dk/">Openomic</a> as a full stack developer</p>
 			</div>
 		</div>
 		<canvas id="model"></canvas>

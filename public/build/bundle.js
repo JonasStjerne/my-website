@@ -76986,10 +76986,10 @@ var app = (function () {
     			svg = svg_element("svg");
     			attr_dev(svg, "id", "svgchart");
     			attr_dev(svg, "class", "svelte-12gwn2n");
-    			add_location(svg, file$1, 239, 4, 9239);
+    			add_location(svg, file$1, 142, 4, 6703);
     			attr_dev(div, "id", "mainContainer");
     			attr_dev(div, "class", "svelte-12gwn2n");
-    			add_location(div, file$1, 238, 0, 9209);
+    			add_location(div, file$1, 141, 0, 6673);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -77022,79 +77022,7 @@ var app = (function () {
     	validate_slots('Dots', slots, []);
 
     	onMount(() => {
-    		// const nodes = [
-    		//     {"id": "Alice"},
-    		//     {"id": "Bob"},
-    		//     {"id": "Carol"}
-    		// ];
-    		// const links = [
-    		// {"source": 0, "target": 1}, // Alice → Bob
-    		// {"source": 1, "target": 2} // Bob → Carol
-    		// ];
-    		// const chartHeight        = 800,
-    		//         chartWidth         = 900,
-    		//         nodeHeight         = 11,
-    		//         nodeWidth          = 16
-    		// const svg = d3.select("#tech-skills")
-    		// svg.attr("height", chartHeight)
-    		//     .attr("width", chartWidth)
-    		// // functions to avoid nodes and links going outside the svg container, when calculating the position:
-    		// function getNodeXCoordinate(x) {
-    		//     return Math.max(0, Math.min(chartWidth - nodeWidth, x))
-    		// }
-    		// function getNodeYCoordinate(y) {
-    		//     return Math.max(0, Math.min(chartHeight - nodeHeight, y))
-    		// }
-    		// // create a new simulation (a simulation starts with alpha = 1 and decrese it slowly to 0):
-    		// const simulation = d3.forceSimulation()
-    		//                 // many-body force (force applied amongst all nodes, negative strength for repulsion):
-    		//                 .force("charge", d3.forceManyBody().strength(-40).distanceMax(150))
-    		//                 // centering force (mean position of all nodes):
-    		//                 .force("center", d3.forceCenter(chartWidth / 2, chartHeight / 2)) 
-    		//                 // link force (pushes linked nodes together or apart according to the desired link distance):
-    		//                 .force("link", d3.forceLink())
-    		//                 // prevent nodes from ovelapping, treating them as circles with the given radius:
-    		//                 .force("collide", d3.forceCollide((nodeWidth + 2) / 2))
-    		//                 .force('link').link(links);
-    		// const url = 'https://raw.githubusercontent.com/DealPete/forceDirected/master/countries.json'
-    		// const nodeElements = svg.append('g')
-    		// .selectAll('circle')
-    		// .data(nodes)
-    		// .enter().append('circle')
-    		//     .attr('r', 10)
-    		//     .attr('fill', "red")
-    		// const textElements = svg.append('g')
-    		//     .selectAll('text')
-    		//     .data(nodes)
-    		//     .enter().append('text')
-    		//         .text(node => node.label)
-    		//         .attr('font-size', 15)
-    		//         .attr('dx', 15)
-    		//         .attr('dy', 4)
-    		// simulation.nodes(nodes).on("tick", () => {
-    		//     nodeElements
-    		//         .attr("cx", node => node.x)
-    		//         .attr("cy", node => node.y)
-    		//     textElements
-    		//         .attr("x", node => node.x)
-    		//         .attr("y", node => node.y)
-    		// })
-    		// simulation.force('link', d3.forceLink()
-    		//     .id(link => link.id)
-    		//     .strength(1))
-    		//     const linkElements = svg.append('g')
-    		//         .selectAll('line')
-    		//         .data(links)
-    		//         .enter().append('line')
-    		//             .attr('stroke-width', 1)
-    		//             .attr('stroke', '#E5E5E5')
-    		//     linkElements
-    		//         .attr('x1', link => link.source.x)
-    		//         .attr('y1', link => link.source.y)
-    		//         .attr('x2', link => link.target.x)
-    		//         .attr('y2', link => link.target.y)
     		const chartHeight = 800, chartWidth = 900, nodeHeight = 11, nodeWidth = 16;
-
     		const svg = select("#svgchart");
     		svg.attr("height", chartHeight).attr("width", chartWidth);
 
@@ -77145,7 +77073,7 @@ var app = (function () {
     				console.log("Started");
     			}).on("drag", d => {
     				console.log("drag updated");
-    				console.log(undefined);
+    				console.log(d3);
     				console.log(d.x);
 
     				// by fixing its position, this disables the forces acting on the node:
@@ -77282,36 +77210,43 @@ var app = (function () {
     			if (!src_url_equal(img0.src, img0_src_value = "assets/github.svg")) attr_dev(img0, "src", img0_src_value);
     			attr_dev(img0, "alt", "Github logo");
     			attr_dev(img0, "height", "30");
-    			add_location(img0, file, 101, 3, 2784);
+    			add_location(img0, file, 101, 3, 2786);
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 100, 2, 2737);
+    			add_location(a0, file, 100, 2, 2739);
     			if (!src_url_equal(img1.src, img1_src_value = "assets/linkedin.svg")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "alt", "Github logo");
     			attr_dev(img1, "height", "30");
-    			add_location(img1, file, 104, 3, 2923);
+    			add_location(img1, file, 104, 3, 2925);
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 103, 2, 2855);
+    			add_location(a1, file, 103, 2, 2857);
     			attr_dev(div0, "id", "header");
     			attr_dev(div0, "class", "svelte-o6qvq8");
-    			add_location(div0, file, 99, 1, 2716);
-    			add_location(h1, file, 110, 4, 3112);
+    			add_location(div0, file, 99, 1, 2718);
+    			attr_dev(h1, "data-aos", "fade-right");
+    			attr_dev(h1, "data-aos-duration", "800");
+    			add_location(h1, file, 110, 4, 3095);
     			attr_dev(h2, "class", "nameEl svelte-o6qvq8");
-    			add_location(h2, file, 112, 5, 3163);
+    			add_location(h2, file, 112, 5, 3259);
+    			attr_dev(div1, "data-aos", "fade-right");
+    			attr_dev(div1, "data-aos-delay", "100");
+    			attr_dev(div1, "data-aos-duration", "800");
     			attr_dev(div1, "class", "nameContainer svelte-o6qvq8");
-    			add_location(div1, file, 111, 4, 3129);
+    			add_location(div1, file, 111, 4, 3158);
     			attr_dev(a2, "href", "https://openomic.dk/");
-    			add_location(a2, file, 114, 65, 3276);
-    			add_location(p, file, 114, 4, 3215);
+    			add_location(a2, file, 114, 132, 3439);
+    			attr_dev(p, "data-aos", "fade-right");
+    			attr_dev(p, "data-aos-delay", "200");
+    			attr_dev(p, "data-aos-duration", "800");
+    			add_location(p, file, 114, 4, 3311);
     			attr_dev(div2, "class", "introContainer svelte-o6qvq8");
-    			add_location(div2, file, 109, 3, 3078);
+    			add_location(div2, file, 109, 3, 3061);
     			attr_dev(div3, "class", "content svelte-o6qvq8");
-    			attr_dev(div3, "data-aos", "fade-up");
-    			add_location(div3, file, 108, 2, 3033);
+    			add_location(div3, file, 108, 2, 3035);
     			attr_dev(canvas, "id", "model");
-    			add_location(canvas, file, 117, 2, 3374);
+    			add_location(canvas, file, 117, 2, 3537);
     			attr_dev(div4, "class", "homeContent svelte-o6qvq8");
-    			add_location(div4, file, 107, 1, 3004);
-    			add_location(main, file, 98, 0, 2707);
+    			add_location(div4, file, 107, 1, 3006);
+    			add_location(main, file, 98, 0, 2709);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -77378,7 +77313,7 @@ var app = (function () {
     	//Defining camera and propeties
     	var camera = new PerspectiveCamera(75, 1 / 2, 0.1, 1000);
 
-    	camera.position.setZ(2);
+    	camera.position.setZ(1.5);
 
     	// Geometry
     	const geometry = new TorusGeometry(10, 3, 16, 100);
@@ -77393,9 +77328,9 @@ var app = (function () {
     	scene.add(light);
 
     	//Add directional light
-    	const directionalLight = new DirectionalLight(0xffffff, 5);
+    	const directionalLight = new DirectionalLight(0xffffff, 2);
 
-    	directionalLight.position.set(0, 1, 0);
+    	directionalLight.position.set(0, 1, 2);
     	directionalLight.castShadow = true;
     	scene.add(directionalLight);
 
@@ -77440,7 +77375,7 @@ var app = (function () {
     		//Set size and pixel ratio
     		renderer.setPixelRatio(window.devicePixelRatio);
 
-    		renderer.setSize(200, 400);
+    		renderer.setSize(300, 600);
 
     		//Define clock from three.js
     		const clock = new Clock();
