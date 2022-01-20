@@ -77210,43 +77210,43 @@ var app = (function () {
     			if (!src_url_equal(img0.src, img0_src_value = "assets/github.svg")) attr_dev(img0, "src", img0_src_value);
     			attr_dev(img0, "alt", "Github logo");
     			attr_dev(img0, "height", "30");
-    			add_location(img0, file, 101, 3, 2786);
+    			add_location(img0, file, 129, 3, 3817);
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 100, 2, 2739);
+    			add_location(a0, file, 128, 2, 3770);
     			if (!src_url_equal(img1.src, img1_src_value = "assets/linkedin.svg")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "alt", "Github logo");
     			attr_dev(img1, "height", "30");
-    			add_location(img1, file, 104, 3, 2925);
+    			add_location(img1, file, 132, 3, 3956);
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 103, 2, 2857);
+    			add_location(a1, file, 131, 2, 3888);
     			attr_dev(div0, "id", "header");
     			attr_dev(div0, "class", "svelte-o6qvq8");
-    			add_location(div0, file, 99, 1, 2718);
+    			add_location(div0, file, 127, 1, 3749);
     			attr_dev(h1, "data-aos", "fade-right");
     			attr_dev(h1, "data-aos-duration", "800");
-    			add_location(h1, file, 110, 4, 3095);
+    			add_location(h1, file, 138, 4, 4126);
     			attr_dev(h2, "class", "nameEl svelte-o6qvq8");
-    			add_location(h2, file, 112, 5, 3259);
+    			add_location(h2, file, 140, 5, 4290);
     			attr_dev(div1, "data-aos", "fade-right");
     			attr_dev(div1, "data-aos-delay", "100");
     			attr_dev(div1, "data-aos-duration", "800");
     			attr_dev(div1, "class", "nameContainer svelte-o6qvq8");
-    			add_location(div1, file, 111, 4, 3158);
+    			add_location(div1, file, 139, 4, 4189);
     			attr_dev(a2, "href", "https://openomic.dk/");
-    			add_location(a2, file, 114, 132, 3439);
+    			add_location(a2, file, 142, 132, 4470);
     			attr_dev(p, "data-aos", "fade-right");
     			attr_dev(p, "data-aos-delay", "200");
     			attr_dev(p, "data-aos-duration", "800");
-    			add_location(p, file, 114, 4, 3311);
+    			add_location(p, file, 142, 4, 4342);
     			attr_dev(div2, "class", "introContainer svelte-o6qvq8");
-    			add_location(div2, file, 109, 3, 3061);
+    			add_location(div2, file, 137, 3, 4092);
     			attr_dev(div3, "class", "content svelte-o6qvq8");
-    			add_location(div3, file, 108, 2, 3035);
+    			add_location(div3, file, 136, 2, 4066);
     			attr_dev(canvas, "id", "model");
-    			add_location(canvas, file, 117, 2, 3537);
+    			add_location(canvas, file, 145, 2, 4568);
     			attr_dev(div4, "class", "homeContent svelte-o6qvq8");
-    			add_location(div4, file, 107, 1, 3006);
-    			add_location(main, file, 98, 0, 2709);
+    			add_location(div4, file, 135, 1, 4037);
+    			add_location(main, file, 126, 0, 3740);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -77305,9 +77305,16 @@ var app = (function () {
     	return block;
     }
 
+    function calcAngle(opposite, adjacent) {
+    	return Math.atan(opposite / adjacent) * 180 / Math.PI;
+    }
+
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
+    	let model, skeleton, renderer, element;
+
+    	//Decaling a new scene object
     	const scene = new Scene();
 
     	//Defining camera and propeties
@@ -77334,72 +77341,96 @@ var app = (function () {
     	directionalLight.castShadow = true;
     	scene.add(directionalLight);
 
-    	//Colored light
-    	// const pointLight = new THREE.PointLight(0x0000ff, 5);
-    	// pointLight.position.set(0, 100, 250);
-    	// scene.add(pointLight);
-    	//Load custom object
-    	const loader = new GLTFLoader();
+    	//Define clock from three.js
+    	const clock = new Clock();
 
-    	loader.load(
-    		'assets/test_model.glb',
-    		function (gltf) {
-    			const obj = gltf.scene.children[0];
-    			scene.add(obj);
-    			obj.position.setY(-1);
-    		},
-    		undefined,
-    		function (error) {
-    			console.error(error);
+    	//Animation tick
+    	const tick = () => {
+    		//Gets time between animation tick, to run at same speed across different hardware
+    		const elapsedTime = clock.getElapsedTime();
+
+    		//Define animation relative to time between ticks
+    		torus.rotation.x = 0.8 * 1;
+
+    		torus.rotation.y = 1 * elapsedTime;
+    		torus.rotation.z = 1.2 * elapsedTime;
+
+    		// skeleton.bones[5].rotation.y = 1 * elapsedTime;
+    		//render scene
+    		renderer.render(scene, camera);
+
+    		//Tell browser to call tick function on next animation frame
+    		requestAnimationFrame(tick);
+    	};
+
+    	//Get rotation of head
+    	function RotateHead(x) {
+    		let degRatio = 3 / 180;
+    		let m = 200;
+    		let rect = element.getBoundingClientRect();
+    		let originX = (rect.right - rect.left) / 2 + rect.left;
+
+    		if (x > originX) {
+    			skeleton.bones[5].rotation.y = calcAngle(window.innerWidth - originX, m) * degRatio * ((x - originX) / (window.innerWidth - originX));
+    		} else {
+    			skeleton.bones[5].rotation.y = -calcAngle(originX, m) * degRatio * ((originX - x) / originX);
     		}
-    	);
 
+    		let degressOriginToScreen = calcAngle(window.innerWidth - originX, m) + calcAngle(originX, m);
+    		console.log(degressOriginToScreen);
+    	} // skeleton.bones[5].rotation.y = degRatio*degressOriginToScreen*(x/window.innerWidth)-(degRatio*degressOriginToScreen)/2;
+    	//Primitiv men virker - lidt bugy
+
+    	// skeleton.bones[5].rotation.y = (x/window.innerWidth)*2-1;
     	onMount(() => {
     		aos.init();
 
-    		//On mount connect render to canvas element
-    		// const renderer = new THREE.WebGL1Renderer({
-    		// 	canvas: document.querySelector('#model')
-    		// });
-    		const renderer = new WebGLRenderer({
+    		renderer = new WebGLRenderer({
     				antialias: true,
     				alpha: true,
     				canvas: document.querySelector('#model')
     			});
 
-    		//Interactive
-    		const controls = new OrbitControls(camera, renderer.domElement);
+    		element = document.querySelector('#model');
+    		document.addEventListener("mousemove", e => RotateHead(e.pageX));
 
-    		controls.addEventListener('mousechange', renderer);
-
+    		//  //Interactive
+    		//  const controls = new OrbitControls( camera,  renderer.domElement);
+    		// controls.addEventListener('mousechange', renderer);
     		//Set size and pixel ratio
     		renderer.setPixelRatio(window.devicePixelRatio);
 
     		renderer.setSize(300, 600);
 
-    		//Define clock from three.js
-    		const clock = new Clock();
+    		//Load custom object
+    		const loader = new GLTFLoader();
 
-    		//Animation tick
-    		const tick = () => {
-    			//Gets time between animation tick, to run at same speed across different hardware
-    			const elapsedTime = clock.getElapsedTime();
+    		loader.load(
+    			'assets/Xbot.glb',
+    			function (gltf) {
+    				console.log("Load2");
+    				model = gltf.scene;
 
-    			//Define animation relative to time between ticks
-    			torus.rotation.x = 0.8 * 1;
+    				//Add to scene
+    				scene.add(model);
 
-    			torus.rotation.y = 1 * elapsedTime;
-    			torus.rotation.z = 1.2 * elapsedTime;
+    				model.position.setY(-1);
 
-    			//render scene
-    			renderer.render(scene, camera);
+    				//Setup skelton
+    				skeleton = new SkeletonHelper(model);
 
-    			//Tell browser to call tick function on next animation frame
-    			requestAnimationFrame(tick);
-    		};
+    				skeleton.visible = false;
+    				scene.add(skeleton);
+    				console.log(skeleton.bones[5]);
 
-    		//Call function
-    		tick();
+    				//Call tick function to start animation
+    				tick();
+    			},
+    			undefined,
+    			function (error) {
+    				console.error(error);
+    			}
+    		);
     	});
 
     	const writable_props = [];
@@ -77415,6 +77446,10 @@ var app = (function () {
     		OrbitControls,
     		AOS,
     		Dots,
+    		model,
+    		skeleton,
+    		renderer,
+    		element,
     		scene,
     		camera,
     		geometry,
@@ -77422,10 +77457,17 @@ var app = (function () {
     		torus,
     		light,
     		directionalLight,
-    		loader
+    		clock,
+    		tick,
+    		calcAngle,
+    		RotateHead
     	});
 
     	$$self.$inject_state = $$props => {
+    		if ('model' in $$props) model = $$props.model;
+    		if ('skeleton' in $$props) skeleton = $$props.skeleton;
+    		if ('renderer' in $$props) renderer = $$props.renderer;
+    		if ('element' in $$props) element = $$props.element;
     		if ('camera' in $$props) camera = $$props.camera;
     	};
 

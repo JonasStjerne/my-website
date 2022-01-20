@@ -7,6 +7,7 @@ import * as AOS from 'aos';
 import "../node_modules/aos/dist/aos.css";
 import Dots from './Dots.svelte';
 
+let model, skeleton, renderer, element;
 //Decaling a new scene object
 const scene = new THREE.Scene();
 
@@ -31,67 +32,94 @@ directionalLight.position.set(0,1,2);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
+//Define clock from three.js
+const clock = new THREE.Clock();
 
-//Colored light
-// const pointLight = new THREE.PointLight(0x0000ff, 5);
-// pointLight.position.set(0, 100, 250);
-// scene.add(pointLight);
+//Animation tick
+const tick = () => {
+	//Gets time between animation tick, to run at same speed across different hardware
+	const elapsedTime = clock.getElapsedTime();
 
-//Load custom object
-const loader = new GLTFLoader();
-loader.load( 'assets/test_model.glb', function ( gltf ) {
-	const obj = gltf.scene.children[0];
-	scene.add( obj );
-	obj.position.setY(-1);
-}, undefined, function ( error ) {
-	console.error( error );
-} );
+	//Define animation relative to time between ticks
+	torus.rotation.x = 0.8 *1;
+	torus.rotation.y = 1 * elapsedTime;
+	torus.rotation.z = 1.2 * elapsedTime;
+	// skeleton.bones[5].rotation.y = 1 * elapsedTime;
+	//render scene
+	renderer.render( scene, camera );
+
+	//Tell browser to call tick function on next animation frame
+	requestAnimationFrame( tick );
+} 
+
+function calcAngle(opposite, adjacent) {
+  return Math.atan(opposite / adjacent) * 180/Math.PI;
+}
+
+//Get rotation of head
+function RotateHead(x) {
+	let degRatio = 3/180;
+	let m = 200;
+	let rect = element.getBoundingClientRect();
+	let originX = (rect.right - rect.left)/2 + rect.left;
+
+	if (x > originX) {
+		skeleton.bones[5].rotation.y = 
+		calcAngle(window.innerWidth-originX, m)*degRatio*((x-originX)/(window.innerWidth-originX));
+	} else {
+		skeleton.bones[5].rotation.y = 
+		-calcAngle(originX, m)*degRatio*((originX-x)/originX);
+	}
+	let degressOriginToScreen =calcAngle(window.innerWidth-originX, m) + calcAngle(originX, m);
+	
+
+	console.log(degressOriginToScreen)
+
+
+	// skeleton.bones[5].rotation.y = degRatio*degressOriginToScreen*(x/window.innerWidth)-(degRatio*degressOriginToScreen)/2;
+	//Primitiv men virker - lidt bugy
+	// skeleton.bones[5].rotation.y = (x/window.innerWidth)*2-1;
+}
 
 
 onMount(() => {
 	AOS.init();
-	//On mount connect render to canvas element
-	// const renderer = new THREE.WebGL1Renderer({
-	// 	canvas: document.querySelector('#model')
-	// });
-	const renderer = new THREE.WebGLRenderer({ 
+
+	renderer = new THREE.WebGLRenderer({ 
 		antialias: true,
 		alpha: true,
 		canvas: document.querySelector('#model')
 	 });
-
-	 //Interactive
-	 const controls = new OrbitControls( camera,  renderer.domElement);
-	controls.addEventListener('mousechange', renderer);
+	 element = document.querySelector('#model');
+	 document.addEventListener("mousemove", e => RotateHead(e.pageX));
+	//  //Interactive
+	//  const controls = new OrbitControls( camera,  renderer.domElement);
+	// controls.addEventListener('mousechange', renderer);
 
 	//Set size and pixel ratio
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( 300, 600 );
-	
-	 
-	//Define clock from three.js
-	const clock = new THREE.Clock();
+	//Load custom object
+	const loader = new GLTFLoader();
+	loader.load( 'assets/Xbot.glb', function ( gltf ) {
+		console.log("Load2");
+		model = gltf.scene;
+		//Add to scene
+		scene.add( model );
+		model.position.setY(-1);
 
-	//Animation tick
-	const tick = () => {
-		//Gets time between animation tick, to run at same speed across different hardware
-		const elapsedTime = clock.getElapsedTime();
+		//Setup skelton
+		skeleton = new THREE.SkeletonHelper(model);
+		skeleton.visible = false;
+		scene.add( skeleton );
 
-		//Define animation relative to time between ticks
-		torus.rotation.x = 0.8 *1;
-		torus.rotation.y = 1 * elapsedTime;
-		torus.rotation.z = 1.2 * elapsedTime;
+		console.log(skeleton.bones[5]);
 
-		//render scene
-		renderer.render( scene, camera );
-
-		//Tell browser to call tick function on next animation frame
-		requestAnimationFrame( tick );
-	} 
-
-	//Call function
-	tick();
-	
+		//Call tick function to start animation
+		tick();
+	}, undefined, function ( error ) {
+		console.error( error );
+	} );
 })
 
 </script>
