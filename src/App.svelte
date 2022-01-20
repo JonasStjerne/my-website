@@ -14,6 +14,7 @@ const scene = new THREE.Scene();
 //Defining camera and propeties
 var camera = new THREE.PerspectiveCamera( 75, 1 / 2, 0.1, 1000);
 camera.position.setZ(1.5);
+camera.position.setY(-0.3);
 
 // Geometry
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
@@ -57,28 +58,37 @@ function calcAngle(opposite, adjacent) {
 }
 
 //Get rotation of head
-function RotateHead(x) {
-	let degRatio = 3/180;
-	let m = 200;
+function RotateHead(x,y) {
+	let degRatio = 3/180; //3 rotation on model = 180 degrees
+	let m = 1000; //Depth distance to the model. The lower the more head movement
 	let rect = element.getBoundingClientRect();
-	let originX = (rect.right - rect.left)/2 + rect.left;
+	let originX = (rect.right - rect.left)/2 + rect.left; //Center position of model
+	let originY =  rect.top + 50;
+
+	//Calculates the estimated angle of head rotation according to curser movement. Not fully right, could be a bit unpricise at window edges, espacially at axtreme distance values.
+	if (y > originY) {
+		skeleton.bones[5].rotation.x = 
+		calcAngle(window.innerHeight-originY, m)*
+		degRatio*
+		((y-originY)/(window.innerHeight-originY));
+	} else {
+		skeleton.bones[5].rotation.x = 
+		-calcAngle(originY, m)*
+		degRatio*
+		((originY-y)/originY);
+	}
 
 	if (x > originX) {
 		skeleton.bones[5].rotation.y = 
-		calcAngle(window.innerWidth-originX, m)*degRatio*((x-originX)/(window.innerWidth-originX));
+		calcAngle(window.innerWidth-originX, m)*
+		degRatio*
+		((x-originX)/(window.innerWidth-originX));
 	} else {
 		skeleton.bones[5].rotation.y = 
-		-calcAngle(originX, m)*degRatio*((originX-x)/originX);
+		-calcAngle(originX, m)*
+		degRatio*
+		((originX-x)/originX);
 	}
-	let degressOriginToScreen =calcAngle(window.innerWidth-originX, m) + calcAngle(originX, m);
-	
-
-	console.log(degressOriginToScreen)
-
-
-	// skeleton.bones[5].rotation.y = degRatio*degressOriginToScreen*(x/window.innerWidth)-(degRatio*degressOriginToScreen)/2;
-	//Primitiv men virker - lidt bugy
-	// skeleton.bones[5].rotation.y = (x/window.innerWidth)*2-1;
 }
 
 
@@ -91,7 +101,7 @@ onMount(() => {
 		canvas: document.querySelector('#model')
 	 });
 	 element = document.querySelector('#model');
-	 document.addEventListener("mousemove", e => RotateHead(e.pageX));
+	 document.addEventListener("mousemove", e => RotateHead(e.pageX, e.pageY));
 	//  //Interactive
 	//  const controls = new OrbitControls( camera,  renderer.domElement);
 	// controls.addEventListener('mousechange', renderer);
@@ -112,8 +122,6 @@ onMount(() => {
 		skeleton = new THREE.SkeletonHelper(model);
 		skeleton.visible = false;
 		scene.add( skeleton );
-
-		console.log(skeleton.bones[5]);
 
 		//Call tick function to start animation
 		tick();
