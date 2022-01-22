@@ -1,238 +1,194 @@
 <script>
-    import { onMount } from "svelte";
-    import * as d3 from "../node_modules/d3";
+  import { onMount } from "svelte";
 
-    onMount(() => {
-
-        // const nodes = [
-        //     {"id": "Alice"},
-        //     {"id": "Bob"},
-        //     {"id": "Carol"}
-        // ];
-
-        // const links = [
-        // {"source": 0, "target": 1}, // Alice → Bob
-        // {"source": 1, "target": 2} // Bob → Carol
-        // ];
-
-        // const chartHeight        = 800,
-        //         chartWidth         = 900,
-        //         nodeHeight         = 11,
-        //         nodeWidth          = 16
-        // const svg = d3.select("#tech-skills")
-        // svg.attr("height", chartHeight)
-        //     .attr("width", chartWidth)
-
-        // // functions to avoid nodes and links going outside the svg container, when calculating the position:
-        // function getNodeXCoordinate(x) {
-        //     return Math.max(0, Math.min(chartWidth - nodeWidth, x))
-        // }
-        // function getNodeYCoordinate(y) {
-        //     return Math.max(0, Math.min(chartHeight - nodeHeight, y))
-        // }
-
-        // // create a new simulation (a simulation starts with alpha = 1 and decrese it slowly to 0):
-        // const simulation = d3.forceSimulation()
-        //                 // many-body force (force applied amongst all nodes, negative strength for repulsion):
-        //                 .force("charge", d3.forceManyBody().strength(-40).distanceMax(150))
-        //                 // centering force (mean position of all nodes):
-        //                 .force("center", d3.forceCenter(chartWidth / 2, chartHeight / 2)) 
-        //                 // link force (pushes linked nodes together or apart according to the desired link distance):
-        //                 .force("link", d3.forceLink())
-        //                 // prevent nodes from ovelapping, treating them as circles with the given radius:
-        //                 .force("collide", d3.forceCollide((nodeWidth + 2) / 2))
-        //                 .force('link').link(links);
-        
-
-        // const url = 'https://raw.githubusercontent.com/DealPete/forceDirected/master/countries.json'
-
-        // const nodeElements = svg.append('g')
-        // .selectAll('circle')
-        // .data(nodes)
-        // .enter().append('circle')
-        //     .attr('r', 10)
-        //     .attr('fill', "red")
-        
-        // const textElements = svg.append('g')
-        //     .selectAll('text')
-        //     .data(nodes)
-        //     .enter().append('text')
-        //         .text(node => node.label)
-        //         .attr('font-size', 15)
-        //         .attr('dx', 15)
-        //         .attr('dy', 4)
-        
-        // simulation.nodes(nodes).on("tick", () => {
-        //     nodeElements
-        //         .attr("cx", node => node.x)
-        //         .attr("cy", node => node.y)
-        //     textElements
-        //         .attr("x", node => node.x)
-        //         .attr("y", node => node.y)
-        // })
-
-        // simulation.force('link', d3.forceLink()
-        //     .id(link => link.id)
-        //     .strength(1))
-
-        //     const linkElements = svg.append('g')
-        //         .selectAll('line')
-        //         .data(links)
-        //         .enter().append('line')
-        //             .attr('stroke-width', 1)
-        //             .attr('stroke', '#E5E5E5')
-            
-        //     linkElements
-        //         .attr('x1', link => link.source.x)
-        //         .attr('y1', link => link.source.y)
-        //         .attr('x2', link => link.target.x)
-        //         .attr('y2', link => link.target.y)
-
-
-
-
-        const chartHeight        = 800,
-		  chartWidth         = 900,
-		  nodeHeight         = 11,
-		  nodeWidth          = 16
-
-const svg = d3.select("#svgchart")
-svg.attr("height", chartHeight)
-	 .attr("width", chartWidth)
-
-// functions to avoid nodes and links going outside the svg container, when calculating the position:
-function getNodeXCoordinate(x) {
-	return Math.max(0, Math.min(chartWidth - nodeWidth, x))
-}
-function getNodeYCoordinate(y) {
-	return Math.max(0, Math.min(chartHeight - nodeHeight, y))
+  let link, node, text, h, w, simulation;
+   const data = {
+  "nodes": [
+    {"text": "Angular", "r": "40", "types": "Framework"},
+    {"text": "Svelte","r": "40", "types": "Framework"},
+    {"text": "Vue","r": "40", "types": "Framework"},
+    {"text": "JavaScript", "r": "50", "types": "Language"},
+    {"text": "TypeScript", "r": "45", "types": "Language"},
+    {"text": "Node.js", "r": "35", "types": "Language"},
+    {"text": "C#", "r": "50", "types": "Language"},
+    {"text": "PHP", "r": "40", "types": "Language"},
+    {"text": "MySQL","r": "30", "types": "Database"},
+    {"text": "RPA","r": "30", "types": "RPA"},
+    {"text": "Git","r": "25", "types": "Source Control"},
+    {"text": "AdobeXD","r": "40", "types": "Design"},
+    {"text": "Figma","r": "35", "types": "Design"},
+    {"text": ".Net Core","r": "40", "types": ".Net"},
+    {"text": "Blazor","r": "35", "types": ".Net"},
+  ],
+  "links": [
+    { "target": 1, "source": 0 },
+    { "target": 2, "source": 1 },
+    { "target": 2, "source": 0 },
+    { "target": 4, "source": 3 },
+    { "target": 5, "source": 3 },
+    { "target": 6, "source": 3 },
+    { "target": 13, "source": 6 },
+    { "target": 14, "source": 6 },
+    { "target": 3, "source": 7 },
+    { "target": 6, "source": 7 },
+    { "target": 12, "source": 11 },
+    { "target": 13, "source": 14 },
+    { "target": 1, "source": 3 },
+  ]
 }
 
-// create a new simulation (a simulation starts with alpha = 1 and decrese it slowly to 0):
-const simulation = d3.forceSimulation()
-				// many-body force (force applied amongst all nodes, negative strength for repulsion):
-				.force("charge", d3.forceManyBody().strength(-40).distanceMax(150))
-				// centering force (mean position of all nodes):
-				.force("center", d3.forceCenter(chartWidth / 2, chartHeight / 2)) 
-				// link force (pushes linked nodes together or apart according to the desired link distance):
-				.force("link", d3.forceLink())
-				// prevent nodes from ovelapping, treating them as circles with the given radius:
-				.force("collide", d3.forceCollide((nodeWidth + 2) / 2))
-
-const url = 'assets/countries.json'
-d3.json(url).then( function(data) {
-
-	const nodes = data.nodes
-	const links = data.links
-
-	// add links (lines):
-	const link = svg.append("g")
-					      .attr("class", "links")
-					    .selectAll("line")
-					    .data(links)
-					    .enter().append("line") // line to connect nodes
-					      .attr("stroke-width", 1) // line width
-
-    // use a g element to contain a rect and an image for every node:
-    const nodeWrapper = svg.append("g")
-                                            .attr("class", "nodes")
-                                            .selectAll(".node")
-                                            .data(nodes)
-                                            .enter().append("g")
-                                            .attr("class", "nodeWrapper")
-
-        // add nodes (rects):
-        const node = nodeWrapper
-                                .append("rect")
-                                .attr("id", d => d.code)
-                                .attr("class", "node")
-                                .attr("width", nodeWidth)
-                                .attr("height", nodeHeight)
-    
-    // add flag images:
-    nodeWrapper
-        .append("image")
-            .attr("href", d => "https://github.com/fabvit86/d3-force-directed-graph/raw/master/public/images/flag-" + d.code + ".png")
-            .attr("height", nodeHeight)
-            .attr("width", nodeWidth)
-
-    // node dragging:
-    nodeWrapper
-        .call(d3.drag()
-            .on("start", d => {
-                // heat the simulation:
-                if (!d3.event.active) simulation.alphaTarget(0.2).restart()
-                // set fixed x and y coordinates:	
-                d.fx = d.x
-                d.fy = d.y
-                console.log("Started");
-            })
-            .on("drag", d => {
-                console.log("drag updated");
-                console.log(d3.event);
-                console.log(d.x);
-                // by fixing its position, this disables the forces acting on the node:
-                d.fx = d3.event.x
-                d.fy = d3.event.y
-            })
-            .on("end", d => {
-                console.log("drag ended");
-                // stop simulation:
-                if (!d3.event.active) simulation.alphaTarget(0)
-                // reactivate the force on the node:
-                d.fx = null
-                d.fy = null
-            })
-        )
-
-    // tooltip div:
-    const tooltip = d3.select('#mainContainer').append("div")
-                                        .classed("tooltip", true)
-                                        .style("opacity", 0) // start invisible
-    nodeWrapper
-        .on("mouseover", function(d) {
-            tooltip.transition()
-                .duration(300)
-                .style("opacity", 1) // show the tooltip
-            tooltip.html(d.country)
-            .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth - 5) + "px")
-            .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight) + "px");
-        })
-        .on("mouseleave", function(d) {
-            tooltip.transition()
-                .duration(200)
-                .style("opacity", 0)
-        })
-
-    simulation
-        .nodes(nodes)
-        .on("tick", () => {
-            // set each node's position on each tick of the simulation:
-            nodeWrapper.attr("transform", d => "translate(" + getNodeXCoordinate(d.x) + "," + getNodeYCoordinate(d.y) + ")")
-            // set start (x1,y1) and point (x2,y2) coordinate of each link on each tick of the simulation:
-            link.attr("x1", d => getNodeXCoordinate(d.source.x + nodeWidth / 2))
-            link.attr("y1", d => getNodeYCoordinate(d.source.y + nodeHeight / 2))
-            link.attr("x2", d => getNodeXCoordinate(d.target.x + nodeWidth / 2))
-            link.attr("y2", d => getNodeYCoordinate(d.target.y + nodeHeight / 2))
-        })
-
-        // pass the links to the link force:
-        simulation
-            .force("link")
-            .links(links)
-                .distance(45)
-    })
+const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
 
 
+const types = [
+"Framework",
+"Language",
+"Markup",
+"Source Control",
+"RPA",
+"Database",
+"Design",
+".Net"
+];
+
+//Colors
+const color = d3.scaleSequential(d3.interpolateRainbow)
+    .domain([0,types.length]);
+
+// define constants
+const { nodes, links } = data;
 
 
 
+const dragstarted = (d) => {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+const dragged = (d) => {
+  d.fx = clamp(d3.event.x, 0, w);
+  d.fy = clamp(d3.event.y, 0, h);
+}
+
+const dragended = (d) => {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+function getNodeXCoordinate(x , r) {
+    return Math.max(r, Math.min(w - r, x));
+}
+function getNodeYCoordinate(y, r) {
+    return Math.max(r, Math.min(h - r, y));
+}
+onMount(() => {
+  w = document.body.clientWidth;
+  h = 500;
+
+  // initialize simulation
+  simulation = d3.forceSimulation()
+    // keep entire simulation balanced around screen center
+  //   .force('center', d3.forceCenter(w/2, h/2))
+    // pull toward center
+    .force('attract', d3.forceAttract()
+      .target([w/2, h/2])
+      .strength(0.11))
+    // cluster by region
+    .force('cluster', d3.forceCluster()
+      .centers(d => types.indexOf(d.types))
+      .strength(1)
+      .centerInertia(0.1))
+
+    .force("link", d3.forceLink())
+    .force('charge', d3.forceManyBody().strength(-10))
+    // apply collision with padding
+    .force("collide", d3.forceCollide().radius(d => d.r).strength(0));
+
+
+    // ramp up collision strength to provide smooth transition
+  const transitionTime = 3000;
+  const t = d3.timer((elapsed) => {
+    const dt = elapsed / transitionTime;
+    simulation.force('collide').strength(Math.pow(dt, 2) * 0.7);
+    if (dt >= 1.0) t.stop();
+  });
+
+  //initialize svg
+  const svg = d3.select("#svgchart")
+    .attr('width', w )
+    .attr('height', h )
+
+    // initialize links
+  link = svg.append("g")
+    .attr("class", "link")
+    .selectAll("line")
+    .data(links)
+    .enter()
+    .append("line");
+
+  // initialize node circles
+  node = svg
+    .append("g")
+    .attr("class", "node")
+    .selectAll("circle")
+    .data(nodes)
+    .enter().append("circle")
+      .attr("r", d => d.r)
+      .attr("fill", d => color(types.indexOf(d.types)))
+      .attr("stroke", d => color(types.indexOf(d.types)))
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+
+  text = svg
+    .append("g")
+    .attr("class", "textBoxes noselect")
+    .selectAll("text")
+    .data(nodes)
+    .enter()
+    .append("text")
+    .attr('text-anchor', "middle")
+    .text(d => d.text)
+    .attr('color', 'black')
+    .attr('font-size', 15)
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
+
+  simulation
+    .nodes(nodes)
+    .on("tick", ticked);
+
+  simulation.force("link")
+      .links(links);
+})
 
 
 
+ // define tick function
+const ticked = () => {
+  link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
 
-});
+  node
+    .attr("cx", d => getNodeXCoordinate(d.x, d.r) + "px")
+    .attr("cy", d => getNodeYCoordinate(d.y, d.r) + "px");
+  
+  text
+    .attr("x", d => getNodeXCoordinate(d.x, d.r) + "px")
+    .attr("y", d => getNodeYCoordinate(d.y, d.r) + 4 +"px");
+
+}
+
+
 
 </script>
 
@@ -245,9 +201,6 @@ d3.json(url).then( function(data) {
 	text-align: center;
 }
 
-    #svgchart {
-        background-color: white;
-    }
 
 
 

@@ -7,21 +7,19 @@ import * as AOS from 'aos';
 import "../node_modules/aos/dist/aos.css";
 import Dots from './Dots.svelte';
 
-let model, skeleton, renderer, element;
+let originY, originX;
+
+//Define clock from three.js
+const clock = new THREE.Clock();
+
+let model, skeleton, renderer, mixer, animations;
 //Decaling a new scene object
 const scene = new THREE.Scene();
 
 //Defining camera and propeties
 var camera = new THREE.PerspectiveCamera( 75, 1 / 2, 0.1, 1000);
-camera.position.setZ(1.5);
-camera.position.setY(-0.3);
-
-// Geometry
-const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-const material = new THREE.MeshBasicMaterial( {color: 0xFF6347, wireframe: true } );
-const torus = new THREE.Mesh( geometry, material );
-//scene.add(torus);
-
+camera.position.setZ(2);
+camera.position.setY(0);
 
 //Add ambient light
 const light = new THREE.AmbientLight( 0x404040, 2 ); // soft white light
@@ -33,24 +31,19 @@ directionalLight.position.set(0,1,2);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
-//Define clock from three.js
-const clock = new THREE.Clock();
-
 //Animation tick
 const tick = () => {
-	//Gets time between animation tick, to run at same speed across different hardware
-	const elapsedTime = clock.getElapsedTime();
-
-	//Define animation relative to time between ticks
-	torus.rotation.x = 0.8 *1;
-	torus.rotation.y = 1 * elapsedTime;
-	torus.rotation.z = 1.2 * elapsedTime;
-	// skeleton.bones[5].rotation.y = 1 * elapsedTime;
-	//render scene
-	renderer.render( scene, camera );
 
 	//Tell browser to call tick function on next animation frame
 	requestAnimationFrame( tick );
+
+	//Animation update, with the delta time of last update
+	if (mixer ) mixer.update( clock.getDelta() );
+
+	//render scene
+	renderer.render( scene, camera );
+
+	
 } 
 
 function calcAngle(opposite, adjacent) {
@@ -61,34 +54,36 @@ function calcAngle(opposite, adjacent) {
 function RotateHead(x,y) {
 	let degRatio = 3/180; //3 rotation on model = 180 degrees
 	let m = 1000; //Depth distance to the model. The lower the more head movement
-	let rect = element.getBoundingClientRect();
-	let originX = (rect.right - rect.left)/2 + rect.left; //Center position of model
-	let originY =  rect.top + 50;
 
-	//Calculates the estimated angle of head rotation according to curser movement. Not fully right, could be a bit unpricise at window edges, espacially at axtreme distance values.
-	if (y > originY) {
-		skeleton.bones[5].rotation.x = 
-		calcAngle(window.innerHeight-originY, m)*
-		degRatio*
-		((y-originY)/(window.innerHeight-originY));
-	} else {
-		skeleton.bones[5].rotation.x = 
-		-calcAngle(originY, m)*
-		degRatio*
-		((originY-y)/originY);
-	}
+	// //Simple version of head calc. Not as good a result
+	skeleton.bones[5].rotation.y = -0.6+(x/originX)*0.6;
+	skeleton.bones[5].rotation.x = -0.05+(y/originY)*0.05;
 
-	if (x > originX) {
-		skeleton.bones[5].rotation.y = 
-		calcAngle(window.innerWidth-originX, m)*
-		degRatio*
-		((x-originX)/(window.innerWidth-originX));
-	} else {
-		skeleton.bones[5].rotation.y = 
-		-calcAngle(originX, m)*
-		degRatio*
-		((originX-x)/originX);
-	}
+	
+	// //Calculates the estimated angle of head rotation according to curser movement
+	// if (y > originY) {
+	// 	skeleton.bones[5].rotation.x = 
+	// 	calcAngle(window.innerHeight-originY, m)*
+	// 	degRatio*
+	// 	((y-originY)/(window.innerHeight-originY));
+	// } else {
+	// 	skeleton.bones[5].rotation.x = 
+	// 	-calcAngle(originY, m)*
+	// 	degRatio*
+	// 	((originY-y)/originY);
+	// }
+
+	// if (x > originX) {
+	// 	skeleton.bones[5].rotation.y = 
+	// 	calcAngle(window.innerWidth-originX, m)*
+	// 	degRatio*
+	// 	((x-originX)/(window.innerWidth-originX));
+	// } else {
+	// 	skeleton.bones[5].rotation.y = 
+	// 	-calcAngle(originX, m)*
+	// 	degRatio*
+	// 	((originX-x)/originX);
+	// }
 }
 
 
@@ -100,8 +95,13 @@ onMount(() => {
 		alpha: true,
 		canvas: document.querySelector('#model')
 	 });
-	 element = document.querySelector('#model');
-	 document.addEventListener("mousemove", e => RotateHead(e.pageX, e.pageY));
+
+	 //Get postition of model
+	 let element = document.querySelector('#model');
+			let rect = element.getBoundingClientRect();
+			originX = (rect.right - rect.left)/2 + rect.left; //Center position of model
+			originY =  rect.top + 50;
+
 	//  //Interactive
 	//  const controls = new OrbitControls( camera,  renderer.domElement);
 	// controls.addEventListener('mousechange', renderer);
@@ -109,6 +109,7 @@ onMount(() => {
 	//Set size and pixel ratio
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( 300, 600 );
+
 	//Load custom object
 	const loader = new GLTFLoader();
 	loader.load( 'assets/Xbot.glb', function ( gltf ) {
@@ -117,14 +118,26 @@ onMount(() => {
 		//Add to scene
 		scene.add( model );
 		model.position.setY(-1);
-
 		//Setup skelton
 		skeleton = new THREE.SkeletonHelper(model);
 		skeleton.visible = false;
 		scene.add( skeleton );
 
+		//Setup animations
+		mixer = new THREE.AnimationMixer( model );
+		//Start hello animation
+		mixer.clipAction(gltf.animations[3]).play(); //Change this to hello animation
+
+		
 		//Call tick function to start animation
 		tick();
+
+		//Add eventlistiner for mouse move and call function to move model head after hello-animation has run
+		setTimeout(() => {
+			mixer.clipAction(gltf.animations[3]).fadeOut(1);
+			 document.addEventListener("mousemove", e => RotateHead(e.pageX, e.pageY));
+		}, 2000);
+
 	}, undefined, function ( error ) {
 		console.error( error );
 	} );
@@ -162,6 +175,7 @@ onMount(() => {
 		justify-content: right;
 		gap: 20px;
 		margin-right: 20px;
+		margin-top: 10px;
 	}
 
 	.content {
