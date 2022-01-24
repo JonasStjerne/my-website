@@ -212,7 +212,7 @@ onMount(() => {
 					</h2>
 				</div>
 				<p class="underText" data-aos="fade-right" data-aos-delay="200" data-aos-duration="800">
-					{#each "Currently studing IT at Aalborg University and working at" as char}
+					{#each "Currently studying IT at Aalborg University and working at" as char}
 						{#if char == " "}
 							&#160
 						{:else}

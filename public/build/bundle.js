@@ -57093,7 +57093,7 @@ var app = (function () {
     			span = element("span");
     			t = text(/*char*/ ctx[14]);
     			attr_dev(span, "class", "svelte-1yum0u0");
-    			add_location(span, file, 218, 7, 8263);
+    			add_location(span, file, 218, 7, 8264);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -57142,7 +57142,7 @@ var app = (function () {
     	return block;
     }
 
-    // (215:5) {#each "Currently studing IT at Aalborg University and working at" as char}
+    // (215:5) {#each "Currently studying IT at Aalborg University and working at" as char}
     function create_each_block_1(ctx) {
     	let if_block_anchor;
 
@@ -57174,7 +57174,7 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(215:5) {#each \\\"Currently studing IT at Aalborg University and working at\\\" as char}",
+    		source: "(215:5) {#each \\\"Currently studying IT at Aalborg University and working at\\\" as char}",
     		ctx
     	});
 
@@ -57191,7 +57191,7 @@ var app = (function () {
     			span = element("span");
     			t = text(/*char*/ ctx[14]);
     			attr_dev(span, "class", "svelte-1yum0u0");
-    			add_location(span, file, 228, 7, 8488);
+    			add_location(span, file, 228, 7, 8489);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -57327,7 +57327,7 @@ var app = (function () {
     		each_blocks_2[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
     	}
 
-    	let each_value_1 = "Currently studing IT at Aalborg University and working at";
+    	let each_value_1 = "Currently studying IT at Aalborg University and working at";
     	validate_each_argument(each_value_1);
     	let each_blocks_1 = [];
 
@@ -57483,7 +57483,7 @@ var app = (function () {
     			attr_dev(div1, "class", "nameContainer svelte-1yum0u0");
     			add_location(div1, file, 202, 4, 7730);
     			attr_dev(a2, "href", "https://openomic.dk/");
-    			add_location(a2, file, 221, 5, 8316);
+    			add_location(a2, file, 221, 5, 8317);
     			attr_dev(p, "class", "underText svelte-1yum0u0");
     			attr_dev(p, "data-aos", "fade-right");
     			attr_dev(p, "data-aos-delay", "200");
@@ -57494,7 +57494,7 @@ var app = (function () {
     			attr_dev(div3, "class", "content svelte-1yum0u0");
     			add_location(div3, file, 199, 2, 7581);
     			attr_dev(canvas, "id", "model");
-    			add_location(canvas, file, 234, 2, 8569);
+    			add_location(canvas, file, 234, 2, 8570);
     			attr_dev(div4, "class", "homeContent svelte-1yum0u0");
     			add_location(div4, file, 198, 1, 7552);
     			add_location(main, file, 163, 0, 4521);
