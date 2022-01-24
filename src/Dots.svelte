@@ -109,7 +109,7 @@ onMount(() => {
 
 
     // ramp up collision strength to provide smooth transition
-  const transitionTime = 3000;
+  const transitionTime = 2500;
   const t = d3.timer((elapsed) => {
     const dt = elapsed / transitionTime;
     simulation.force('collide').strength(Math.pow(dt, 2) * 0.7);
@@ -121,13 +121,6 @@ onMount(() => {
     .attr('width', w )
     .attr('height', h )
 
-    // initialize links
-  link = svg.append("g")
-    .attr("class", "link")
-    .selectAll("line")
-    .data(links)
-    .enter()
-    .append("line");
 
   // initialize node circles
   node = svg
@@ -172,11 +165,6 @@ onMount(() => {
 
  // define tick function
 const ticked = () => {
-  link
-      .attr("x1", d => d.source.x)
-      .attr("y1", d => d.source.y)
-      .attr("x2", d => d.target.x)
-      .attr("y2", d => d.target.y);
 
   node
     .attr("cx", d => getNodeXCoordinate(d.x, d.r) + "px")
@@ -200,8 +188,6 @@ const ticked = () => {
    #mainContainer {
 	text-align: center;
 }
-
-
 
 
 </style>

@@ -39,14 +39,6 @@ var app = (function () {
     function safe_not_equal(a, b) {
         return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
     }
-    let src_url_equal_anchor;
-    function src_url_equal(element_src, url) {
-        if (!src_url_equal_anchor) {
-            src_url_equal_anchor = document.createElement('a');
-        }
-        src_url_equal_anchor.href = url;
-        return element_src === src_url_equal_anchor.href;
-    }
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
     }
@@ -59,6 +51,12 @@ var app = (function () {
     function detach(node) {
         node.parentNode.removeChild(node);
     }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
     function element(name) {
         return document.createElement(name);
     }
@@ -70,6 +68,9 @@ var app = (function () {
     }
     function space() {
         return text(' ');
+    }
+    function empty() {
+        return text('');
     }
     function attr(node, attribute, value) {
         if (value == null)
@@ -360,6 +361,15 @@ var app = (function () {
             dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
         else
             dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
     }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
@@ -56685,10 +56695,10 @@ var app = (function () {
     			div = element("div");
     			svg = svg_element("svg");
     			attr_dev(svg, "id", "svgchart");
-    			add_location(svg, file$1, 195, 4, 5059);
+    			add_location(svg, file$1, 183, 4, 4749);
     			attr_dev(div, "id", "mainContainer");
-    			attr_dev(div, "class", "svelte-ihina6");
-    			add_location(div, file$1, 194, 0, 5029);
+    			attr_dev(div, "class", "svelte-a4r84e");
+    			add_location(div, file$1, 182, 0, 4719);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -56869,7 +56879,7 @@ var app = (function () {
     		force("collide", d3.forceCollide().radius(d => d.r).strength(0));
 
     		// ramp up collision strength to provide smooth transition
-    		const transitionTime = 3000;
+    		const transitionTime = 2500;
 
     		const t = d3.timer(elapsed => {
     			const dt = elapsed / transitionTime;
@@ -56879,9 +56889,6 @@ var app = (function () {
 
     		//initialize svg
     		const svg = d3.select("#svgchart").attr('width', w).attr('height', h);
-
-    		// initialize links
-    		link = svg.append("g").attr("class", "link").selectAll("line").data(links).enter().append("line");
 
     		// initialize node circles
     		node = svg.append("g").attr("class", "node").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.r).attr("fill", d => color(types.indexOf(d.types))).attr("stroke", d => color(types.indexOf(d.types))).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
@@ -56893,7 +56900,6 @@ var app = (function () {
 
     	// define tick function
     	const ticked = () => {
-    		link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
     		node.attr("cx", d => getNodeXCoordinate(d.x, d.r) + "px").attr("cy", d => getNodeYCoordinate(d.y, d.r) + "px");
     		text.attr("x", d => getNodeXCoordinate(d.x, d.r) + "px").attr("y", d => getNodeYCoordinate(d.y, d.r) + 4 + "px");
     	};
@@ -56961,34 +56967,382 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file = "src\\App.svelte";
 
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[14] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[14] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[14] = list[i];
+    	return child_ctx;
+    }
+
+    // (208:7) {:else}
+    function create_else_block_2(ctx) {
+    	let span;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t = text(/*char*/ ctx[14]);
+    			attr_dev(span, "class", "svelte-1yum0u0");
+    			add_location(span, file, 208, 8, 7952);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+    			append_dev(span, t);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2.name,
+    		type: "else",
+    		source: "(208:7) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (206:7) {#if char == " "}
+    function create_if_block_2(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(" ");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(206:7) {#if char == \\\" \\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (205:6) {#each "I'm Jonas" as char}
+    function create_each_block_2(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*char*/ ctx[14] == " ") return create_if_block_2;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(205:6) {#each \\\"I'm Jonas\\\" as char}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (218:6) {:else}
+    function create_else_block_1(ctx) {
+    	let span;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t = text(/*char*/ ctx[14]);
+    			attr_dev(span, "class", "svelte-1yum0u0");
+    			add_location(span, file, 218, 7, 8263);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+    			append_dev(span, t);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(218:6) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (216:6) {#if char == " "}
+    function create_if_block_1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(" ");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(216:6) {#if char == \\\" \\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (215:5) {#each "Currently studing IT at Aalborg University and working at" as char}
+    function create_each_block_1(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*char*/ ctx[14] == " ") return create_if_block_1;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(215:5) {#each \\\"Currently studing IT at Aalborg University and working at\\\" as char}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (228:6) {:else}
+    function create_else_block(ctx) {
+    	let span;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t = text(/*char*/ ctx[14]);
+    			attr_dev(span, "class", "svelte-1yum0u0");
+    			add_location(span, file, 228, 7, 8488);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+    			append_dev(span, t);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(228:6) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (226:6) {#if char == " "}
+    function create_if_block(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(" ");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(226:6) {#if char == \\\" \\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (225:5) {#each "as a full stack developer" as char}
+    function create_each_block(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (/*char*/ ctx[14] == " ") return create_if_block;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_2(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(225:5) {#each \\\"as a full stack developer\\\" as char}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment(ctx) {
     	let main;
     	let div0;
     	let a0;
-    	let img0;
-    	let img0_src_value;
+    	let svg0;
+    	let title0;
     	let t0;
-    	let a1;
-    	let img1;
-    	let img1_src_value;
+    	let g0;
+    	let circle0;
+    	let circle1;
+    	let path0;
     	let t1;
+    	let a1;
+    	let svg1;
+    	let title1;
+    	let t2;
+    	let g1;
+    	let circle2;
+    	let circle3;
+    	let path1;
+    	let t3;
     	let div4;
     	let div3;
     	let div2;
     	let h1;
-    	let t3;
+    	let span0;
+    	let span1;
+    	let t6;
     	let div1;
     	let h2;
-    	let t5;
+    	let t7;
     	let p;
-    	let t6;
-    	let a2;
     	let t8;
-    	let t9;
-    	let canvas;
+    	let a2;
     	let t10;
+    	let t11;
+    	let canvas;
+    	let t12;
     	let dots;
     	let current;
+    	let each_value_2 = "I'm Jonas";
+    	validate_each_argument(each_value_2);
+    	let each_blocks_2 = [];
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks_2[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	let each_value_1 = "Currently studing IT at Aalborg University and working at";
+    	validate_each_argument(each_value_1);
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	let each_value = "as a full stack developer";
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
     	dots = new Dots({ $$inline: true });
 
     	const block = {
@@ -56996,70 +57350,154 @@ var app = (function () {
     			main = element("main");
     			div0 = element("div");
     			a0 = element("a");
-    			img0 = element("img");
-    			t0 = space();
-    			a1 = element("a");
-    			img1 = element("img");
+    			svg0 = svg_element("svg");
+    			title0 = svg_element("title");
+    			t0 = text("github\r\n\t\t\t  ");
+    			g0 = svg_element("g");
+    			circle0 = svg_element("circle");
+    			circle1 = svg_element("circle");
+    			path0 = svg_element("path");
     			t1 = space();
+    			a1 = element("a");
+    			svg1 = svg_element("svg");
+    			title1 = svg_element("title");
+    			t2 = text("linkedin\r\n\t\t\t  ");
+    			g1 = svg_element("g");
+    			circle2 = svg_element("circle");
+    			circle3 = svg_element("circle");
+    			path1 = svg_element("path");
+    			t3 = space();
     			div4 = element("div");
     			div3 = element("div");
     			div2 = element("div");
     			h1 = element("h1");
-    			h1.textContent = "Hi";
-    			t3 = space();
+    			span0 = element("span");
+    			span0.textContent = "H";
+    			span1 = element("span");
+    			span1.textContent = "i";
+    			t6 = space();
     			div1 = element("div");
     			h2 = element("h2");
-    			h2.textContent = "I’m Jonas";
-    			t5 = space();
+
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].c();
+    			}
+
+    			t7 = space();
     			p = element("p");
-    			t6 = text("Currently studing IT at Aalborg University and working at ");
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t8 = space();
     			a2 = element("a");
     			a2.textContent = "Openomic";
-    			t8 = text(" as a full stack developer");
-    			t9 = space();
-    			canvas = element("canvas");
     			t10 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t11 = space();
+    			canvas = element("canvas");
+    			t12 = space();
     			create_component(dots.$$.fragment);
-    			if (!src_url_equal(img0.src, img0_src_value = "assets/github.svg")) attr_dev(img0, "src", img0_src_value);
-    			attr_dev(img0, "alt", "Github logo");
-    			attr_dev(img0, "height", "30");
-    			add_location(img0, file, 150, 3, 4213);
+    			add_location(title0, file, 167, 5, 4738);
+    			attr_dev(circle0, "class", "social-group__outline svelte-1yum0u0");
+    			attr_dev(circle0, "stroke", "#000");
+    			attr_dev(circle0, "stroke-width", "20");
+    			attr_dev(circle0, "cx", "300");
+    			attr_dev(circle0, "cy", "300");
+    			attr_dev(circle0, "r", "262.5");
+    			add_location(circle0, file, 171, 4, 4841);
+    			attr_dev(circle1, "class", "social-group__inner-circle svelte-1yum0u0");
+    			attr_dev(circle1, "fill", "#000");
+    			attr_dev(circle1, "cx", "300");
+    			attr_dev(circle1, "cy", "300");
+    			attr_dev(circle1, "r", "252.5");
+    			add_location(circle1, file, 172, 4, 4947);
+    			attr_dev(path0, "class", "social-group__icon svelte-1yum0u0");
+    			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
+    			attr_dev(path0, "fill", "#FFF");
+    			attr_dev(path0, "fill-rule", "nonzero");
+    			add_location(path0, file, 173, 4, 5038);
+    			attr_dev(g0, "class", "social-group");
+    			attr_dev(g0, "fill", "none");
+    			attr_dev(g0, "fill-rule", "evenodd");
+    			add_location(g0, file, 170, 5, 4779);
+    			attr_dev(svg0, "class", "social-svg svelte-1yum0u0");
+    			attr_dev(svg0, "viewBox", "0 0 600 600");
+    			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
+    			add_location(svg0, file, 166, 3, 4650);
+    			attr_dev(a0, "class", "social-link social-link--github svelte-1yum0u0");
+    			attr_dev(a0, "id", "github");
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 149, 2, 4166);
-    			if (!src_url_equal(img1.src, img1_src_value = "assets/linkedin.svg")) attr_dev(img1, "src", img1_src_value);
-    			attr_dev(img1, "alt", "Github logo");
-    			attr_dev(img1, "height", "30");
-    			add_location(img1, file, 153, 3, 4352);
+    			add_location(a0, file, 165, 2, 4551);
+    			add_location(title1, file, 180, 5, 6398);
+    			attr_dev(circle2, "class", "social-group__outline svelte-1yum0u0");
+    			attr_dev(circle2, "stroke", "#000");
+    			attr_dev(circle2, "stroke-width", "20");
+    			attr_dev(circle2, "cx", "300");
+    			attr_dev(circle2, "cy", "300");
+    			attr_dev(circle2, "r", "262.5");
+    			add_location(circle2, file, 184, 4, 6503);
+    			attr_dev(circle3, "class", "social-group__inner-circle svelte-1yum0u0");
+    			attr_dev(circle3, "fill", "#2D76B0");
+    			attr_dev(circle3, "cx", "300");
+    			attr_dev(circle3, "cy", "300");
+    			attr_dev(circle3, "r", "252.5");
+    			add_location(circle3, file, 185, 4, 6609);
+    			attr_dev(path1, "class", "social-group__icon svelte-1yum0u0");
+    			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
+    			attr_dev(path1, "fill", "#000");
+    			attr_dev(path1, "fill-rule", "nonzero");
+    			add_location(path1, file, 186, 4, 6703);
+    			attr_dev(g1, "class", "social-group");
+    			attr_dev(g1, "fill", "none");
+    			attr_dev(g1, "fill-rule", "evenodd");
+    			add_location(g1, file, 183, 5, 6441);
+    			attr_dev(svg1, "class", "social-svg svelte-1yum0u0");
+    			attr_dev(svg1, "viewBox", "0 0 600 600");
+    			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
+    			add_location(svg1, file, 179, 3, 6310);
+    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-1yum0u0");
+    			attr_dev(a1, "id", "linkedin");
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 152, 2, 4284);
+    			add_location(a1, file, 178, 2, 6186);
     			attr_dev(div0, "id", "header");
-    			attr_dev(div0, "class", "svelte-fpy5lw");
-    			add_location(div0, file, 148, 1, 4145);
+    			attr_dev(div0, "class", "svelte-1yum0u0");
+    			add_location(div0, file, 164, 1, 4530);
+    			attr_dev(span0, "class", "svelte-1yum0u0");
+    			add_location(span0, file, 201, 54, 7691);
+    			attr_dev(span1, "class", "svelte-1yum0u0");
+    			add_location(span1, file, 201, 68, 7705);
     			attr_dev(h1, "data-aos", "fade-right");
     			attr_dev(h1, "data-aos-duration", "800");
-    			add_location(h1, file, 159, 4, 4522);
-    			attr_dev(h2, "class", "nameEl svelte-fpy5lw");
-    			add_location(h2, file, 161, 5, 4686);
+    			add_location(h1, file, 201, 4, 7641);
+    			attr_dev(h2, "class", "nameEl svelte-1yum0u0");
+    			add_location(h2, file, 203, 5, 7831);
     			attr_dev(div1, "data-aos", "fade-right");
     			attr_dev(div1, "data-aos-delay", "100");
     			attr_dev(div1, "data-aos-duration", "800");
-    			attr_dev(div1, "class", "nameContainer svelte-fpy5lw");
-    			add_location(div1, file, 160, 4, 4585);
+    			attr_dev(div1, "class", "nameContainer svelte-1yum0u0");
+    			add_location(div1, file, 202, 4, 7730);
     			attr_dev(a2, "href", "https://openomic.dk/");
-    			add_location(a2, file, 163, 132, 4866);
+    			add_location(a2, file, 221, 5, 8316);
+    			attr_dev(p, "class", "underText svelte-1yum0u0");
     			attr_dev(p, "data-aos", "fade-right");
     			attr_dev(p, "data-aos-delay", "200");
     			attr_dev(p, "data-aos-duration", "800");
-    			add_location(p, file, 163, 4, 4738);
-    			attr_dev(div2, "class", "introContainer svelte-fpy5lw");
-    			add_location(div2, file, 158, 3, 4488);
-    			attr_dev(div3, "class", "content svelte-fpy5lw");
-    			add_location(div3, file, 157, 2, 4462);
+    			add_location(p, file, 213, 4, 8030);
+    			attr_dev(div2, "class", "introContainer svelte-1yum0u0");
+    			add_location(div2, file, 200, 3, 7607);
+    			attr_dev(div3, "class", "content svelte-1yum0u0");
+    			add_location(div3, file, 199, 2, 7581);
     			attr_dev(canvas, "id", "model");
-    			add_location(canvas, file, 166, 2, 4964);
-    			attr_dev(div4, "class", "homeContent svelte-fpy5lw");
-    			add_location(div4, file, 156, 1, 4433);
-    			add_location(main, file, 147, 0, 4136);
+    			add_location(canvas, file, 234, 2, 8569);
+    			attr_dev(div4, "class", "homeContent svelte-1yum0u0");
+    			add_location(div4, file, 198, 1, 7552);
+    			add_location(main, file, 163, 0, 4521);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57068,26 +57506,55 @@ var app = (function () {
     			insert_dev(target, main, anchor);
     			append_dev(main, div0);
     			append_dev(div0, a0);
-    			append_dev(a0, img0);
-    			append_dev(div0, t0);
+    			append_dev(a0, svg0);
+    			append_dev(svg0, title0);
+    			append_dev(title0, t0);
+    			append_dev(svg0, g0);
+    			append_dev(g0, circle0);
+    			append_dev(g0, circle1);
+    			append_dev(g0, path0);
+    			append_dev(div0, t1);
     			append_dev(div0, a1);
-    			append_dev(a1, img1);
-    			append_dev(main, t1);
+    			append_dev(a1, svg1);
+    			append_dev(svg1, title1);
+    			append_dev(title1, t2);
+    			append_dev(svg1, g1);
+    			append_dev(g1, circle2);
+    			append_dev(g1, circle3);
+    			append_dev(g1, path1);
+    			append_dev(main, t3);
     			append_dev(main, div4);
     			append_dev(div4, div3);
     			append_dev(div3, div2);
     			append_dev(div2, h1);
-    			append_dev(div2, t3);
+    			append_dev(h1, span0);
+    			append_dev(h1, span1);
+    			append_dev(div2, t6);
     			append_dev(div2, div1);
     			append_dev(div1, h2);
-    			append_dev(div2, t5);
+
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].m(h2, null);
+    			}
+
+    			append_dev(div2, t7);
     			append_dev(div2, p);
-    			append_dev(p, t6);
-    			append_dev(p, a2);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(p, null);
+    			}
+
     			append_dev(p, t8);
-    			append_dev(div4, t9);
+    			append_dev(p, a2);
+    			append_dev(p, t10);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(p, null);
+    			}
+
+    			append_dev(div4, t11);
     			append_dev(div4, canvas);
-    			append_dev(main, t10);
+    			append_dev(main, t12);
     			mount_component(dots, main, null);
     			current = true;
     		},
@@ -57103,6 +57570,9 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
+    			destroy_each(each_blocks_2, detaching);
+    			destroy_each(each_blocks_1, detaching);
+    			destroy_each(each_blocks, detaching);
     			destroy_component(dots);
     		}
     	};
@@ -57226,7 +57696,6 @@ var app = (function () {
     		loader.load(
     			'assets/Xbot.glb',
     			function (gltf) {
-    				console.log("Load2");
     				model = gltf.scene;
 
     				//Add to scene
@@ -57263,6 +57732,19 @@ var app = (function () {
     				console.error(error);
     			}
     		);
+
+    		//Animation hover effect
+    		const elements = document.querySelectorAll('span');
+
+    		for (let i = 0; i < elements.length; i++) {
+    			elements[i].addEventListener('animationend', function (e) {
+    				elements[i].classList.remove('animate__rubberBand');
+    			});
+
+    			elements[i].addEventListener('mouseover', function (e) {
+    				elements[i].classList.add('animate__rubberBand');
+    			});
+    		}
     	});
 
     	const writable_props = [];
