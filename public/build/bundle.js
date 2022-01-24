@@ -56967,25 +56967,53 @@ var app = (function () {
     const file$2 = "src\\MeModel.svelte";
 
     function create_fragment$2(ctx) {
+    	let div2;
+    	let div0;
     	let canvas;
+    	let t;
+    	let div1;
 
     	const block = {
     		c: function create() {
+    			div2 = element("div");
+    			div0 = element("div");
     			canvas = element("canvas");
+    			t = space();
+    			div1 = element("div");
     			attr_dev(canvas, "id", "model");
-    			add_location(canvas, file$2, 145, 4, 4905);
+    			add_location(canvas, file$2, 148, 12, 5016);
+    			attr_dev(div0, "class", "maskWindow svelte-zzdjb0");
+    			add_location(div0, file$2, 147, 8, 4978);
+    			attr_dev(div1, "class", "modelWindow svelte-zzdjb0");
+    			set_style(div1, "height", /*w*/ ctx[0] - /*w*/ ctx[0] / 3 + "px");
+    			set_style(div1, "width", /*w*/ ctx[0] - /*w*/ ctx[0] / 3 + "px");
+    			add_location(div1, file$2, 150, 8, 5070);
+    			attr_dev(div2, "class", "position-relative");
+    			add_location(div2, file$2, 146, 4, 4937);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, canvas, anchor);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div0);
+    			append_dev(div0, canvas);
+    			append_dev(div2, t);
+    			append_dev(div2, div1);
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*w*/ 1) {
+    				set_style(div1, "height", /*w*/ ctx[0] - /*w*/ ctx[0] / 3 + "px");
+    			}
+
+    			if (dirty & /*w*/ 1) {
+    				set_style(div1, "width", /*w*/ ctx[0] - /*w*/ ctx[0] / 3 + "px");
+    			}
+    		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(canvas);
+    			if (detaching) detach_dev(div2);
     		}
     	};
 
@@ -57007,7 +57035,7 @@ var app = (function () {
     function instance$2($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('MeModel', slots, []);
-    	let originY, originX;
+    	let originY, originX, w, h;
 
     	//Define clock from three.js
     	const clock = new Clock();
@@ -57096,9 +57124,11 @@ var app = (function () {
     		//  const controls = new OrbitControls( camera,  renderer.domElement);
     		// controls.addEventListener('mousechange', renderer);
     		//Set size and pixel ratio
-    		renderer.setPixelRatio(window.devicePixelRatio);
+    		$$invalidate(0, w = 300);
 
-    		renderer.setSize(300, 600);
+    		h = 600;
+    		renderer.setPixelRatio(window.devicePixelRatio);
+    		renderer.setSize(w, h);
 
     		//Load custom object
     		const loader = new GLTFLoader();
@@ -57157,6 +57187,8 @@ var app = (function () {
     		OrbitControls,
     		originY,
     		originX,
+    		w,
+    		h,
     		clock,
     		model,
     		skeleton,
@@ -57175,6 +57207,8 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('originY' in $$props) originY = $$props.originY;
     		if ('originX' in $$props) originX = $$props.originX;
+    		if ('w' in $$props) $$invalidate(0, w = $$props.w);
+    		if ('h' in $$props) h = $$props.h;
     		if ('model' in $$props) model = $$props.model;
     		if ('skeleton' in $$props) skeleton = $$props.skeleton;
     		if ('renderer' in $$props) renderer = $$props.renderer;
@@ -57187,7 +57221,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [];
+    	return [w];
     }
 
     class MeModel extends SvelteComponentDev {
@@ -57491,7 +57525,7 @@ var app = (function () {
     			span = element("span");
     			t = text(/*char*/ ctx[0]);
     			attr_dev(span, "class", "svelte-1s399ea");
-    			add_location(span, file, 82, 9, 4544);
+    			add_location(span, file, 82, 9, 4541);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -57690,112 +57724,112 @@ var app = (function () {
     			t10 = space();
     			div6 = element("div");
     			h21 = element("h2");
-    			h21.textContent = "I love learning new technologies and comming up with new great software ideas";
+    			h21.textContent = "I love learning new technologies and comming up with new software ideas";
     			t12 = space();
     			create_component(skills.$$.fragment);
     			t13 = space();
     			create_component(projectcard.$$.fragment);
-    			add_location(title0, file, 41, 4, 1284);
+    			add_location(title0, file, 41, 4, 1281);
     			attr_dev(circle0, "class", "social-group__outline svelte-1s399ea");
     			attr_dev(circle0, "stroke", "#000");
     			attr_dev(circle0, "stroke-width", "20");
     			attr_dev(circle0, "cx", "300");
     			attr_dev(circle0, "cy", "300");
     			attr_dev(circle0, "r", "262.5");
-    			add_location(circle0, file, 45, 5, 1387);
+    			add_location(circle0, file, 45, 5, 1384);
     			attr_dev(circle1, "class", "social-group__inner-circle svelte-1s399ea");
     			attr_dev(circle1, "fill", "#000");
     			attr_dev(circle1, "cx", "300");
     			attr_dev(circle1, "cy", "300");
     			attr_dev(circle1, "r", "252.5");
-    			add_location(circle1, file, 46, 5, 1494);
+    			add_location(circle1, file, 46, 5, 1491);
     			attr_dev(path0, "class", "social-group__icon svelte-1s399ea");
     			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
     			attr_dev(path0, "fill", "#FFF");
     			attr_dev(path0, "fill-rule", "nonzero");
-    			add_location(path0, file, 47, 5, 1586);
+    			add_location(path0, file, 47, 5, 1583);
     			attr_dev(g0, "class", "social-group");
     			attr_dev(g0, "fill", "none");
     			attr_dev(g0, "fill-rule", "evenodd");
-    			add_location(g0, file, 44, 4, 1324);
+    			add_location(g0, file, 44, 4, 1321);
     			attr_dev(svg0, "class", "social-svg svelte-1s399ea");
     			attr_dev(svg0, "viewBox", "0 0 600 600");
     			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg0, file, 40, 4, 1197);
+    			add_location(svg0, file, 40, 4, 1194);
     			attr_dev(a0, "class", "social-link social-link--github svelte-1s399ea");
     			attr_dev(a0, "id", "github");
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 39, 3, 1097);
-    			add_location(title1, file, 54, 4, 2947);
+    			add_location(a0, file, 39, 3, 1094);
+    			add_location(title1, file, 54, 4, 2944);
     			attr_dev(circle2, "class", "social-group__outline svelte-1s399ea");
     			attr_dev(circle2, "stroke", "#000");
     			attr_dev(circle2, "stroke-width", "20");
     			attr_dev(circle2, "cx", "300");
     			attr_dev(circle2, "cy", "300");
     			attr_dev(circle2, "r", "262.5");
-    			add_location(circle2, file, 58, 5, 3052);
+    			add_location(circle2, file, 58, 5, 3049);
     			attr_dev(circle3, "class", "social-group__inner-circle svelte-1s399ea");
     			attr_dev(circle3, "fill", "#2D76B0");
     			attr_dev(circle3, "cx", "300");
     			attr_dev(circle3, "cy", "300");
     			attr_dev(circle3, "r", "252.5");
-    			add_location(circle3, file, 59, 5, 3159);
+    			add_location(circle3, file, 59, 5, 3156);
     			attr_dev(path1, "class", "social-group__icon svelte-1s399ea");
     			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
     			attr_dev(path1, "fill", "#000");
     			attr_dev(path1, "fill-rule", "nonzero");
-    			add_location(path1, file, 60, 5, 3254);
+    			add_location(path1, file, 60, 5, 3251);
     			attr_dev(g1, "class", "social-group");
     			attr_dev(g1, "fill", "none");
     			attr_dev(g1, "fill-rule", "evenodd");
-    			add_location(g1, file, 57, 4, 2989);
+    			add_location(g1, file, 57, 4, 2986);
     			attr_dev(svg1, "class", "social-svg svelte-1s399ea");
     			attr_dev(svg1, "viewBox", "0 0 600 600");
     			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg1, file, 53, 4, 2860);
+    			add_location(svg1, file, 53, 4, 2857);
     			attr_dev(a1, "class", "social-link social-link--linkedin svelte-1s399ea");
     			attr_dev(a1, "id", "linkedin");
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 52, 3, 2735);
+    			add_location(a1, file, 52, 3, 2732);
     			attr_dev(div0, "id", "header");
     			attr_dev(div0, "class", "svelte-1s399ea");
-    			add_location(div0, file, 38, 2, 1075);
+    			add_location(div0, file, 38, 2, 1072);
     			attr_dev(span0, "class", "svelte-1s399ea");
-    			add_location(span0, file, 75, 55, 4251);
+    			add_location(span0, file, 75, 55, 4248);
     			attr_dev(span1, "class", "svelte-1s399ea");
-    			add_location(span1, file, 75, 69, 4265);
+    			add_location(span1, file, 75, 69, 4262);
     			attr_dev(h1, "data-aos", "fade-right");
     			attr_dev(h1, "data-aos-duration", "800");
-    			add_location(h1, file, 75, 5, 4201);
+    			add_location(h1, file, 75, 5, 4198);
     			attr_dev(h20, "class", "nameEl font-weight-bold svelte-1s399ea");
-    			add_location(h20, file, 77, 6, 4401);
+    			add_location(h20, file, 77, 6, 4398);
     			attr_dev(div1, "data-aos", "fade-right");
     			attr_dev(div1, "data-aos-delay", "100");
     			attr_dev(div1, "data-aos-duration", "800");
     			attr_dev(div1, "class", "nameContainer rounded svelte-1s399ea");
-    			add_location(div1, file, 76, 5, 4291);
+    			add_location(div1, file, 76, 5, 4288);
     			attr_dev(p, "class", "underText svelte-1s399ea");
     			attr_dev(p, "data-aos", "fade-right");
     			attr_dev(p, "data-aos-delay", "200");
     			attr_dev(p, "data-aos-duration", "800");
-    			add_location(p, file, 87, 5, 4627);
+    			add_location(p, file, 87, 5, 4624);
     			attr_dev(div2, "class", "introContainer svelte-1s399ea");
-    			add_location(div2, file, 74, 4, 4166);
+    			add_location(div2, file, 74, 4, 4163);
     			attr_dev(div3, "class", "content svelte-1s399ea");
-    			add_location(div3, file, 73, 3, 4139);
+    			add_location(div3, file, 73, 3, 4136);
     			attr_dev(div4, "class", "homeContent svelte-1s399ea");
-    			add_location(div4, file, 72, 2, 4109);
+    			add_location(div4, file, 72, 2, 4106);
     			attr_dev(div5, "class", "bg-image");
     			set_style(div5, "background-image", "url('assets/wave.png')");
     			set_style(div5, "background-repeat", "no-repeat");
-    			add_location(div5, file, 36, 1, 966);
+    			add_location(div5, file, 36, 1, 963);
     			attr_dev(h21, "data-aos", "fade-in");
     			attr_dev(h21, "data-aos-duration", "800");
     			attr_dev(h21, "class", "svelte-1s399ea");
-    			add_location(h21, file, 113, 2, 5347);
+    			add_location(h21, file, 113, 2, 5344);
     			attr_dev(div6, "class", "skillsContainer svelte-1s399ea");
-    			add_location(div6, file, 112, 1, 5314);
-    			add_location(main, file, 35, 0, 957);
+    			add_location(div6, file, 112, 1, 5311);
+    			add_location(main, file, 35, 0, 954);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

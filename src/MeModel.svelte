@@ -5,7 +5,7 @@
     import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
     
     
-    let originY, originX;
+    let originY, originX, w, h;
     
     //Define clock from three.js
     const clock = new THREE.Clock();
@@ -104,8 +104,10 @@
         // controls.addEventListener('mousechange', renderer);
     
         //Set size and pixel ratio
+        w = 300;
+        h = 600;
         renderer.setPixelRatio( window.devicePixelRatio );
-        renderer.setSize( 300, 600 );
+        renderer.setSize( w, h );
     
         //Load custom object
         const loader = new GLTFLoader();
@@ -142,8 +144,33 @@
     })
     
     </script>
-    
-    <canvas id="model"></canvas>
+    <div class="position-relative">
+        <div class="maskWindow">
+            <canvas id="model"></canvas>
+        </div>
+        <div class="modelWindow" style="height: {w-w/3}px; width: {w-w/3}px;"></div>
+    </div>
 
+   <style>
+       .modelWindow {
+           background-image: var(--gradient);
+           position: absolute;
+           top: 0%;
+           transform: translate(-50%, -50%) rotate(45deg);
+           z-index: -1;
+           border-radius: 5px;
+           left: 50%;
+           top: 34%;
+       }
+
+       .maskWindow {
+        -webkit-mask-image: url("/assets/modelMask.png");
+        mask-image: url("assets/modelMask.png");
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;  
+       }
+
+
+   </style>
 
     

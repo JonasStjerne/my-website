@@ -6,7 +6,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as AOS from 'aos';
 import "../node_modules/aos/dist/aos.css";
 import 'animate.css';
-// import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
@@ -111,7 +111,7 @@ onMount(() => {
 		</div>
 	</div>
 	<div class="skillsContainer">
-		<h2 data-aos="fade-in" data-aos-duration="800">I love learning new technologies and comming up with new great software ideas</h2>
+		<h2 data-aos="fade-in" data-aos-duration="800">I love learning new technologies and comming up with new software ideas</h2>
 		<Skills/>
 	</div>
 	<ProjectCard Title={"Test Tilte"} Text={"Test text"} Tech={"Test tech"} ImgSrc={"assets/projectImages/Chatter.png"}/>
