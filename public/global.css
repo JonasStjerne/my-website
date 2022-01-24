@@ -23,18 +23,11 @@ body {
 	color: var(--mainColor);
 	background-color: #FBFBFB;
 	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 h1 {
-	font-size: 3em;
-}
-
-h2 {
-	font-size: 2em;
-}
-p {
-	font-size: 1em;
+	font-weight: 900 !important;
+	margin: 0 !important;
 }
 
 a {

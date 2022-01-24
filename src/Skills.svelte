@@ -5,35 +5,27 @@
    const data = {
   "nodes": [
     {"text": "Angular", "r": "40", "types": "Framework"},
-    {"text": "Svelte","r": "40", "types": "Framework"},
     {"text": "Vue","r": "40", "types": "Framework"},
     {"text": "JavaScript", "r": "50", "types": "Language"},
-    {"text": "TypeScript", "r": "45", "types": "Language"},
-    {"text": "Node.js", "r": "35", "types": "Language"},
-    {"text": "C#", "r": "50", "types": "Language"},
+    {"text": "C#", "r": "40", "types": "Language"},
     {"text": "PHP", "r": "40", "types": "Language"},
     {"text": "MySQL","r": "30", "types": "Database"},
-    {"text": "RPA","r": "30", "types": "RPA"},
     {"text": "Git","r": "25", "types": "Source Control"},
-    {"text": "AdobeXD","r": "40", "types": "Design"},
     {"text": "Figma","r": "35", "types": "Design"},
     {"text": ".Net Core","r": "40", "types": ".Net"},
     {"text": "Blazor","r": "35", "types": ".Net"},
+    {"text": "Node.js","r": "35", "types": "RPA"},
   ],
   "links": [
     { "target": 1, "source": 0 },
     { "target": 2, "source": 1 },
     { "target": 2, "source": 0 },
     { "target": 4, "source": 3 },
-    { "target": 5, "source": 3 },
-    { "target": 6, "source": 3 },
-    { "target": 13, "source": 6 },
-    { "target": 14, "source": 6 },
-    { "target": 3, "source": 7 },
-    { "target": 6, "source": 7 },
-    { "target": 12, "source": 11 },
-    { "target": 13, "source": 14 },
-    { "target": 1, "source": 3 },
+    { "target": 3, "source": 2 },
+    { "target": 4, "source": 2 },
+    { "target": 3, "source": 8 },
+    { "target": 8, "source": 9 },
+    { "target": 2, "source": 10 }
   ]
 }
 
@@ -85,8 +77,8 @@ function getNodeYCoordinate(y, r) {
     return Math.max(r, Math.min(h - r, y));
 }
 onMount(() => {
-  w = document.body.clientWidth;
-  h = 500;
+  w = document.querySelector("#svgchart").clientWidth;
+  h = document.querySelector("#svgchart").clientHeight;
 
   // initialize simulation
   simulation = d3.forceSimulation()
@@ -117,9 +109,7 @@ onMount(() => {
   });
 
   //initialize svg
-  const svg = d3.select("#svgchart")
-    .attr('width', w )
-    .attr('height', h )
+  const svg = d3.select("#svgchart");
 
 
   // initialize node circles
@@ -179,15 +169,19 @@ const ticked = () => {
 
 
 </script>
-
 <div id='mainContainer'>
     <svg id="svgchart"></svg>
 </div>
 
 <style>
    #mainContainer {
-	text-align: center;
-}
+	  text-align: center;
+    width: 100%;
+  }
 
+  #svgchart {
+    width: 100%;
+    height: 500px;
+  }
 
 </style>
