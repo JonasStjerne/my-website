@@ -9,6 +9,7 @@ import 'animate.css';
 
 import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
+import ProjectCard from './ProjectCard.svelte';
 
 
 onMount(() => {
@@ -106,6 +107,7 @@ onMount(() => {
 		<MeModel/>
 	</div>
 	<Skills/>
+	<ProjectCard Title={"Test Tilte"} Text={"Test text"} Tech={"Test tech"} ImgSrc={"assets/projectImages/Chatter.png"}/>
 </main>
 
 <style>
@@ -116,12 +118,23 @@ onMount(() => {
 		display: inline-block;
 	}
 
+	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 5vh;
+	}
+
 	#header {
 		display: flex;
 		justify-content: right;
 		gap: 20px;
-		margin-right: 20px;
-		margin-top: 10px;
+		width: 100%;
+		padding-top: 10px;
+	}
+
+	#header > :last-child{
+		padding-right: 20px;
 	}
 
 	.content {
@@ -158,42 +171,42 @@ onMount(() => {
 	}
 
 	.social-link--linkedin {
-	color: #2d76b0;
+		color: #2d76b0;
 	}
 	.social-link--github {
-	color: #000;
+		color: #000;
 	}
 
 	.social-link .social-svg {
-	width: 3rem;
-	height: 3rem;
+		width: 3rem;
+		height: 3rem;
 	}
 	.social-link .social-svg .social-group__icon {
-	fill: #191308;
-	transition: all 0.2s;
+		fill: #191308;
+		transition: all 0.2s;
 	}
 	.social-link .social-svg .social-group__inner-circle {
-	fill: transparent;
-	transition: all 0.2s;
+		fill: transparent;
+		transition: all 0.2s;
 	}
 	.social-link .social-svg .social-group__outline {
-	stroke: #191308;
-	transform-origin: 50% 50%;
-	transition: all 0.2s;
+		stroke: #191308;
+		transform-origin: 50% 50%;
+		transition: all 0.2s;
 	}
 	.social-link .social-svg:hover .social-group__icon, .social-link .social-svg:active .social-group__icon, .social-link .social-svg:focus .social-group__icon {
-	fill: #FFFBFA;
-	transition: all 0.45s;
+		fill: #FFFBFA;
+		transition: all 0.45s;
 	}
 	.social-link .social-svg:hover .social-group__inner-circle, .social-link .social-svg:active .social-group__inner-circle, .social-link .social-svg:focus .social-group__inner-circle {
-	fill: currentColor;
-	transition: all 0.45s;
+		fill: currentColor;
+		transition: all 0.45s;
 	}
 
 	.social-link .social-svg:hover .social-group__outline, .social-link .social-svg:active .social-group__outline, .social-link .social-svg:focus .social-group__outline {
-	stroke: currentColor;
-	transform: scale(1.1);
-	transition: all 0.45s;
+		stroke: currentColor;
+		transform: scale(1.1);
+		transition: all 0.45s;
 	}
 </style>
 
