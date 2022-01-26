@@ -160,7 +160,7 @@
            z-index: -1;
            border-radius: 5px;
            left: 50%;
-           top: 34%;
+           top: 204px;
        }
 
        .maskWindow {
