@@ -56837,10 +56837,10 @@ var app = (function () {
     			svg = svg_element("svg");
     			attr_dev(svg, "id", "svgchart");
     			attr_dev(svg, "class", "svelte-teck90");
-    			add_location(svg, file$3, 215, 4, 6403);
+    			add_location(svg, file$3, 214, 4, 6367);
     			attr_dev(div, "id", "mainContainer");
     			attr_dev(div, "class", "svelte-teck90");
-    			add_location(div, file$3, 214, 0, 6373);
+    			add_location(div, file$3, 213, 0, 6337);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57047,7 +57047,10 @@ var app = (function () {
     		const svg = d3.select("#svgchart");
 
     		// initialize node circles
-    		node = svg.append("g").attr("class", "node").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.r).attr("fill", d => "url(#gradient" + d.id + ")").attr("cx", d => d.initialX + "px").attr("cy", d => d.initialY + "px").call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+    		node = svg.append("g").attr("class", "node").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.r).attr("fill", d => "url(#gradient" + d.id + ")").each(function (d) {
+    			d.x = w / 2;
+    			d.y = h / 2;
+    		}).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
 
     		//Initialize text
     		text = svg.append("g").attr("class", "textBoxes noselect").selectAll("text").data(nodes).enter().append("text").attr('text-anchor', "middle").text(d => d.text).attr('color', 'black').attr('font-size', 15).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
