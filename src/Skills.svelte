@@ -1,20 +1,22 @@
 <script>
   import { onMount } from "svelte";
-
-  let link, node, text, h, w, simulation;
+  import Gradient from "javascript-color-gradient";
+  const colorGradient = new Gradient();
+  
+  let link, node, text, h, w, simulation, grade;
    const data = {
   "nodes": [
-    {"text": "Angular", "r": "40", "types": "Framework"},
-    {"text": "Vue","r": "40", "types": "Framework"},
-    {"text": "JavaScript", "r": "50", "types": "Language"},
-    {"text": "C#", "r": "40", "types": "Language"},
-    {"text": "PHP", "r": "40", "types": "Language"},
-    {"text": "MySQL","r": "30", "types": "Database"},
-    {"text": "Git","r": "25", "types": "Source Control"},
-    {"text": "Figma","r": "35", "types": "Design"},
-    {"text": ".Net Core","r": "40", "types": ".Net"},
-    {"text": "Blazor","r": "35", "types": ".Net"},
-    {"text": "Node.js","r": "35", "types": "RPA"},
+    {"id" : 0, "text": "Angular", "r": "40", "types": "Framework", "initialX" : "345.31596164743587", "initialY" : "189.15349152740902"},
+    {"id" : 1, "text": "Vue","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    {"id" : 3, "text": "JavaScript", "r": "50", "types": "Language", "initialX" : "270.43616060491706", "initialY" : "239.08718406127946"},
+    {"id" : 4, "text": "C#", "r": "40", "types": "Language", "initialX" : "298.3934782289567", "initialY" : "324.5876401317703"},
+    {"id" : 5, "text": "PHP", "r": "40", "types": "Language", "initialX" : "219.26882601831906", "initialY" : "313.0955897542832"},
+    {"id" : 6, "text": "MySQL","r": "30", "types": "Database", "initialX" : "407.35532205082353", "initialY" : "221.56284590239827"},
+    {"id" : 7, "text": "Git","r": "25", "types": "Source Control", "initialX" : "307.8295090235146", "initialY" : "388.89348650755284"},
+    {"id" : 8, "text": "Figma","r": "35", "types": "Design", "initialX" : "212.45022640388", "initialY" : "176.95100030647427"},
+    {"id" : 9, "text": ".Net Core","r": "40", "types": ".Net", "initialX" : "375.42842288639594", "initialY" : "1345.9764636192515"},
+    {"id" : 10, "text": "Blazor","r": "35", "types": ".Net", "initialX" : "426.8418927251777", "initialY" : "291.401994824919"},
+    {"id" : 11, "text": "Node.js","r": "35", "types": "RPA", "initialX" : "278.7683508949712", "initialY" : "154.55739227994252"},
   ],
   "links": [
     { "target": 1, "source": 0 },
@@ -100,7 +102,7 @@ onMount(() => {
     .force("collide", d3.forceCollide().radius(d => d.r).strength(0));
 
 
-    // ramp up collision strength to provide smooth transition
+    //ramp up collision strength to provide smooth transition
   const transitionTime = 2500;
   const t = d3.timer((elapsed) => {
     const dt = elapsed / transitionTime;
@@ -120,13 +122,15 @@ onMount(() => {
     .data(nodes)
     .enter().append("circle")
       .attr("r", d => d.r)
-      .attr("fill", d => color(types.indexOf(d.types)))
-      .attr("stroke", d => color(types.indexOf(d.types)))
+      .attr("fill", d => "url(#gradient" + d.id +")")
+      .attr("cx", d => d.initialX + "px")
+      .attr("cy", d => d.initialY + "px")
       .call(d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended));
 
+//Initialize text
   text = svg
     .append("g")
     .attr("class", "textBoxes noselect")
@@ -142,6 +146,34 @@ onMount(() => {
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended));
+
+  //Set gradient colors
+  const color1 = "#FF9900";
+  const color2 = "#FF00A8";
+  colorGradient.setGradient(color1, color2);
+  
+
+  //Make a linearGradient for each node
+  grade = svg
+    .append("defs")
+    .selectAll("linearGradient")
+    .data(nodes)
+    .enter();
+
+    grade
+    .append("linearGradient")
+    .attr("id", d => "gradient" + d.id)
+    .append("stop")
+      .attr("stop-color", "rgba(255, 153, 0, 1)")
+      .attr("offset", "0%")
+      .attr("class", "startGrade")
+    
+    svg.selectAll("linearGradient")
+    .append("stop")
+      .attr("stop-color", "rgba(255, 0, 168, 1)")
+      .attr("offset", "100%")
+      .attr("class", "endGrade")
+
 
   simulation
     .nodes(nodes)
@@ -163,6 +195,17 @@ const ticked = () => {
   text
     .attr("x", d => getNodeXCoordinate(d.x, d.r) + "px")
     .attr("y", d => getNodeYCoordinate(d.y, d.r) + 4 +"px");
+
+
+//Update node color according to pos
+  grade
+  .selectAll(".startGrade")
+    .attr("stop-color", d => colorGradient.getColor( Math.max(0.1, ((d.x-d.r)/w)*10 )) );
+    
+  grade
+  .selectAll(".endGrade")
+    .attr("stop-color", d => colorGradient.getColor( Math.max(0.1, ((d.x+d.r)/w)*10 )));
+    
 
 }
 

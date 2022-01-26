@@ -56701,6 +56701,129 @@ var app = (function () {
         'default': aos$1
     }, [aos]));
 
+    class Gradient {
+        constructor(gradients = '', maxNum = 10, colors = ['', ''], intervals = []) {
+
+            const setColors = props => {
+                if (props.length < 2) {
+                    throw new Error(`setGradient should have more than ${props.length} color`);
+                } else {
+                    let increment = maxNum / (props.length - 1);
+                    let firstGradient = new GradientColor();
+                    let lower = 0;
+                    let upper = 0 + increment;
+                    firstGradient.setGradient(props[0], props[1]);
+                    firstGradient.setMidpoint(lower, upper);
+                    gradients = [firstGradient];
+                    intervals = [{
+                        lower,
+                        upper
+                    }];
+
+                    for (let i = 1; i < props.length - 1; i++) {
+                        let gradientColor = new GradientColor();
+                        let lower = 0 + increment * i;
+                        let upper = 0 + increment * (i + 1);
+                        gradientColor.setGradient(props[i], props[i + 1]);
+                        gradientColor.setMidpoint(lower, upper);
+                        gradients[i] = gradientColor;
+                        intervals[i] = {
+                            lower,
+                            upper
+                        };
+                    }
+                    colors = props;
+                }
+            };
+
+            this.setGradient = (...props) => {
+                setColors(props);
+                return this;
+            };
+
+            this.getArray = () => {
+                let gradientArray = [];
+                for (let j = 0; j < intervals.length; j++) {
+                    const interval = intervals[j];
+                    const start = interval.lower === 0 ? 1 : Math.ceil(interval.lower);
+                    const end = interval.upper === maxNum ? interval.upper + 1 : Math.ceil(interval.upper);
+                    for (let i = start; i < end; i++) {
+                        gradientArray.push(gradients[j].getColor(i));
+                    }
+                }
+                return gradientArray;
+            };
+
+            this.getColor = props => {
+                if (isNaN(props)) {
+                    throw new TypeError(`getColor should be a number`);
+                } else if (props <= 0) {
+                    throw new TypeError(`getColor should be greater than ${props}`);
+                } else {
+                    let segment = (maxNum - 0) / (gradients.length);
+                    let index = Math.min(Math.floor((Math.max(props, 0) - 0) / segment), gradients.length - 1);
+                    return gradients[index].getColor(props);
+                }
+            };
+
+            this.setMidpoint = (maxNumber) => {
+                if (!isNaN(maxNumber) && maxNumber >= 0) {
+                    maxNum = maxNumber;
+                    setColors(colors);
+                } else if (maxNumber <= 0) {
+                    throw new RangeError(`midPoint should be greater than ${maxNumber}`);
+                } else {
+                    throw new RangeError('midPoint should be a number');
+                }
+                return this;
+            };
+        }
+    }
+
+    class GradientColor {
+        constructor(startColor = '', endColor = '', minNum = 0, maxNum = 10) {
+            this.setGradient = (colorStart, colorEnd) => {
+                startColor = getHexColor(colorStart);
+                endColor = getHexColor(colorEnd);
+            };
+
+            this.setMidpoint = (minNumber, maxNumber) => {
+                minNum = minNumber;
+                maxNum = maxNumber;
+            };
+
+            this.getColor = props => {
+                if (props) {
+                    return '#' + generateHex(props, startColor.substring(0, 2), endColor.substring(0, 2)) +
+                        generateHex(props, startColor.substring(2, 4), endColor.substring(2, 4)) +
+                        generateHex(props, startColor.substring(4, 6), endColor.substring(4, 6));
+                }
+            };
+
+            const generateHex = (number, start, end) => {
+                if (number < minNum) {
+                    number = minNum;
+                } else if (number > maxNum) {
+                    number = maxNum;
+                }
+
+                let midPoint = maxNum - minNum;
+                let startBase = parseInt(start, 16);
+                let endBase = parseInt(end, 16);
+                let average = (endBase - startBase) / midPoint;
+                let finalBase = Math.round(average * (number - minNum) + startBase);
+                let balancedFinalBase = finalBase < 16 ? "0" + finalBase.toString(16) : finalBase.toString(16);
+                return balancedFinalBase;
+            };
+
+            const getHexColor = props => {
+                return props.substring(props.length - 6, props.length);
+            };
+        }
+    }
+
+    var src = Gradient;
+
     /* src\Skills.svelte generated by Svelte v3.44.3 */
     const file$3 = "src\\Skills.svelte";
 
@@ -56714,10 +56837,10 @@ var app = (function () {
     			svg = svg_element("svg");
     			attr_dev(svg, "id", "svgchart");
     			attr_dev(svg, "class", "svelte-teck90");
-    			add_location(svg, file$3, 172, 4, 4393);
+    			add_location(svg, file$3, 215, 4, 6403);
     			attr_dev(div, "id", "mainContainer");
     			attr_dev(div, "class", "svelte-teck90");
-    			add_location(div, file$3, 171, 0, 4363);
+    			add_location(div, file$3, 214, 0, 6373);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -56748,64 +56871,98 @@ var app = (function () {
     function instance$3($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Skills', slots, []);
-    	let link, node, text, h, w, simulation;
+    	const colorGradient = new src();
+    	let link, node, text, h, w, simulation, grade;
 
     	const data = {
     		"nodes": [
     			{
+    				"id": 0,
     				"text": "Angular",
     				"r": "40",
-    				"types": "Framework"
+    				"types": "Framework",
+    				"initialX": "345.31596164743587",
+    				"initialY": "189.15349152740902"
     			},
     			{
+    				"id": 1,
     				"text": "Vue",
     				"r": "40",
-    				"types": "Framework"
+    				"types": "Framework",
+    				"initialX": "355.45314764282796",
+    				"initialY": "268.4997049720481"
     			},
     			{
+    				"id": 3,
     				"text": "JavaScript",
     				"r": "50",
-    				"types": "Language"
+    				"types": "Language",
+    				"initialX": "270.43616060491706",
+    				"initialY": "239.08718406127946"
     			},
     			{
+    				"id": 4,
     				"text": "C#",
     				"r": "40",
-    				"types": "Language"
+    				"types": "Language",
+    				"initialX": "298.3934782289567",
+    				"initialY": "324.5876401317703"
     			},
     			{
+    				"id": 5,
     				"text": "PHP",
     				"r": "40",
-    				"types": "Language"
+    				"types": "Language",
+    				"initialX": "219.26882601831906",
+    				"initialY": "313.0955897542832"
     			},
     			{
+    				"id": 6,
     				"text": "MySQL",
     				"r": "30",
-    				"types": "Database"
+    				"types": "Database",
+    				"initialX": "407.35532205082353",
+    				"initialY": "221.56284590239827"
     			},
     			{
+    				"id": 7,
     				"text": "Git",
     				"r": "25",
-    				"types": "Source Control"
+    				"types": "Source Control",
+    				"initialX": "307.8295090235146",
+    				"initialY": "388.89348650755284"
     			},
     			{
+    				"id": 8,
     				"text": "Figma",
     				"r": "35",
-    				"types": "Design"
+    				"types": "Design",
+    				"initialX": "212.45022640388",
+    				"initialY": "176.95100030647427"
     			},
     			{
+    				"id": 9,
     				"text": ".Net Core",
     				"r": "40",
-    				"types": ".Net"
+    				"types": ".Net",
+    				"initialX": "375.42842288639594",
+    				"initialY": "1345.9764636192515"
     			},
     			{
+    				"id": 10,
     				"text": "Blazor",
     				"r": "35",
-    				"types": ".Net"
+    				"types": ".Net",
+    				"initialX": "426.8418927251777",
+    				"initialY": "291.401994824919"
     			},
     			{
+    				"id": 11,
     				"text": "Node.js",
     				"r": "35",
-    				"types": "RPA"
+    				"types": "RPA",
+    				"initialX": "278.7683508949712",
+    				"initialY": "154.55739227994252"
     			}
     		],
     		"links": [
@@ -56877,7 +57034,7 @@ var app = (function () {
     		force('cluster', d3.forceCluster().centers(d => types.indexOf(d.types)).strength(1).centerInertia(0.1)).force("link", d3.forceLink()).force('charge', d3.forceManyBody().strength(-10)).// apply collision with padding
     		force("collide", d3.forceCollide().radius(d => d.r).strength(0));
 
-    		// ramp up collision strength to provide smooth transition
+    		//ramp up collision strength to provide smooth transition
     		const transitionTime = 2500;
 
     		const t = d3.timer(elapsed => {
@@ -56890,9 +57047,22 @@ var app = (function () {
     		const svg = d3.select("#svgchart");
 
     		// initialize node circles
-    		node = svg.append("g").attr("class", "node").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.r).attr("fill", d => color(types.indexOf(d.types))).attr("stroke", d => color(types.indexOf(d.types))).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+    		node = svg.append("g").attr("class", "node").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.r).attr("fill", d => "url(#gradient" + d.id + ")").attr("cx", d => d.initialX + "px").attr("cy", d => d.initialY + "px").call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
 
+    		//Initialize text
     		text = svg.append("g").attr("class", "textBoxes noselect").selectAll("text").data(nodes).enter().append("text").attr('text-anchor', "middle").text(d => d.text).attr('color', 'black').attr('font-size', 15).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+    		//Set gradient colors
+    		const color1 = "#FF9900";
+
+    		const color2 = "#FF00A8";
+    		colorGradient.setGradient(color1, color2);
+
+    		//Make a linearGradient for each node
+    		grade = svg.append("defs").selectAll("linearGradient").data(nodes).enter();
+
+    		grade.append("linearGradient").attr("id", d => "gradient" + d.id).append("stop").attr("stop-color", "rgba(255, 153, 0, 1)").attr("offset", "0%").attr("class", "startGrade");
+    		svg.selectAll("linearGradient").append("stop").attr("stop-color", "rgba(255, 0, 168, 1)").attr("offset", "100%").attr("class", "endGrade");
     		simulation.nodes(nodes).on("tick", ticked);
     		simulation.force("link").links(links);
     	});
@@ -56901,6 +57071,11 @@ var app = (function () {
     	const ticked = () => {
     		node.attr("cx", d => getNodeXCoordinate(d.x, d.r) + "px").attr("cy", d => getNodeYCoordinate(d.y, d.r) + "px");
     		text.attr("x", d => getNodeXCoordinate(d.x, d.r) + "px").attr("y", d => getNodeYCoordinate(d.y, d.r) + 4 + "px");
+
+    		//Update node color according to pos
+    		grade.selectAll(".startGrade").attr("stop-color", d => colorGradient.getColor(Math.max(0.1, (d.x - d.r) / w * 10)));
+
+    		grade.selectAll(".endGrade").attr("stop-color", d => colorGradient.getColor(Math.max(0.1, (d.x + d.r) / w * 10)));
     	};
 
     	const writable_props = [];
@@ -56911,12 +57086,15 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		onMount,
+    		Gradient: src,
+    		colorGradient,
     		link,
     		node,
     		text,
     		h,
     		w,
     		simulation,
+    		grade,
     		data,
     		clamp,
     		types,
@@ -56938,6 +57116,7 @@ var app = (function () {
     		if ('h' in $$props) h = $$props.h;
     		if ('w' in $$props) w = $$props.w;
     		if ('simulation' in $$props) simulation = $$props.simulation;
+    		if ('grade' in $$props) grade = $$props.grade;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -56982,9 +57161,9 @@ var app = (function () {
     			div1 = element("div");
     			attr_dev(canvas, "id", "model");
     			add_location(canvas, file$2, 148, 12, 5016);
-    			attr_dev(div0, "class", "maskWindow svelte-zzdjb0");
+    			attr_dev(div0, "class", "maskWindow svelte-1l55pvs");
     			add_location(div0, file$2, 147, 8, 4978);
-    			attr_dev(div1, "class", "modelWindow svelte-zzdjb0");
+    			attr_dev(div1, "class", "modelWindow svelte-1l55pvs");
     			set_style(div1, "height", /*w*/ ctx[0] - /*w*/ ctx[0] / 3 + "px");
     			set_style(div1, "width", /*w*/ ctx[0] - /*w*/ ctx[0] / 3 + "px");
     			add_location(div1, file$2, 150, 8, 5070);
