@@ -46,9 +46,6 @@ const types = [
 ".Net"
 ];
 
-//Colors
-const color = d3.scaleSequential(d3.interpolateRainbow)
-    .domain([0,types.length]);
 
 // define constants
 const { nodes, links } = data;
@@ -148,8 +145,11 @@ onMount(() => {
 
   //Set gradient colors
   const color1 = "#FF9900";
-  const color2 = "#FF00A8";
-  colorGradient.setGradient(color1, color2);
+  const color2 = '#FF8713';
+  const color3 = '#FF198D';
+  const color4 = "#FF00A8";
+  colorGradient.setGradient(color1, color2, color3, color4);
+  // colorGradient.setGradient(color1, color4);
   
 
   //Make a linearGradient for each node
@@ -211,7 +211,6 @@ const ticked = () => {
 
 
 </script>
-<div id='mainContainer'>
 <div id='mainContainer' class="col-12 col-md-6 gx-0">
     <svg id="svgchart"></svg>
 </div>
