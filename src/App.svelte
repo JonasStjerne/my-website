@@ -158,6 +158,7 @@ onMount(() => {
 		text-align: left;
 		position: relative;
 	}
+	
 	.skillsContainer h2::after {
 		position: absolute;
 		bottom: -15px;
@@ -167,7 +168,7 @@ onMount(() => {
 		visibility: visible;
 		border-radius: 20px;
 		background: var(--gradient);
-		animation: underlineAnimation 1s cubic-bezier(0, 0, 0, 1.04) forwards 1s;
+		animation: underlineAnimation 1s cubic-bezier(0, 0, 0, 1.04) forwards 2s;
 	}
 
 	@keyframes underlineAnimation {

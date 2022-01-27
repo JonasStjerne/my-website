@@ -5,7 +5,7 @@
     import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
     
     
-    let originY, originX, w, h;
+    let originY, originX, w, h, camera;
     
     //Define clock from three.js
     const clock = new THREE.Clock();
@@ -14,10 +14,7 @@
     //Decaling a new scene object
     const scene = new THREE.Scene();
     
-    //Defining camera and propeties
-    var camera = new THREE.PerspectiveCamera( 75, 1 / 2, 0.1, 1000);
-    camera.position.setZ(2);
-    camera.position.setY(0);
+   
     
     //Add ambient light
     const light = new THREE.AmbientLight( 0x404040, 2 ); // soft white light
@@ -104,18 +101,26 @@
         // controls.addEventListener('mousechange', renderer);
     
         //Set size and pixel ratio
-        w = 300;
-        h = 600;
+        w = 400;
+        h = 400;
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( w, h );
-    
+        //Defining camera and propeties
+        camera = new THREE.PerspectiveCamera( 75, w/h, 1, 1000);
+        camera.position.setZ(1.5);
+        camera.position.setY(0);
+        camera.zoom = 1.8;
+        camera.updateProjectionMatrix();
+
+
+
         //Load custom object
         const loader = new GLTFLoader();
         loader.load( 'assets/Xbot.glb', function ( gltf ) {
             model = gltf.scene;
             //Add to scene
             scene.add( model );
-            model.position.setY(-1);
+            model.position.setY(-1.5);
             //Setup skelton
             skeleton = new THREE.SkeletonHelper(model);
             skeleton.visible = false;
@@ -125,7 +130,13 @@
             mixer = new THREE.AnimationMixer( model );
             //Start hello animation
             mixer.clipAction(gltf.animations[3]).play(); //Change this to hello animation
-    
+            
+            //Magic to get three.js to render the model correctly.
+            gltf.scene.traverse((child) => {
+                if ( child.type == 'SkinnedMesh' ) {
+                    child.frustumCulled = false;
+                }
+            });
             
             //Call tick function to start animation
             tick();
@@ -146,28 +157,30 @@
     </script>
     <div class="position-relative">
         <div class="maskWindow">
-            <canvas id="model"></canvas>
+            <canvas id="model" style="display:block;"></canvas>
         </div>
-        <div class="modelWindow" style="height: {w-w/3}px; width: {w-w/3}px;"></div>
+        <div class="modelWindow" style="width: {w/Math.sqrt(2)-50}px; height: {w/Math.sqrt(2)-50}px ;"></div>
     </div>
 
    <style>
        .modelWindow {
            background-image: var(--gradient);
            position: absolute;
-           top: 0%;
-           transform: translate(-50%, -50%) rotate(45deg);
+           left: 50%;
+           transform: translateX(-50%) rotate(45deg);
            z-index: -1;
            border-radius: 5px;
-           left: 50%;
-           top: 204px;
+           bottom: 50px;
        }
 
        .maskWindow {
         -webkit-mask-image: url("/assets/modelMask.png");
-        mask-image: url("assets/modelMask.png");
         -webkit-mask-repeat: no-repeat;
-        mask-repeat: no-repeat;  
+        -webkit-mask-position: bottom;
+
+        mask-image: url("assets/modelMask.png");
+        mask-repeat: no-repeat; 
+        mask-position: bottom;
        }
 
 
