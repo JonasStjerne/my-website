@@ -8,7 +8,7 @@
 
 :root {
 	--gradient: linear-gradient(90.15deg, #FF9900 0.13%, #FF00A8 99.89%);
-	--mainColor: #000000;
+	--mainColor: #171322;
 }
 
 html, body {
@@ -28,7 +28,6 @@ body {
 
 h1 {
 	font-weight: 900 !important;
-	margin: 0 !important;
 }
 
 a {

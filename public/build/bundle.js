@@ -56836,11 +56836,11 @@ var app = (function () {
     			div = element("div");
     			svg = svg_element("svg");
     			attr_dev(svg, "id", "svgchart");
-    			attr_dev(svg, "class", "svelte-teck90");
-    			add_location(svg, file$3, 214, 4, 6367);
+    			attr_dev(svg, "class", "svelte-qvu6yc");
+    			add_location(svg, file$3, 214, 4, 6420);
     			attr_dev(div, "id", "mainContainer");
-    			attr_dev(div, "class", "svelte-teck90");
-    			add_location(div, file$3, 213, 0, 6337);
+    			attr_dev(div, "class", "col-12 col-md-6 gx-0");
+    			add_location(div, file$3, 213, 0, 6361);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -56991,9 +56991,6 @@ var app = (function () {
     		".Net"
     	];
 
-    	//Colors
-    	const color = d3.scaleSequential(d3.interpolateRainbow).domain([0, types.length]);
-
     	// define constants
     	const { nodes, links } = data;
 
@@ -57058,9 +57055,12 @@ var app = (function () {
     		//Set gradient colors
     		const color1 = "#FF9900";
 
-    		const color2 = "#FF00A8";
-    		colorGradient.setGradient(color1, color2);
+    		const color2 = '#FF8713';
+    		const color3 = '#FF198D';
+    		const color4 = "#FF00A8";
+    		colorGradient.setGradient(color1, color2, color3, color4);
 
+    		// colorGradient.setGradient(color1, color4);
     		//Make a linearGradient for each node
     		grade = svg.append("defs").selectAll("linearGradient").data(nodes).enter();
 
@@ -57101,7 +57101,6 @@ var app = (function () {
     		data,
     		clamp,
     		types,
-    		color,
     		nodes,
     		links,
     		dragstarted,
@@ -57707,7 +57706,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (82:8) {:else}
+    // (81:8) {:else}
     function create_else_block(ctx) {
     	let span;
     	let t;
@@ -57716,8 +57715,8 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(/*char*/ ctx[0]);
-    			attr_dev(span, "class", "svelte-14d2sps");
-    			add_location(span, file, 82, 9, 4541);
+    			attr_dev(span, "class", "svelte-1czpdar");
+    			add_location(span, file, 81, 9, 4537);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -57732,14 +57731,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(82:8) {:else}",
+    		source: "(81:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (80:8) {#if char == " "}
+    // (79:8) {#if char == " "}
     function create_if_block(ctx) {
     	let t;
 
@@ -57759,14 +57758,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(80:8) {#if char == \\\" \\\"}",
+    		source: "(79:8) {#if char == \\\" \\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (79:7) {#each "I'm Jonas" as char}
+    // (78:7) {#each "I'm Jonas" as char}
     function create_each_block(ctx) {
     	let if_block_anchor;
 
@@ -57798,7 +57797,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(79:7) {#each \\\"I'm Jonas\\\" as char}",
+    		source: "(78:7) {#each \\\"I'm Jonas\\\" as char}",
     		ctx
     	});
 
@@ -57841,6 +57840,8 @@ var app = (function () {
     	let t9;
     	let memodel;
     	let t10;
+    	let div8;
+    	let div7;
     	let div6;
     	let h21;
     	let t12;
@@ -57914,6 +57915,8 @@ var app = (function () {
     			t9 = space();
     			create_component(memodel.$$.fragment);
     			t10 = space();
+    			div8 = element("div");
+    			div7 = element("div");
     			div6 = element("div");
     			h21 = element("h2");
     			h21.textContent = "I love learning new technologies and comming up with new software ideas";
@@ -57921,106 +57924,113 @@ var app = (function () {
     			create_component(skills.$$.fragment);
     			t13 = space();
     			create_component(projectcard.$$.fragment);
-    			add_location(title0, file, 41, 4, 1281);
-    			attr_dev(circle0, "class", "social-group__outline svelte-14d2sps");
+    			add_location(title0, file, 40, 4, 1277);
+    			attr_dev(circle0, "class", "social-group__outline svelte-1czpdar");
     			attr_dev(circle0, "stroke", "#000");
     			attr_dev(circle0, "stroke-width", "20");
     			attr_dev(circle0, "cx", "300");
     			attr_dev(circle0, "cy", "300");
     			attr_dev(circle0, "r", "262.5");
-    			add_location(circle0, file, 45, 5, 1384);
-    			attr_dev(circle1, "class", "social-group__inner-circle svelte-14d2sps");
+    			add_location(circle0, file, 44, 5, 1380);
+    			attr_dev(circle1, "class", "social-group__inner-circle svelte-1czpdar");
     			attr_dev(circle1, "fill", "#000");
     			attr_dev(circle1, "cx", "300");
     			attr_dev(circle1, "cy", "300");
     			attr_dev(circle1, "r", "252.5");
-    			add_location(circle1, file, 46, 5, 1491);
-    			attr_dev(path0, "class", "social-group__icon svelte-14d2sps");
+    			add_location(circle1, file, 45, 5, 1487);
+    			attr_dev(path0, "class", "social-group__icon svelte-1czpdar");
     			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
     			attr_dev(path0, "fill", "#FFF");
     			attr_dev(path0, "fill-rule", "nonzero");
-    			add_location(path0, file, 47, 5, 1583);
+    			add_location(path0, file, 46, 5, 1579);
     			attr_dev(g0, "class", "social-group");
     			attr_dev(g0, "fill", "none");
     			attr_dev(g0, "fill-rule", "evenodd");
-    			add_location(g0, file, 44, 4, 1321);
-    			attr_dev(svg0, "class", "social-svg svelte-14d2sps");
+    			add_location(g0, file, 43, 4, 1317);
+    			attr_dev(svg0, "class", "social-svg svelte-1czpdar");
     			attr_dev(svg0, "viewBox", "0 0 600 600");
     			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg0, file, 40, 4, 1194);
-    			attr_dev(a0, "class", "social-link social-link--github svelte-14d2sps");
+    			add_location(svg0, file, 39, 4, 1190);
+    			attr_dev(a0, "class", "social-link social-link--github svelte-1czpdar");
     			attr_dev(a0, "id", "github");
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 39, 3, 1094);
-    			add_location(title1, file, 54, 4, 2944);
-    			attr_dev(circle2, "class", "social-group__outline svelte-14d2sps");
+    			add_location(a0, file, 38, 3, 1090);
+    			add_location(title1, file, 53, 4, 2940);
+    			attr_dev(circle2, "class", "social-group__outline svelte-1czpdar");
     			attr_dev(circle2, "stroke", "#000");
     			attr_dev(circle2, "stroke-width", "20");
     			attr_dev(circle2, "cx", "300");
     			attr_dev(circle2, "cy", "300");
     			attr_dev(circle2, "r", "262.5");
-    			add_location(circle2, file, 58, 5, 3049);
-    			attr_dev(circle3, "class", "social-group__inner-circle svelte-14d2sps");
+    			add_location(circle2, file, 57, 5, 3045);
+    			attr_dev(circle3, "class", "social-group__inner-circle svelte-1czpdar");
     			attr_dev(circle3, "fill", "#2D76B0");
     			attr_dev(circle3, "cx", "300");
     			attr_dev(circle3, "cy", "300");
     			attr_dev(circle3, "r", "252.5");
-    			add_location(circle3, file, 59, 5, 3156);
-    			attr_dev(path1, "class", "social-group__icon svelte-14d2sps");
+    			add_location(circle3, file, 58, 5, 3152);
+    			attr_dev(path1, "class", "social-group__icon svelte-1czpdar");
     			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
     			attr_dev(path1, "fill", "#000");
     			attr_dev(path1, "fill-rule", "nonzero");
-    			add_location(path1, file, 60, 5, 3251);
+    			add_location(path1, file, 59, 5, 3247);
     			attr_dev(g1, "class", "social-group");
     			attr_dev(g1, "fill", "none");
     			attr_dev(g1, "fill-rule", "evenodd");
-    			add_location(g1, file, 57, 4, 2986);
-    			attr_dev(svg1, "class", "social-svg svelte-14d2sps");
+    			add_location(g1, file, 56, 4, 2982);
+    			attr_dev(svg1, "class", "social-svg svelte-1czpdar");
     			attr_dev(svg1, "viewBox", "0 0 600 600");
     			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg1, file, 53, 4, 2857);
-    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-14d2sps");
+    			add_location(svg1, file, 52, 4, 2853);
+    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-1czpdar");
     			attr_dev(a1, "id", "linkedin");
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 52, 3, 2732);
+    			add_location(a1, file, 51, 3, 2728);
     			attr_dev(div0, "id", "header");
-    			attr_dev(div0, "class", "svelte-14d2sps");
-    			add_location(div0, file, 38, 2, 1072);
-    			attr_dev(span0, "class", "svelte-14d2sps");
-    			add_location(span0, file, 75, 55, 4248);
-    			attr_dev(span1, "class", "svelte-14d2sps");
-    			add_location(span1, file, 75, 69, 4262);
+    			attr_dev(div0, "class", "svelte-1czpdar");
+    			add_location(div0, file, 37, 2, 1068);
+    			attr_dev(span0, "class", "svelte-1czpdar");
+    			add_location(span0, file, 74, 55, 4244);
+    			attr_dev(span1, "class", "svelte-1czpdar");
+    			add_location(span1, file, 74, 69, 4258);
     			attr_dev(h1, "data-aos", "fade-right");
     			attr_dev(h1, "data-aos-duration", "800");
-    			add_location(h1, file, 75, 5, 4198);
-    			attr_dev(h20, "class", "nameEl font-weight-bold svelte-14d2sps");
-    			add_location(h20, file, 77, 6, 4398);
+    			add_location(h1, file, 74, 5, 4194);
+    			attr_dev(h20, "class", "nameEl font-weight-bold svelte-1czpdar");
+    			add_location(h20, file, 76, 6, 4394);
     			attr_dev(div1, "data-aos", "fade-right");
     			attr_dev(div1, "data-aos-delay", "100");
     			attr_dev(div1, "data-aos-duration", "800");
-    			attr_dev(div1, "class", "nameContainer rounded svelte-14d2sps");
-    			add_location(div1, file, 76, 5, 4288);
-    			attr_dev(p, "class", "underText svelte-14d2sps");
+    			attr_dev(div1, "class", "nameContainer rounded svelte-1czpdar");
+    			add_location(div1, file, 75, 5, 4284);
+    			attr_dev(p, "class", "underText svelte-1czpdar");
     			attr_dev(p, "data-aos", "fade-right");
     			attr_dev(p, "data-aos-delay", "200");
     			attr_dev(p, "data-aos-duration", "800");
-    			add_location(p, file, 87, 5, 4624);
-    			attr_dev(div2, "class", "introContainer svelte-14d2sps");
-    			add_location(div2, file, 74, 4, 4163);
-    			attr_dev(div3, "class", "content svelte-14d2sps");
-    			add_location(div3, file, 73, 3, 4136);
-    			attr_dev(div4, "class", "homeContent svelte-14d2sps");
-    			add_location(div4, file, 72, 2, 4106);
-    			attr_dev(div5, "class", "bg-image");
+    			add_location(p, file, 86, 5, 4620);
+    			attr_dev(div2, "class", "introContainer svelte-1czpdar");
+    			add_location(div2, file, 73, 4, 4159);
+    			attr_dev(div3, "class", "content svelte-1czpdar");
+    			add_location(div3, file, 72, 3, 4132);
+    			attr_dev(div4, "class", "homeContent svelte-1czpdar");
+    			add_location(div4, file, 71, 2, 4102);
+    			attr_dev(div5, "class", "position-relative svelte-1czpdar");
+    			attr_dev(div5, "id", "waveBackground");
     			set_style(div5, "background-image", "url('assets/wave.png')");
-    			set_style(div5, "background-repeat", "no-repeat");
     			add_location(div5, file, 36, 1, 963);
+    			attr_dev(h21, "class", "skillsText text-white ms-md-5 ms-0 text-center text-md-start svelte-1czpdar");
     			attr_dev(h21, "data-aos", "fade-in");
     			attr_dev(h21, "data-aos-duration", "800");
-    			attr_dev(h21, "class", "svelte-14d2sps");
-    			add_location(h21, file, 113, 2, 5344);
-    			attr_dev(div6, "class", "skillsContainer svelte-14d2sps");
-    			add_location(div6, file, 112, 1, 5311);
+    			add_location(h21, file, 114, 4, 5497);
+    			attr_dev(div6, "class", "col-10 col-md-6 m-auto");
+    			add_location(div6, file, 113, 3, 5455);
+    			attr_dev(div7, "class", "row my-5 my-md-0");
+    			add_location(div7, file, 112, 2, 5420);
+    			attr_dev(div8, "class", "container-fluid");
+    			set_style(div8, "background-color", "var(--mainColor)");
+    			set_style(div8, "margin-top", "-2px");
+    			set_style(div8, "padding-top", "1px");
+    			add_location(div8, file, 111, 1, 5307);
     			add_location(main, file, 35, 0, 954);
     		},
     		l: function claim(nodes) {
@@ -58067,10 +58077,12 @@ var app = (function () {
     			append_dev(div4, t9);
     			mount_component(memodel, div4, null);
     			append_dev(main, t10);
-    			append_dev(main, div6);
+    			append_dev(main, div8);
+    			append_dev(div8, div7);
+    			append_dev(div7, div6);
     			append_dev(div6, h21);
-    			append_dev(div6, t12);
-    			mount_component(skills, div6, null);
+    			append_dev(div7, t12);
+    			mount_component(skills, div7, null);
     			append_dev(main, t13);
     			mount_component(projectcard, main, null);
     			current = true;

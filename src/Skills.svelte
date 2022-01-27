@@ -212,14 +212,11 @@ const ticked = () => {
 
 </script>
 <div id='mainContainer'>
+<div id='mainContainer' class="col-12 col-md-6 gx-0">
     <svg id="svgchart"></svg>
 </div>
 
 <style>
-   #mainContainer {
-	  text-align: center;
-    width: 100%;
-  }
 
   #svgchart {
     width: 100%;

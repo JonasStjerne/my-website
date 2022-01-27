@@ -34,8 +34,7 @@ onMount(() => {
 </script>
 
 <main>
-	<div class="bg-image" 
-	style="background-image: url('assets/wave.png'); background-repeat: no-repeat;">
+	<div class="position-relative" id="waveBackground" style="background-image: url('assets/wave.png');">
 		<div id="header">
 			<a class="social-link social-link--github" id="github" href="https://github.com/JonasStjerne">
 				<svg class="social-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -110,9 +109,13 @@ onMount(() => {
 			<MeModel/>
 		</div>
 	</div>
-	<div class="skillsContainer">
-		<h2 data-aos="fade-in" data-aos-duration="800">I love learning new technologies and comming up with new software ideas</h2>
-		<Skills/>
+	<div class="container-fluid" style="background-color: var(--mainColor); margin-top: -2px; padding-top: 1px;">
+		<div class="row my-5 my-md-0">
+			<div class="col-10 col-md-6 m-auto">
+				<h2 class="skillsText text-white ms-md-5 ms-0 text-center text-md-start" data-aos="fade-in" data-aos-duration="800">I love learning new technologies and comming up with new software ideas</h2>
+			</div>
+			<Skills></Skills>
+		</div>
 	</div>
 	<ProjectCard Title={"Test Tilte"} Text={"Test text"} Tech={"Test tech"} ImgSrc={"assets/projectImages/Chatter.png"}/>
 </main>
@@ -144,22 +147,15 @@ onMount(() => {
 		padding-right: 20px;
 	}
 
-	.skillsContainer{
-		display: flex;
-		flex-direction: row;
-		justify-content: space-evenly;
-		background-color: rgba(23, 19, 34, 1);
-		align-items: center;
-		padding: 5vw;
+	#waveBackground {
+		aspect-ratio: 1463.5/694.96;
+		width: 100%;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
 
-	.skillsContainer h2 {
-		color: white;
-		text-align: left;
-		position: relative;
-	}
-	
-	.skillsContainer h2::after {
+
+	.skillsText::after {
 		position: absolute;
 		bottom: -15px;
 		left: 0;
