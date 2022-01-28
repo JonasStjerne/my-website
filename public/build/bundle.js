@@ -80,6 +80,10 @@ var app = (function () {
     function empty() {
         return text('');
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -365,6 +369,19 @@ var app = (function () {
     function detach_dev(node) {
         dispatch_dev('SvelteDOMRemove', { node });
         detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
     }
     function attr_dev(node, attribute, value) {
         attr(node, attribute, value);
@@ -57163,15 +57180,16 @@ var app = (function () {
     			div1 = element("div");
     			attr_dev(canvas, "id", "model");
     			set_style(canvas, "display", "block");
-    			add_location(canvas, file$2, 159, 12, 5373);
+    			attr_dev(canvas, "class", "mx-auto");
+    			add_location(canvas, file$2, 159, 12, 5352);
     			attr_dev(div0, "class", "maskWindow svelte-1g33j91");
-    			add_location(div0, file$2, 158, 8, 5335);
+    			add_location(div0, file$2, 158, 8, 5314);
     			attr_dev(div1, "class", "modelWindow svelte-1g33j91");
     			set_style(div1, "width", /*w*/ ctx[0] / Math.sqrt(2) - 50 + "px");
     			set_style(div1, "height", /*w*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
-    			add_location(div1, file$2, 161, 8, 5450);
+    			add_location(div1, file$2, 161, 8, 5445);
     			attr_dev(div2, "class", "position-relative");
-    			add_location(div2, file$2, 157, 4, 5294);
+    			add_location(div2, file$2, 157, 4, 5273);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57254,7 +57272,7 @@ var app = (function () {
     	//Get rotation of head
     	function RotateHead(x, y) {
 
-    		// //Simple version of head calc. Not as good a result
+    		// //Simple version of head calc
     		skeleton.bones[5].rotation.y = -0.6 + x / originX * 0.6;
 
     		skeleton.bones[5].rotation.x = -0.05 + y / originY * 0.05;
@@ -57293,7 +57311,7 @@ var app = (function () {
     		let element = document.querySelector('#model');
 
     		let rect = element.getBoundingClientRect();
-    		originX = (rect.right - rect.left) / 2 + rect.left; //Center position of model
+    		originX = rect.right - (rect.right - rect.left) / 2; //Center position of model
     		originY = rect.top + 50;
 
     		//  //Interactive
@@ -57434,114 +57452,364 @@ var app = (function () {
     const file$1 = "src\\ProjectCard.svelte";
 
     function create_fragment$1(ctx) {
+    	let div13;
+    	let div5;
+    	let div4;
     	let div2;
+    	let h3;
+    	let t0_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].title + "";
     	let t0;
-    	let img0;
-    	let img0_src_value;
     	let t1;
     	let div1;
-    	let h2;
+    	let p0;
+    	let t2_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].text + "";
     	let t2;
     	let t3;
-    	let p;
-    	let t4;
-    	let t5;
-    	let small0;
-    	let t6;
-    	let t7;
     	let div0;
+    	let t4;
+    	let img0;
+    	let img0_src_value;
+    	let t5;
+    	let svg;
+    	let defs;
+    	let filter;
+    	let feFlood;
+    	let feBlend;
+    	let feGaussianBlur;
+    	let rect;
+    	let g;
+    	let circle0;
+    	let circle1;
+    	let circle2;
+    	let circle3;
+    	let circle4;
+    	let circle5;
+    	let t6;
+    	let div3;
+    	let p1;
+    	let t7;
+    	let t8_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].tech + "";
+    	let t8;
+    	let t9;
     	let a;
-    	let small1;
     	let img1;
     	let img1_src_value;
+    	let a_href_value;
+    	let t10;
+    	let div12;
+    	let div11;
+    	let div9;
+    	let small0;
+    	let t11_value = /*selectedProject*/ ctx[0] + 1 + "";
+    	let t11;
+    	let t12;
+    	let div8;
+    	let div6;
+    	let t13;
+    	let div7;
+    	let t14;
+    	let small1;
+    	let t16;
+    	let div10;
+    	let button0;
+    	let img2;
+    	let img2_src_value;
+    	let t17;
+    	let button1;
+    	let img3;
+    	let img3_src_value;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
+    			div13 = element("div");
+    			div5 = element("div");
+    			div4 = element("div");
     			div2 = element("div");
-    			t0 = text("'\r\n    ");
-    			img0 = element("img");
+    			h3 = element("h3");
+    			t0 = text(t0_value);
     			t1 = space();
     			div1 = element("div");
-    			h2 = element("h2");
-    			t2 = text(/*Title*/ ctx[2]);
+    			p0 = element("p");
+    			t2 = text(t2_value);
     			t3 = space();
-    			p = element("p");
-    			t4 = text(/*Text*/ ctx[3]);
-    			t5 = space();
-    			small0 = element("small");
-    			t6 = text(/*Tech*/ ctx[4]);
-    			t7 = space();
     			div0 = element("div");
+    			t4 = space();
+    			img0 = element("img");
+    			t5 = space();
+    			svg = svg_element("svg");
+    			defs = svg_element("defs");
+    			filter = svg_element("filter");
+    			feFlood = svg_element("feFlood");
+    			feBlend = svg_element("feBlend");
+    			feGaussianBlur = svg_element("feGaussianBlur");
+    			rect = svg_element("rect");
+    			g = svg_element("g");
+    			circle0 = svg_element("circle");
+    			circle1 = svg_element("circle");
+    			circle2 = svg_element("circle");
+    			circle3 = svg_element("circle");
+    			circle4 = svg_element("circle");
+    			circle5 = svg_element("circle");
+    			t6 = space();
+    			div3 = element("div");
+    			p1 = element("p");
+    			t7 = text("Made with ");
+    			t8 = text(t8_value);
+    			t9 = space();
     			a = element("a");
-    			small1 = element("small");
-    			small1.textContent = "View on Github";
     			img1 = element("img");
-    			attr_dev(img0, "class", "thumbnail svelte-1rygtmg");
-    			if (!src_url_equal(img0.src, img0_src_value = /*ImgSrc*/ ctx[0])) attr_dev(img0, "src", img0_src_value);
-    			attr_dev(img0, "alt", /*ImgAlt*/ ctx[1]);
-    			add_location(img0, file$1, 4, 4, 113);
-    			add_location(h2, file$1, 6, 8, 205);
-    			add_location(p, file$1, 7, 8, 231);
-    			add_location(small0, file$1, 8, 8, 254);
-    			attr_dev(small1, "class", "githubLink");
-    			add_location(small1, file$1, 10, 63, 355);
+    			t10 = space();
+    			div12 = element("div");
+    			div11 = element("div");
+    			div9 = element("div");
+    			small0 = element("small");
+    			t11 = text(t11_value);
+    			t12 = space();
+    			div8 = element("div");
+    			div6 = element("div");
+    			t13 = space();
+    			div7 = element("div");
+    			t14 = space();
+    			small1 = element("small");
+    			small1.textContent = `${/*projects*/ ctx[2].length}`;
+    			t16 = space();
+    			div10 = element("div");
+    			button0 = element("button");
+    			img2 = element("img");
+    			t17 = space();
+    			button1 = element("button");
+    			img3 = element("img");
+    			attr_dev(h3, "class", "row text-white pb-2");
+    			add_location(h3, file$1, 55, 16, 1890);
+    			attr_dev(p0, "class", "col-7 p-0 text-white");
+    			add_location(p0, file$1, 57, 20, 2034);
+    			attr_dev(div0, "class", "col-5");
+    			add_location(div0, file$1, 58, 20, 2124);
+    			attr_dev(img0, "class", "h-50 position-absolute top-50 shadowDarker p-0");
+    			set_style(img0, "transform", "translateY(-50%)");
+    			set_style(img0, "left", "60%");
+    			set_style(img0, "border-radius", "8px");
+    			if (!src_url_equal(img0.src, img0_src_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].src)) attr_dev(img0, "src", img0_src_value);
+    			attr_dev(img0, "alt", "");
+    			add_location(img0, file$1, 59, 20, 2171);
+    			attr_dev(div1, "class", "row positon-relative");
+    			add_location(div1, file$1, 56, 16, 1978);
+    			attr_dev(feFlood, "flood-opacity", "0");
+    			attr_dev(feFlood, "result", "BackgroundImageFix");
+    			add_location(feFlood, file$1, 61, 290, 2660);
+    			attr_dev(feBlend, "mode", "normal");
+    			attr_dev(feBlend, "in", "SourceGraphic");
+    			attr_dev(feBlend, "in2", "BackgroundImageFix");
+    			attr_dev(feBlend, "result", "shape");
+    			add_location(feBlend, file$1, 61, 355, 2725);
+    			attr_dev(feGaussianBlur, "stdDeviation", "161");
+    			attr_dev(feGaussianBlur, "result", "effect1_foregroundBlur");
+    			add_location(feGaussianBlur, file$1, 61, 447, 2817);
+    			attr_dev(filter, "id", "blur1");
+    			attr_dev(filter, "x", "-10%");
+    			attr_dev(filter, "y", "-10%");
+    			attr_dev(filter, "width", "120%");
+    			attr_dev(filter, "height", "120%");
+    			add_location(filter, file$1, 61, 226, 2596);
+    			add_location(defs, file$1, 61, 220, 2590);
+    			attr_dev(rect, "width", "900");
+    			attr_dev(rect, "height", "600");
+    			attr_dev(rect, "fill", "#e800ff");
+    			add_location(rect, file$1, 61, 547, 2917);
+    			attr_dev(circle0, "cx", "877");
+    			attr_dev(circle0, "cy", "11");
+    			attr_dev(circle0, "fill", "#ff9b00");
+    			attr_dev(circle0, "r", "357");
+    			add_location(circle0, file$1, 61, 624, 2994);
+    			attr_dev(circle1, "cx", "259");
+    			attr_dev(circle1, "cy", "45");
+    			attr_dev(circle1, "fill", "#e800ff");
+    			attr_dev(circle1, "r", "357");
+    			add_location(circle1, file$1, 61, 681, 3051);
+    			attr_dev(circle2, "cx", "866");
+    			attr_dev(circle2, "cy", "592");
+    			attr_dev(circle2, "fill", "#ff9b00");
+    			attr_dev(circle2, "r", "357");
+    			add_location(circle2, file$1, 61, 738, 3108);
+    			attr_dev(circle3, "cx", "743");
+    			attr_dev(circle3, "cy", "302");
+    			attr_dev(circle3, "fill", "#ff9b00");
+    			attr_dev(circle3, "r", "357");
+    			add_location(circle3, file$1, 61, 796, 3166);
+    			attr_dev(circle4, "cx", "288");
+    			attr_dev(circle4, "cy", "498");
+    			attr_dev(circle4, "fill", "#e800ff");
+    			attr_dev(circle4, "r", "357");
+    			add_location(circle4, file$1, 61, 854, 3224);
+    			attr_dev(circle5, "cx", "192");
+    			attr_dev(circle5, "cy", "260");
+    			attr_dev(circle5, "fill", "#ff9b00");
+    			attr_dev(circle5, "r", "357");
+    			add_location(circle5, file$1, 61, 912, 3282);
+    			attr_dev(g, "filter", "url(#blur1)");
+    			add_location(g, file$1, 61, 600, 2970);
+    			attr_dev(svg, "class", "position-absolute w-100 h-100");
+    			set_style(svg, "top", "0");
+    			set_style(svg, "left", "0");
+    			set_style(svg, "z-index", "-1");
+    			set_style(svg, "border-radius", "3%");
+    			attr_dev(svg, "id", "visual");
+    			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
+    			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
+    			attr_dev(svg, "version", "1.1");
+    			add_location(svg, file$1, 61, 16, 2386);
+    			attr_dev(div2, "class", "p-4");
+    			add_location(div2, file$1, 54, 12, 1855);
+    			attr_dev(p1, "class", "m-0");
+    			add_location(p1, file$1, 64, 16, 3466);
     			if (!src_url_equal(img1.src, img1_src_value = "assets/github.svg")) attr_dev(img1, "src", img1_src_value);
-    			attr_dev(img1, "alt", "Github logo");
-    			attr_dev(img1, "height", "30");
-    			add_location(img1, file$1, 10, 111, 403);
-    			attr_dev(a, "class", "githubLinkContainer svelte-1rygtmg");
-    			attr_dev(a, "href", /*GithubLink*/ ctx[5]);
-    			add_location(a, file$1, 10, 12, 304);
-    			add_location(div0, file$1, 9, 8, 285);
-    			attr_dev(div1, "class", "container svelte-1rygtmg");
-    			add_location(div1, file$1, 5, 4, 172);
-    			attr_dev(div2, "class", "wrapper svelte-1rygtmg");
-    			add_location(div2, file$1, 3, 0, 85);
+    			attr_dev(img1, "alt", "github");
+    			attr_dev(img1, "height", "30px");
+    			attr_dev(img1, "width", "30px");
+    			add_location(img1, file$1, 66, 20, 3615);
+    			attr_dev(a, "href", a_href_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].srcGithub);
+    			add_location(a, file$1, 65, 16, 3545);
+    			attr_dev(div3, "class", "d-flex justify-content-between align-items-center ");
+    			add_location(div3, file$1, 63, 12, 3384);
+    			attr_dev(div4, "class", "position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0");
+    			add_location(div4, file$1, 53, 8, 1737);
+    			attr_dev(div5, "class", "position-relative container m-0 col-8");
+    			set_style(div5, "height", "0");
+    			set_style(div5, "width", "30%");
+    			set_style(div5, "padding-bottom", "30%");
+    			add_location(div5, file$1, 52, 4, 1629);
+    			add_location(small0, file$1, 74, 20, 3922);
+    			attr_dev(div6, "class", "w-100 rounded-3");
+    			set_style(div6, "height", "5px");
+    			set_style(div6, "background-color", "var(--secondaryColor)");
+    			add_location(div6, file$1, 76, 24, 4049);
+    			attr_dev(div7, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-lf6k27");
+    			set_style(div7, "background-image", "var(--gradient)");
+    			set_style(div7, "width", /*percentProjectBar*/ ctx[1] + "%");
+    			set_style(div7, "height", "8px");
+    			set_style(div7, "transform", "translateY(-50%)");
+    			add_location(div7, file$1, 77, 24, 4172);
+    			set_style(div8, "width", "80%");
+    			set_style(div8, "position", "relative");
+    			add_location(div8, file$1, 75, 20, 3978);
+    			add_location(small1, file$1, 79, 20, 4411);
+    			attr_dev(div9, "class", "d-flex justify-content-center align-items-center w-100");
+    			set_style(div9, "gap", "10px");
+    			add_location(div9, file$1, 73, 12, 3813);
+    			if (!src_url_equal(img2.src, img2_src_value = "")) attr_dev(img2, "src", img2_src_value);
+    			attr_dev(img2, "alt", "");
+    			add_location(img2, file$1, 83, 20, 4553);
+    			add_location(button0, file$1, 82, 16, 4500);
+    			if (!src_url_equal(img3.src, img3_src_value = "")) attr_dev(img3, "src", img3_src_value);
+    			attr_dev(img3, "alt", "");
+    			add_location(img3, file$1, 86, 20, 4670);
+    			add_location(button1, file$1, 85, 16, 4617);
+    			add_location(div10, file$1, 81, 12, 4477);
+    			add_location(div11, file$1, 72, 8, 3794);
+    			attr_dev(div12, "class", "col-2 ms-4");
+    			add_location(div12, file$1, 71, 4, 3760);
+    			attr_dev(div13, "class", "mt-5 d-flex justify-content-center");
+    			add_location(div13, file$1, 51, 0, 1575);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div2, anchor);
-    			append_dev(div2, t0);
-    			append_dev(div2, img0);
+    			insert_dev(target, div13, anchor);
+    			append_dev(div13, div5);
+    			append_dev(div5, div4);
+    			append_dev(div4, div2);
+    			append_dev(div2, h3);
+    			append_dev(h3, t0);
     			append_dev(div2, t1);
     			append_dev(div2, div1);
-    			append_dev(div1, h2);
-    			append_dev(h2, t2);
+    			append_dev(div1, p0);
+    			append_dev(p0, t2);
     			append_dev(div1, t3);
-    			append_dev(div1, p);
-    			append_dev(p, t4);
-    			append_dev(div1, t5);
-    			append_dev(div1, small0);
-    			append_dev(small0, t6);
-    			append_dev(div1, t7);
     			append_dev(div1, div0);
-    			append_dev(div0, a);
-    			append_dev(a, small1);
+    			append_dev(div1, t4);
+    			append_dev(div1, img0);
+    			append_dev(div2, t5);
+    			append_dev(div2, svg);
+    			append_dev(svg, defs);
+    			append_dev(defs, filter);
+    			append_dev(filter, feFlood);
+    			append_dev(filter, feBlend);
+    			append_dev(filter, feGaussianBlur);
+    			append_dev(svg, rect);
+    			append_dev(svg, g);
+    			append_dev(g, circle0);
+    			append_dev(g, circle1);
+    			append_dev(g, circle2);
+    			append_dev(g, circle3);
+    			append_dev(g, circle4);
+    			append_dev(g, circle5);
+    			append_dev(div4, t6);
+    			append_dev(div4, div3);
+    			append_dev(div3, p1);
+    			append_dev(p1, t7);
+    			append_dev(p1, t8);
+    			append_dev(div3, t9);
+    			append_dev(div3, a);
     			append_dev(a, img1);
+    			append_dev(div13, t10);
+    			append_dev(div13, div12);
+    			append_dev(div12, div11);
+    			append_dev(div11, div9);
+    			append_dev(div9, small0);
+    			append_dev(small0, t11);
+    			append_dev(div9, t12);
+    			append_dev(div9, div8);
+    			append_dev(div8, div6);
+    			append_dev(div8, t13);
+    			append_dev(div8, div7);
+    			append_dev(div9, t14);
+    			append_dev(div9, small1);
+    			append_dev(div11, t16);
+    			append_dev(div11, div10);
+    			append_dev(div10, button0);
+    			append_dev(button0, img2);
+    			append_dev(div10, t17);
+    			append_dev(div10, button1);
+    			append_dev(button1, img3);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(button0, "click", /*prevProject*/ ctx[4], false, false, false),
+    					listen_dev(button1, "click", /*nextProject*/ ctx[3], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*ImgSrc*/ 1 && !src_url_equal(img0.src, img0_src_value = /*ImgSrc*/ ctx[0])) {
+    			if (dirty & /*selectedProject*/ 1 && t0_value !== (t0_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].title + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*selectedProject*/ 1 && t2_value !== (t2_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].text + "")) set_data_dev(t2, t2_value);
+
+    			if (dirty & /*selectedProject*/ 1 && !src_url_equal(img0.src, img0_src_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].src)) {
     				attr_dev(img0, "src", img0_src_value);
     			}
 
-    			if (dirty & /*ImgAlt*/ 2) {
-    				attr_dev(img0, "alt", /*ImgAlt*/ ctx[1]);
+    			if (dirty & /*selectedProject*/ 1 && t8_value !== (t8_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].tech + "")) set_data_dev(t8, t8_value);
+
+    			if (dirty & /*selectedProject*/ 1 && a_href_value !== (a_href_value = /*projects*/ ctx[2][/*selectedProject*/ ctx[0]].srcGithub)) {
+    				attr_dev(a, "href", a_href_value);
     			}
 
-    			if (dirty & /*Title*/ 4) set_data_dev(t2, /*Title*/ ctx[2]);
-    			if (dirty & /*Text*/ 8) set_data_dev(t4, /*Text*/ ctx[3]);
-    			if (dirty & /*Tech*/ 16) set_data_dev(t6, /*Tech*/ ctx[4]);
+    			if (dirty & /*selectedProject*/ 1 && t11_value !== (t11_value = /*selectedProject*/ ctx[0] + 1 + "")) set_data_dev(t11, t11_value);
 
-    			if (dirty & /*GithubLink*/ 32) {
-    				attr_dev(a, "href", /*GithubLink*/ ctx[5]);
+    			if (dirty & /*percentProjectBar*/ 2) {
+    				set_style(div7, "width", /*percentProjectBar*/ ctx[1] + "%");
     			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div2);
+    			if (detaching) detach_dev(div13);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -57557,61 +57825,91 @@ var app = (function () {
     }
 
     function instance$1($$self, $$props, $$invalidate) {
+    	let percentProjectBar;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('ProjectCard', slots, []);
-    	let { ImgSrc, ImgAlt, Title, Text, Tech, GithubLink } = $$props;
-    	const writable_props = ['ImgSrc', 'ImgAlt', 'Title', 'Text', 'Tech', 'GithubLink'];
+
+    	const projects = [
+    		{
+    			"title": "Chat app",
+    			"text": "Small chat app made with Socket.io to get familiar with it",
+    			"tech": "Socket.io & JavaScript",
+    			"srcGithub": "www.github.com",
+    			"src": "assets/projectImages/Chatter.png",
+    			"colorsHex": ["00C9FF", "00FF8B"]
+    		},
+    		{
+    			"title": "Chat app2",
+    			"text": "Small chat app made with Socket.io to get familiar with it",
+    			"tech": "Socket.io & JavaScript",
+    			"srcGithub": "www.github.com",
+    			"src": "assets/projectImages/Chatter.png",
+    			"colorsHex": ["00C9FF", "00FF8B"]
+    		},
+    		{
+    			"title": "Chat app3",
+    			"text": "Small chat app made with Socket.io to get familiar with it",
+    			"tech": "Socket.io & JavaScript",
+    			"srcGithub": "www.github.com",
+    			"src": "assets/projectImages/Chatter.png",
+    			"colorsHex": ["00C9FF", "00FF8B"]
+    		}
+    	];
+
+    	let selectedProject = 0;
+
+    	function nextProject() {
+    		if (selectedProject == projects.length - 1) {
+    			$$invalidate(0, selectedProject = 0);
+    		} else {
+    			$$invalidate(0, selectedProject++, selectedProject);
+    		}
+    	}
+
+    	function prevProject() {
+    		if (selectedProject == 0) {
+    			$$invalidate(0, selectedProject = projects.length - 1);
+    		} else {
+    			$$invalidate(0, selectedProject--, selectedProject);
+    		}
+    	}
+
+    	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<ProjectCard> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$$set = $$props => {
-    		if ('ImgSrc' in $$props) $$invalidate(0, ImgSrc = $$props.ImgSrc);
-    		if ('ImgAlt' in $$props) $$invalidate(1, ImgAlt = $$props.ImgAlt);
-    		if ('Title' in $$props) $$invalidate(2, Title = $$props.Title);
-    		if ('Text' in $$props) $$invalidate(3, Text = $$props.Text);
-    		if ('Tech' in $$props) $$invalidate(4, Tech = $$props.Tech);
-    		if ('GithubLink' in $$props) $$invalidate(5, GithubLink = $$props.GithubLink);
-    	};
-
     	$$self.$capture_state = () => ({
-    		ImgSrc,
-    		ImgAlt,
-    		Title,
-    		Text,
-    		Tech,
-    		GithubLink
+    		projects,
+    		selectedProject,
+    		nextProject,
+    		prevProject,
+    		percentProjectBar
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('ImgSrc' in $$props) $$invalidate(0, ImgSrc = $$props.ImgSrc);
-    		if ('ImgAlt' in $$props) $$invalidate(1, ImgAlt = $$props.ImgAlt);
-    		if ('Title' in $$props) $$invalidate(2, Title = $$props.Title);
-    		if ('Text' in $$props) $$invalidate(3, Text = $$props.Text);
-    		if ('Tech' in $$props) $$invalidate(4, Tech = $$props.Tech);
-    		if ('GithubLink' in $$props) $$invalidate(5, GithubLink = $$props.GithubLink);
+    		if ('selectedProject' in $$props) $$invalidate(0, selectedProject = $$props.selectedProject);
+    		if ('percentProjectBar' in $$props) $$invalidate(1, percentProjectBar = $$props.percentProjectBar);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [ImgSrc, ImgAlt, Title, Text, Tech, GithubLink];
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*selectedProject*/ 1) {
+    			$$invalidate(1, percentProjectBar = (selectedProject + 1) / projects.length * 100);
+    		}
+    	};
+
+    	return [selectedProject, percentProjectBar, projects, nextProject, prevProject];
     }
 
     class ProjectCard extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {
-    			ImgSrc: 0,
-    			ImgAlt: 1,
-    			Title: 2,
-    			Text: 3,
-    			Tech: 4,
-    			GithubLink: 5
-    		});
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -57619,81 +57917,6 @@ var app = (function () {
     			options,
     			id: create_fragment$1.name
     		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*ImgSrc*/ ctx[0] === undefined && !('ImgSrc' in props)) {
-    			console.warn("<ProjectCard> was created without expected prop 'ImgSrc'");
-    		}
-
-    		if (/*ImgAlt*/ ctx[1] === undefined && !('ImgAlt' in props)) {
-    			console.warn("<ProjectCard> was created without expected prop 'ImgAlt'");
-    		}
-
-    		if (/*Title*/ ctx[2] === undefined && !('Title' in props)) {
-    			console.warn("<ProjectCard> was created without expected prop 'Title'");
-    		}
-
-    		if (/*Text*/ ctx[3] === undefined && !('Text' in props)) {
-    			console.warn("<ProjectCard> was created without expected prop 'Text'");
-    		}
-
-    		if (/*Tech*/ ctx[4] === undefined && !('Tech' in props)) {
-    			console.warn("<ProjectCard> was created without expected prop 'Tech'");
-    		}
-
-    		if (/*GithubLink*/ ctx[5] === undefined && !('GithubLink' in props)) {
-    			console.warn("<ProjectCard> was created without expected prop 'GithubLink'");
-    		}
-    	}
-
-    	get ImgSrc() {
-    		throw new Error("<ProjectCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set ImgSrc(value) {
-    		throw new Error("<ProjectCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get ImgAlt() {
-    		throw new Error("<ProjectCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set ImgAlt(value) {
-    		throw new Error("<ProjectCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get Title() {
-    		throw new Error("<ProjectCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set Title(value) {
-    		throw new Error("<ProjectCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get Text() {
-    		throw new Error("<ProjectCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set Text(value) {
-    		throw new Error("<ProjectCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get Tech() {
-    		throw new Error("<ProjectCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set Tech(value) {
-    		throw new Error("<ProjectCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get GithubLink() {
-    		throw new Error("<ProjectCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set GithubLink(value) {
-    		throw new Error("<ProjectCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -57715,8 +57938,8 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(/*char*/ ctx[0]);
-    			attr_dev(span, "class", "svelte-1czpdar");
-    			add_location(span, file, 81, 9, 4537);
+    			attr_dev(span, "class", "svelte-11mldha");
+    			add_location(span, file, 81, 9, 4528);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -57806,7 +58029,7 @@ var app = (function () {
 
     function create_fragment(ctx) {
     	let main;
-    	let div5;
+    	let div6;
     	let div0;
     	let a0;
     	let svg0;
@@ -57834,19 +58057,21 @@ var app = (function () {
     	let span1;
     	let t6;
     	let div1;
-    	let h20;
+    	let h2;
     	let t7;
     	let p;
     	let t9;
     	let memodel;
     	let t10;
+    	let div5;
+    	let t11;
+    	let div9;
     	let div8;
     	let div7;
-    	let div6;
-    	let h21;
-    	let t12;
-    	let skills;
+    	let h3;
     	let t13;
+    	let skills;
+    	let t14;
     	let projectcard;
     	let current;
     	let each_value = "I'm Jonas";
@@ -57873,7 +58098,7 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			main = element("main");
-    			div5 = element("div");
+    			div6 = element("div");
     			div0 = element("div");
     			a0 = element("a");
     			svg0 = svg_element("svg");
@@ -57903,7 +58128,7 @@ var app = (function () {
     			span1.textContent = "i";
     			t6 = space();
     			div1 = element("div");
-    			h20 = element("h2");
+    			h2 = element("h2");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
@@ -57915,122 +58140,126 @@ var app = (function () {
     			t9 = space();
     			create_component(memodel.$$.fragment);
     			t10 = space();
+    			div5 = element("div");
+    			t11 = space();
+    			div9 = element("div");
     			div8 = element("div");
     			div7 = element("div");
-    			div6 = element("div");
-    			h21 = element("h2");
-    			h21.textContent = "I love learning new technologies and comming up with new software ideas";
-    			t12 = space();
-    			create_component(skills.$$.fragment);
+    			h3 = element("h3");
+    			h3.textContent = "I love learning new technologies and comming up with new software ideas";
     			t13 = space();
+    			create_component(skills.$$.fragment);
+    			t14 = space();
     			create_component(projectcard.$$.fragment);
-    			add_location(title0, file, 40, 4, 1277);
-    			attr_dev(circle0, "class", "social-group__outline svelte-1czpdar");
+    			add_location(title0, file, 40, 4, 1213);
+    			attr_dev(circle0, "class", "social-group__outline svelte-11mldha");
     			attr_dev(circle0, "stroke", "#000");
     			attr_dev(circle0, "stroke-width", "20");
     			attr_dev(circle0, "cx", "300");
     			attr_dev(circle0, "cy", "300");
     			attr_dev(circle0, "r", "262.5");
-    			add_location(circle0, file, 44, 5, 1380);
-    			attr_dev(circle1, "class", "social-group__inner-circle svelte-1czpdar");
+    			add_location(circle0, file, 44, 5, 1316);
+    			attr_dev(circle1, "class", "social-group__inner-circle svelte-11mldha");
     			attr_dev(circle1, "fill", "#000");
     			attr_dev(circle1, "cx", "300");
     			attr_dev(circle1, "cy", "300");
     			attr_dev(circle1, "r", "252.5");
-    			add_location(circle1, file, 45, 5, 1487);
-    			attr_dev(path0, "class", "social-group__icon svelte-1czpdar");
+    			add_location(circle1, file, 45, 5, 1423);
+    			attr_dev(path0, "class", "social-group__icon svelte-11mldha");
     			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
     			attr_dev(path0, "fill", "#FFF");
     			attr_dev(path0, "fill-rule", "nonzero");
-    			add_location(path0, file, 46, 5, 1579);
+    			add_location(path0, file, 46, 5, 1515);
     			attr_dev(g0, "class", "social-group");
     			attr_dev(g0, "fill", "none");
     			attr_dev(g0, "fill-rule", "evenodd");
-    			add_location(g0, file, 43, 4, 1317);
-    			attr_dev(svg0, "class", "social-svg svelte-1czpdar");
+    			add_location(g0, file, 43, 4, 1253);
+    			attr_dev(svg0, "class", "social-svg svelte-11mldha");
     			attr_dev(svg0, "viewBox", "0 0 600 600");
     			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg0, file, 39, 4, 1190);
-    			attr_dev(a0, "class", "social-link social-link--github svelte-1czpdar");
+    			add_location(svg0, file, 39, 4, 1126);
+    			attr_dev(a0, "class", "social-link social-link--github svelte-11mldha");
     			attr_dev(a0, "id", "github");
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 38, 3, 1090);
-    			add_location(title1, file, 53, 4, 2940);
-    			attr_dev(circle2, "class", "social-group__outline svelte-1czpdar");
+    			add_location(a0, file, 38, 3, 1026);
+    			add_location(title1, file, 53, 4, 2876);
+    			attr_dev(circle2, "class", "social-group__outline svelte-11mldha");
     			attr_dev(circle2, "stroke", "#000");
     			attr_dev(circle2, "stroke-width", "20");
     			attr_dev(circle2, "cx", "300");
     			attr_dev(circle2, "cy", "300");
     			attr_dev(circle2, "r", "262.5");
-    			add_location(circle2, file, 57, 5, 3045);
-    			attr_dev(circle3, "class", "social-group__inner-circle svelte-1czpdar");
+    			add_location(circle2, file, 57, 5, 2981);
+    			attr_dev(circle3, "class", "social-group__inner-circle svelte-11mldha");
     			attr_dev(circle3, "fill", "#2D76B0");
     			attr_dev(circle3, "cx", "300");
     			attr_dev(circle3, "cy", "300");
     			attr_dev(circle3, "r", "252.5");
-    			add_location(circle3, file, 58, 5, 3152);
-    			attr_dev(path1, "class", "social-group__icon svelte-1czpdar");
+    			add_location(circle3, file, 58, 5, 3088);
+    			attr_dev(path1, "class", "social-group__icon svelte-11mldha");
     			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
     			attr_dev(path1, "fill", "#000");
     			attr_dev(path1, "fill-rule", "nonzero");
-    			add_location(path1, file, 59, 5, 3247);
+    			add_location(path1, file, 59, 5, 3183);
     			attr_dev(g1, "class", "social-group");
     			attr_dev(g1, "fill", "none");
     			attr_dev(g1, "fill-rule", "evenodd");
-    			add_location(g1, file, 56, 4, 2982);
-    			attr_dev(svg1, "class", "social-svg svelte-1czpdar");
+    			add_location(g1, file, 56, 4, 2918);
+    			attr_dev(svg1, "class", "social-svg svelte-11mldha");
     			attr_dev(svg1, "viewBox", "0 0 600 600");
     			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg1, file, 52, 4, 2853);
-    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-1czpdar");
+    			add_location(svg1, file, 52, 4, 2789);
+    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-11mldha");
     			attr_dev(a1, "id", "linkedin");
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 51, 3, 2728);
+    			add_location(a1, file, 51, 3, 2664);
     			attr_dev(div0, "id", "header");
-    			attr_dev(div0, "class", "svelte-1czpdar");
-    			add_location(div0, file, 37, 2, 1068);
-    			attr_dev(span0, "class", "svelte-1czpdar");
-    			add_location(span0, file, 74, 55, 4244);
-    			attr_dev(span1, "class", "svelte-1czpdar");
-    			add_location(span1, file, 74, 69, 4258);
+    			attr_dev(div0, "class", "svelte-11mldha");
+    			add_location(div0, file, 37, 2, 1004);
+    			attr_dev(span0, "class", "svelte-11mldha");
+    			add_location(span0, file, 74, 55, 4235);
+    			attr_dev(span1, "class", "svelte-11mldha");
+    			add_location(span1, file, 74, 69, 4249);
     			attr_dev(h1, "data-aos", "fade-right");
     			attr_dev(h1, "data-aos-duration", "800");
-    			add_location(h1, file, 74, 5, 4194);
-    			attr_dev(h20, "class", "nameEl font-weight-bold svelte-1czpdar");
-    			add_location(h20, file, 76, 6, 4394);
+    			add_location(h1, file, 74, 5, 4185);
+    			attr_dev(h2, "class", "nameEl font-weight-bold svelte-11mldha");
+    			add_location(h2, file, 76, 6, 4385);
     			attr_dev(div1, "data-aos", "fade-right");
     			attr_dev(div1, "data-aos-delay", "100");
     			attr_dev(div1, "data-aos-duration", "800");
-    			attr_dev(div1, "class", "nameContainer rounded svelte-1czpdar");
-    			add_location(div1, file, 75, 5, 4284);
-    			attr_dev(p, "class", "underText svelte-1czpdar");
+    			attr_dev(div1, "class", "nameContainer rounded svelte-11mldha");
+    			add_location(div1, file, 75, 5, 4275);
+    			attr_dev(p, "class", "underText svelte-11mldha");
     			attr_dev(p, "data-aos", "fade-right");
     			attr_dev(p, "data-aos-delay", "200");
     			attr_dev(p, "data-aos-duration", "800");
-    			add_location(p, file, 86, 5, 4620);
-    			attr_dev(div2, "class", "introContainer svelte-1czpdar");
-    			add_location(div2, file, 73, 4, 4159);
-    			attr_dev(div3, "class", "content svelte-1czpdar");
-    			add_location(div3, file, 72, 3, 4132);
-    			attr_dev(div4, "class", "homeContent svelte-1czpdar");
-    			add_location(div4, file, 71, 2, 4102);
-    			attr_dev(div5, "class", "position-relative svelte-1czpdar");
+    			add_location(p, file, 86, 5, 4611);
+    			attr_dev(div2, "class", "introContainer svelte-11mldha");
+    			add_location(div2, file, 73, 4, 4150);
+    			attr_dev(div3, "class", "content svelte-11mldha");
+    			add_location(div3, file, 72, 3, 4123);
+    			attr_dev(div4, "class", "d-flex justify-content-center flex-column-reverse flex-md-row pb-5");
+    			add_location(div4, file, 71, 2, 4038);
     			attr_dev(div5, "id", "waveBackground");
     			set_style(div5, "background-image", "url('assets/wave.png')");
-    			add_location(div5, file, 36, 1, 963);
-    			attr_dev(h21, "class", "skillsText text-white ms-md-5 ms-0 text-center text-md-start svelte-1czpdar");
-    			attr_dev(h21, "data-aos", "fade-in");
-    			attr_dev(h21, "data-aos-duration", "800");
-    			add_location(h21, file, 114, 4, 5497);
-    			attr_dev(div6, "class", "col-10 col-md-6 m-auto");
-    			add_location(div6, file, 113, 3, 5455);
-    			attr_dev(div7, "class", "row my-5 my-md-0");
-    			add_location(div7, file, 112, 2, 5420);
-    			attr_dev(div8, "class", "container-fluid");
-    			set_style(div8, "background-color", "var(--mainColor)");
-    			set_style(div8, "margin-top", "-2px");
-    			set_style(div8, "padding-top", "1px");
-    			add_location(div8, file, 111, 1, 5307);
+    			attr_dev(div5, "class", "svelte-11mldha");
+    			add_location(div5, file, 110, 2, 5290);
+    			attr_dev(div6, "class", "position-relative vh-50");
+    			add_location(div6, file, 36, 1, 963);
+    			attr_dev(h3, "class", "skillsText text-white text-center text-md-start svelte-11mldha");
+    			attr_dev(h3, "data-aos", "fade-in");
+    			attr_dev(h3, "data-aos-duration", "800");
+    			add_location(h3, file, 115, 4, 5604);
+    			attr_dev(div7, "class", "col-10 col-md-6 m-auto d-flex justify-content-center");
+    			add_location(div7, file, 114, 3, 5531);
+    			attr_dev(div8, "class", "row my-5 my-md-0");
+    			add_location(div8, file, 113, 2, 5496);
+    			attr_dev(div9, "class", "container-fluid");
+    			set_style(div9, "background-color", "var(--mainColor)");
+    			set_style(div9, "margin-top", "-2px");
+    			set_style(div9, "padding-top", "1px");
+    			add_location(div9, file, 112, 1, 5383);
     			add_location(main, file, 35, 0, 954);
     		},
     		l: function claim(nodes) {
@@ -58038,8 +58267,8 @@ var app = (function () {
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
-    			append_dev(main, div5);
-    			append_dev(div5, div0);
+    			append_dev(main, div6);
+    			append_dev(div6, div0);
     			append_dev(div0, a0);
     			append_dev(a0, svg0);
     			append_dev(svg0, title0);
@@ -58057,8 +58286,8 @@ var app = (function () {
     			append_dev(g1, circle2);
     			append_dev(g1, circle3);
     			append_dev(g1, path1);
-    			append_dev(div5, t3);
-    			append_dev(div5, div4);
+    			append_dev(div6, t3);
+    			append_dev(div6, div4);
     			append_dev(div4, div3);
     			append_dev(div3, div2);
     			append_dev(div2, h1);
@@ -58066,24 +58295,26 @@ var app = (function () {
     			append_dev(h1, span1);
     			append_dev(div2, t6);
     			append_dev(div2, div1);
-    			append_dev(div1, h20);
+    			append_dev(div1, h2);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(h20, null);
+    				each_blocks[i].m(h2, null);
     			}
 
     			append_dev(div2, t7);
     			append_dev(div2, p);
     			append_dev(div4, t9);
     			mount_component(memodel, div4, null);
-    			append_dev(main, t10);
-    			append_dev(main, div8);
+    			append_dev(div6, t10);
+    			append_dev(div6, div5);
+    			append_dev(main, t11);
+    			append_dev(main, div9);
+    			append_dev(div9, div8);
     			append_dev(div8, div7);
-    			append_dev(div7, div6);
-    			append_dev(div6, h21);
-    			append_dev(div7, t12);
-    			mount_component(skills, div7, null);
-    			append_dev(main, t13);
+    			append_dev(div7, h3);
+    			append_dev(div8, t13);
+    			mount_component(skills, div8, null);
+    			append_dev(main, t14);
     			mount_component(projectcard, main, null);
     			current = true;
     		},

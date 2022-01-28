@@ -1,49 +1,98 @@
 <script>
-    export let ImgSrc, ImgAlt, Title, Text, Tech, GithubLink; 
+    const projects = [
+        {
+            "title" : "Chat app",
+            "text" : "Small chat app made with Socket.io to get familiar with it",
+            "tech" : "Socket.io & JavaScript",
+            "srcGithub" : "www.github.com",
+            "src" : "assets/projectImages/Chatter.png",
+            "colorsHex" : ["00C9FF", "00FF8B"]
+        },
+        {
+            "title" : "Chat app2",
+            "text" : "Small chat app made with Socket.io to get familiar with it",
+            "tech" : "Socket.io & JavaScript",
+            "srcGithub" : "www.github.com",
+            "src" : "assets/projectImages/Chatter.png",
+            "colorsHex" : ["00C9FF", "00FF8B"]
+        },
+        {
+            "title" : "Chat app3",
+            "text" : "Small chat app made with Socket.io to get familiar with it",
+            "tech" : "Socket.io & JavaScript",
+            "srcGithub" : "www.github.com",
+            "src" : "assets/projectImages/Chatter.png",
+            "colorsHex" : ["00C9FF", "00FF8B"]
+        }
+    ]; 
+    let selectedProject = 0;
+
+    $ : percentProjectBar = ( (selectedProject + 1) / projects.length ) * 100;
+
+
+
+    function nextProject() {
+        if (selectedProject == projects.length - 1) {
+            selectedProject = 0;
+        } else {
+            selectedProject ++;
+        }
+    }
+
+    function prevProject() {
+        if (selectedProject == 0) {
+            selectedProject = projects.length - 1;
+        } else {
+            selectedProject --;
+        }
+    }
+
 </script>
-<div class="wrapper">'
-    <img class="thumbnail" src="{ImgSrc}" alt="{ImgAlt}">
-    <div class="container">
-        <h2>{Title}</h2>
-        <p>{Text}</p>
-        <small>{Tech}</small>
+
+<div class="mt-5 d-flex justify-content-center">
+    <div class="position-relative container m-0 col-8" style="height:0;width:30%;padding-bottom:30%;">
+        <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0" >
+            <div class="p-4">
+                <h3 class="row text-white pb-2">{projects[selectedProject].title}</h3>
+                <div class="row positon-relative">
+                    <p class="col-7 p-0 text-white">{projects[selectedProject].text}</p>
+                    <div class="col-5"></div>
+                    <img class="h-50 position-absolute top-50 shadowDarker p-0" style="transform: translateY(-50%); left: 60%; border-radius: 8px;" src="{projects[selectedProject].src}" alt="">
+                </div>
+                <svg class="position-absolute w-100 h-100" style="top: 0; left: 0; z-index: -1; border-radius: 3%;" id="visual" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><defs><filter id="blur1" x="-10%" y="-10%" width="120%" height="120%"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur stdDeviation="161" result="effect1_foregroundBlur"></feGaussianBlur></filter></defs><rect width="900" height="600" fill="#e800ff"></rect><g filter="url(#blur1)"><circle cx="877" cy="11" fill="#ff9b00" r="357"></circle><circle cx="259" cy="45" fill="#e800ff" r="357"></circle><circle cx="866" cy="592" fill="#ff9b00" r="357"></circle><circle cx="743" cy="302" fill="#ff9b00" r="357"></circle><circle cx="288" cy="498" fill="#e800ff" r="357"></circle><circle cx="192" cy="260" fill="#ff9b00" r="357"></circle></g></svg>
+            </div>
+            <div class="d-flex justify-content-between align-items-center ">
+                <p class="m-0">Made with {projects[selectedProject].tech}</p>
+                <a href="{projects[selectedProject].srcGithub}">
+                    <img src="assets/github.svg" alt="github" height="30px" width="30px">
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-2 ms-4">
         <div>
-            <a class="githubLinkContainer" href="{GithubLink}"><small class="githubLink">View on Github</small><img src="assets/github.svg" alt="Github logo" height="30"></a>
+            <div class="d-flex justify-content-center align-items-center w-100" style="gap: 10px;">
+                    <small>{selectedProject+1}</small>
+                    <div style="width: 80%; position: relative;">
+                        <div class="w-100 rounded-3" style="height: 5px; background-color: var(--secondaryColor);"></div>
+                        <div class="projectProgressBar position-absolute rounded-3 top-50" style="background-image: var(--gradient); width:  { percentProjectBar }%; height:8px; transform: translateY(-50%);"></div>
+                    </div>
+                    <small>{projects.length}</small>
+            </div>
+            <div>
+                <button on:click={prevProject}>
+                    <img src="" alt="">
+                </button>
+                <button on:click={nextProject}>
+                    <img src="" alt="">
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-    .wrapper {
-        box-shadow: 0px 0px 16px 5px rgba(0, 0, 0, 0.19);
-        border-radius: 5px;
-        min-height: 20vh;
-        width: 30vw;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        margin: 10px 30px;
-        height: 100%;
-    }
-
-    .thumbnail {
-        margin-top: -50px;
-        position: relative;
-        max-width: 25vw;
-        border-radius: 2;
-    }
-
-    .githubLinkContainer {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
+   .projectProgressBar {
+       transition: width 1s ease-in-out;
+   }
 </style>

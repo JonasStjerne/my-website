@@ -50,7 +50,7 @@
         let degRatio = 3/180; //3 rotation on model = 180 degrees
         let m = 1000; //Depth distance to the model. The lower the more head movement
     
-        // //Simple version of head calc. Not as good a result
+        // //Simple version of head calc
         skeleton.bones[5].rotation.y = -0.6+(x/originX)*0.6;
         skeleton.bones[5].rotation.x = -0.05+(y/originY)*0.05;
     
@@ -93,7 +93,7 @@
          //Get postition of model
          let element = document.querySelector('#model');
                 let rect = element.getBoundingClientRect();
-                originX = (rect.right - rect.left)/2 + rect.left; //Center position of model
+                originX = rect.right - (rect.right - rect.left)/2; //Center position of model
                 originY =  rect.top + 50;
     
         //  //Interactive
@@ -157,7 +157,7 @@
     </script>
     <div class="position-relative">
         <div class="maskWindow">
-            <canvas id="model" style="display:block;"></canvas>
+            <canvas id="model" style="display:block;" class="mx-auto"></canvas>
         </div>
         <div class="modelWindow" style="width: {w/Math.sqrt(2)-50}px; height: {w/Math.sqrt(2)-50}px ;"></div>
     </div>

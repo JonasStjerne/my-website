@@ -9,6 +9,7 @@
 :root {
 	--gradient: linear-gradient(90.15deg, #FF9900 0.13%, #FF00A8 99.89%);
 	--mainColor: #171322;
+	--secondaryColor: #DFDFDF;
 }
 
 html, body {
@@ -81,5 +82,9 @@ button:focus {
 		  -ms-user-select: none; /* Internet Explorer/Edge */
 			  user-select: none; /* Non-prefixed version, currently
 									supported by Chrome, Edge, Opera and Firefox */
+  }
+
+  .shadowDarker {
+	box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.15);
   }
 

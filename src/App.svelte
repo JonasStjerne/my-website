@@ -34,7 +34,7 @@ onMount(() => {
 </script>
 
 <main>
-	<div class="position-relative" id="waveBackground" style="background-image: url('assets/wave.png');">
+	<div class="position-relative vh-50">
 		<div id="header">
 			<a class="social-link social-link--github" id="github" href="https://github.com/JonasStjerne">
 				<svg class="social-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -69,7 +69,7 @@ onMount(() => {
 				<img src="assets/linkedin.svg" alt="Github logo" height="30">
 			</a> -->
 		</div>
-		<div class="homeContent">
+		<div class="d-flex justify-content-center flex-column-reverse flex-md-row pb-5">
 			<div class="content">
 				<div class="introContainer">
 					<h1 data-aos="fade-right" data-aos-duration="800"><span>H</span><span>i</span></h1>
@@ -108,11 +108,12 @@ onMount(() => {
 			</div>
 			<MeModel/>
 		</div>
+		<div id="waveBackground" style="background-image: url('assets/wave.png');"></div>
 	</div>
 	<div class="container-fluid" style="background-color: var(--mainColor); margin-top: -2px; padding-top: 1px;">
 		<div class="row my-5 my-md-0">
-			<div class="col-10 col-md-6 m-auto">
-				<h2 class="skillsText text-white ms-md-5 ms-0 text-center text-md-start" data-aos="fade-in" data-aos-duration="800">I love learning new technologies and comming up with new software ideas</h2>
+			<div class="col-10 col-md-6 m-auto d-flex  justify-content-center">
+				<h3 class="skillsText text-white text-center text-md-start" data-aos="fade-in" data-aos-duration="800">I love learning new technologies and comming up with new software ideas</h3>
 			</div>
 			<Skills></Skills>
 		</div>
@@ -148,12 +149,20 @@ onMount(() => {
 	}
 
 	#waveBackground {
+		position: absolute;
 		aspect-ratio: 1463.5/694.96;
-		width: 100%;
+		height: 100%;
+		max-width: 100%;
 		background-repeat: no-repeat;
 		background-size: cover;
+		inset:0;
+		z-index: -1;
 	}
 
+	.skillsText {
+		max-width: 600px;
+		display: inline-block;
+	}
 
 	.skillsText::after {
 		position: absolute;
@@ -165,6 +174,13 @@ onMount(() => {
 		border-radius: 20px;
 		background: var(--gradient);
 		animation: underlineAnimation 1s cubic-bezier(0, 0, 0, 1.04) forwards 2s;
+	}
+
+	@media only screen and (max-width: 768px) {
+		.skillsText::after {
+			transform: translateX(-50%);
+			left: 50%;
+		}
 	}
 
 	@keyframes underlineAnimation {
@@ -186,12 +202,6 @@ onMount(() => {
 
 	.introContainer {
 		width: 66%;
-	}
-
-	.homeContent {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
 	}
 
 	.nameEl {
