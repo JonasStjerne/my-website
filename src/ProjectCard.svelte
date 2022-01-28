@@ -1,4 +1,9 @@
 <script>
+    import * as AOS from 'aos';
+    import "../node_modules/aos/dist/aos.css";
+    import { onMount } from 'svelte';
+    AOS.init();
+    
     const projects = [
         {
             "title" : "Chat app",
@@ -26,26 +31,23 @@
         }
     ]; 
     let selectedProject = 0;
-
+    let projectImageElement;
     $ : percentProjectBar = ( (selectedProject + 1) / projects.length ) * 100;
 
 
-
     function nextProject() {
-        if (selectedProject == projects.length - 1) {
-            selectedProject = 0;
-        } else {
-            selectedProject ++;
+        if (selectedProject < projects.length - 1) {
+            projectImageElement.classList.add('slideOutLeft');
         }
     }
 
     function prevProject() {
-        if (selectedProject == 0) {
-            selectedProject = projects.length - 1;
-        } else {
-            selectedProject --;
-        }
+        if (selectedProject > 0) selectedProject--;
     }
+
+    onMount(() => {
+        projectImageElement = document.querySelector('.projectImage');
+    })
 
 </script>
 
@@ -57,7 +59,7 @@
                 <div class="row positon-relative">
                     <p class="col-7 p-0 text-white">{projects[selectedProject].text}</p>
                     <div class="col-5"></div>
-                    <img class="h-50 position-absolute top-50 shadowDarker p-0" style="transform: translateY(-50%); left: 60%; border-radius: 8px;" src="{projects[selectedProject].src}" alt="">
+                    <img class="h-50 position-absolute top-50 shadowDarker p-0 projectImage" style="transform: translateY(-50%); border-radius: 8px;" src="{projects[selectedProject].src}" alt="">
                 </div>
                 <svg class="position-absolute w-100 h-100" style="top: 0; left: 0; z-index: -1; border-radius: 3%;" id="visual" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><defs><filter id="blur1" x="-10%" y="-10%" width="120%" height="120%"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur stdDeviation="161" result="effect1_foregroundBlur"></feGaussianBlur></filter></defs><rect width="900" height="600" fill="#e800ff"></rect><g filter="url(#blur1)"><circle cx="877" cy="11" fill="#ff9b00" r="357"></circle><circle cx="259" cy="45" fill="#e800ff" r="357"></circle><circle cx="866" cy="592" fill="#ff9b00" r="357"></circle><circle cx="743" cy="302" fill="#ff9b00" r="357"></circle><circle cx="288" cy="498" fill="#e800ff" r="357"></circle><circle cx="192" cy="260" fill="#ff9b00" r="357"></circle></g></svg>
             </div>
@@ -70,7 +72,7 @@
         </div>
     </div>
     <div class="col-2 ms-4">
-        <div>
+        <div class="d-flex flex-column justify-content-end h-100">
             <div class="d-flex justify-content-center align-items-center w-100" style="gap: 10px;">
                     <small>{selectedProject+1}</small>
                     <div style="width: 80%; position: relative;">
@@ -79,12 +81,12 @@
                     </div>
                     <small>{projects.length}</small>
             </div>
-            <div>
-                <button on:click={prevProject}>
-                    <img src="" alt="">
+            <div class="d-flex justify-content-center mb-2">
+                <button type="button" class="btn bg-transparent noHighLight" on:click={prevProject}>
+                    <img src="assets/arrow.png" alt="left arrow(see previous project)">
                 </button>
-                <button on:click={nextProject}>
-                    <img src="" alt="">
+                <button type="button" class="btn btn-primary-outline noHighLight" on:click={nextProject}>
+                    <img style="transform: rotate(180deg);" src="assets/arrow.png" alt="right arrow(see next project)">
                 </button>
             </div>
         </div>
@@ -95,4 +97,17 @@
    .projectProgressBar {
        transition: width 1s ease-in-out;
    }
+
+   .noHighLight {
+        outline: none;
+        box-shadow: none;
+        border: none;
+   }
+
+    .projectImage {
+        left: 60%
+    }
+
+
+
 </style>

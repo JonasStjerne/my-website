@@ -88,3 +88,39 @@ button:focus {
 	box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.15);
   }
 
+  .slideOutLeft {
+	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) backwards;
+}
+
+.slideInLeft {
+	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) backwards;
+}
+
+.slideInRight {
+	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) forwards;
+}
+
+.slideOutRight {
+	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) backwards;
+}
+
+@keyframes slideOut {
+	from {
+		left: 60%;
+	}
+
+	to {
+		left: -100vw;
+	}
+}
+
+@keyframes slideOut {
+	from {
+		left: 100vw;
+	}
+
+	to {
+		left: 60%;
+	}
+}
+
