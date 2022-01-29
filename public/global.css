@@ -88,39 +88,60 @@ button:focus {
 	box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.15);
   }
 
-  .slideOutLeft {
-	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) backwards;
+  .c_slideOutLeft {
+	animation: c_slideOut 1s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
-.slideInLeft {
-	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) backwards;
+.c_slideInLeft {
+	animation: c_slideInLeft 1s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
-.slideInRight {
-	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) forwards;
+.c_slideInRight {
+	animation: c_slideIn 1s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
-.slideOutRight {
-	animation: slideOut 1s cubic-bezier(0, 0, 0, 1.04) backwards;
+.c_slideOutRight {
+	animation: c_slideOutRight 1s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
-@keyframes slideOut {
-	from {
+@keyframes c_slideOut {
+	0% {
 		left: 60%;
 	}
 
-	to {
+	100% {
 		left: -100vw;
 	}
 }
 
-@keyframes slideOut {
-	from {
+@keyframes c_slideIn {
+	0% {
 		left: 100vw;
 	}
 
-	to {
+	100% {
 		left: 60%;
 	}
 }
+
+@keyframes c_slideInLeft {
+	0% {
+		left: -100vw;
+	}
+
+	100% {
+		left: 60%;
+	}
+}
+
+@keyframes c_slideOutRight {
+	0% {
+		left: 60%;
+	}
+
+	100% {
+		left: 100vw;
+	}
+}
+
 
