@@ -110,13 +110,25 @@ onMount(() => {
 		</div>
 		<div id="waveBackground" style="background-image: url('assets/wave.png');"></div>
 	</div>
-	<div class="container-fluid" style="background-color: var(--mainColor); margin-top: -2px; padding-top: 1px;">
+	<div class="container-fluid p-0" style="background-color: var(--mainColor); margin-top: -2px; padding-top: 1px;">
 		<div class="row my-5 my-md-0">
 			<div class="col-10 col-md-6 m-auto d-flex  justify-content-center">
-				<h3 class="skillsText text-white text-center text-md-start" data-aos="fade-in" data-aos-duration="800">I love learning new technologies and comming up with new software ideas</h3>
+				<h3 class="skillsText text-white text-center text-md-start" data-aos="fade-in" data-aos-duration="800">I work in alot of different technolgies and love learning new</h3>
 			</div>
 			<Skills></Skills>
 		</div>
+		<div class="row my-5 text-white d-flex flex-column align-items-center">
+			<div class="col-10 col-md-8 col-lg-6">
+				<h3 class="w-100">About me</h3>
+				<div>
+					<p>
+						My name is Jonas Stjerne i’m 22 and on my 4th semester of Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation.</p> <br>
+						<p>I’m currently working at Openomic as a full stack junior developer & doing freelance.</p><br>
+						<p>Feel free to contact me if you have any questions or would like me to work on a project</p>
+				</div>
+			</div>
+		</div>
+		<img src="assets/multiWaveDivider.png" alt="">
 	</div>
 	<ProjectCard Title={"Test Tilte"} Text={"Test text"} Tech={"Test tech"} ImgSrc={"assets/projectImages/Chatter.png"}/>
 </main>

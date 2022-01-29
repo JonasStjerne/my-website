@@ -57478,13 +57478,20 @@ var app = (function () {
     	let feBlend;
     	let feGaussianBlur;
     	let rect;
+    	let rect_fill_value;
     	let g;
     	let circle0;
+    	let circle0_fill_value;
     	let circle1;
+    	let circle1_fill_value;
     	let circle2;
+    	let circle2_fill_value;
     	let circle3;
+    	let circle3_fill_value;
     	let circle4;
+    	let circle4_fill_value;
     	let circle5;
+    	let circle5_fill_value;
     	let t6;
     	let div3;
     	let p1;
@@ -57588,7 +57595,7 @@ var app = (function () {
     			add_location(p0, file$1, 133, 20, 4915);
     			attr_dev(div0, "class", "col-5");
     			add_location(div0, file$1, 134, 20, 5005);
-    			attr_dev(img0, "class", "h-50 position-absolute top-50 shadowDarker p-0 projectImage c_slideInLeft svelte-1tjbkbn");
+    			attr_dev(img0, "class", "h-50 position-absolute top-50 shadowDarker p-0 projectImage svelte-1tjbkbn");
     			attr_dev(img0, "id", "0");
     			set_style(img0, "transform", "translateY(-50%)");
     			set_style(img0, "border-radius", "8px");
@@ -57599,58 +57606,58 @@ var app = (function () {
     			add_location(div1, file$1, 132, 16, 4842);
     			attr_dev(feFlood, "flood-opacity", "0");
     			attr_dev(feFlood, "result", "BackgroundImageFix");
-    			add_location(feFlood, file$1, 137, 290, 5564);
+    			add_location(feFlood, file$1, 137, 290, 5550);
     			attr_dev(feBlend, "mode", "normal");
     			attr_dev(feBlend, "in", "SourceGraphic");
     			attr_dev(feBlend, "in2", "BackgroundImageFix");
     			attr_dev(feBlend, "result", "shape");
-    			add_location(feBlend, file$1, 137, 355, 5629);
+    			add_location(feBlend, file$1, 137, 355, 5615);
     			attr_dev(feGaussianBlur, "stdDeviation", "161");
     			attr_dev(feGaussianBlur, "result", "effect1_foregroundBlur");
-    			add_location(feGaussianBlur, file$1, 137, 447, 5721);
+    			add_location(feGaussianBlur, file$1, 137, 447, 5707);
     			attr_dev(filter, "id", "blur1");
     			attr_dev(filter, "x", "-10%");
     			attr_dev(filter, "y", "-10%");
     			attr_dev(filter, "width", "120%");
     			attr_dev(filter, "height", "120%");
-    			add_location(filter, file$1, 137, 226, 5500);
-    			add_location(defs, file$1, 137, 220, 5494);
+    			add_location(filter, file$1, 137, 226, 5486);
+    			add_location(defs, file$1, 137, 220, 5480);
     			attr_dev(rect, "width", "900");
     			attr_dev(rect, "height", "600");
-    			attr_dev(rect, "fill", "#e800ff");
-    			add_location(rect, file$1, 137, 547, 5821);
+    			attr_dev(rect, "fill", rect_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
+    			add_location(rect, file$1, 137, 547, 5807);
     			attr_dev(circle0, "cx", "877");
     			attr_dev(circle0, "cy", "11");
-    			attr_dev(circle0, "fill", "#ff9b00");
+    			attr_dev(circle0, "fill", circle0_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle0, "r", "357");
-    			add_location(circle0, file$1, 137, 624, 5898);
+    			add_location(circle0, file$1, 138, 20, 5940);
     			attr_dev(circle1, "cx", "259");
     			attr_dev(circle1, "cy", "45");
-    			attr_dev(circle1, "fill", "#e800ff");
+    			attr_dev(circle1, "fill", circle1_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle1, "r", "357");
-    			add_location(circle1, file$1, 137, 681, 5955);
+    			add_location(circle1, file$1, 138, 111, 6031);
     			attr_dev(circle2, "cx", "866");
     			attr_dev(circle2, "cy", "592");
-    			attr_dev(circle2, "fill", "#ff9b00");
+    			attr_dev(circle2, "fill", circle2_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle2, "r", "357");
-    			add_location(circle2, file$1, 137, 738, 6012);
+    			add_location(circle2, file$1, 138, 202, 6122);
     			attr_dev(circle3, "cx", "743");
     			attr_dev(circle3, "cy", "302");
-    			attr_dev(circle3, "fill", "#ff9b00");
+    			attr_dev(circle3, "fill", circle3_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle3, "r", "357");
-    			add_location(circle3, file$1, 137, 796, 6070);
+    			add_location(circle3, file$1, 138, 294, 6214);
     			attr_dev(circle4, "cx", "288");
     			attr_dev(circle4, "cy", "498");
-    			attr_dev(circle4, "fill", "#e800ff");
+    			attr_dev(circle4, "fill", circle4_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle4, "r", "357");
-    			add_location(circle4, file$1, 137, 854, 6128);
+    			add_location(circle4, file$1, 138, 386, 6306);
     			attr_dev(circle5, "cx", "192");
     			attr_dev(circle5, "cy", "260");
-    			attr_dev(circle5, "fill", "#ff9b00");
+    			attr_dev(circle5, "fill", circle5_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle5, "r", "357");
-    			add_location(circle5, file$1, 137, 912, 6186);
+    			add_location(circle5, file$1, 138, 478, 6398);
     			attr_dev(g, "filter", "url(#blur1)");
-    			add_location(g, file$1, 137, 600, 5874);
+    			add_location(g, file$1, 137, 634, 5894);
     			attr_dev(svg, "class", "position-absolute w-100 h-100");
     			set_style(svg, "top", "0");
     			set_style(svg, "left", "0");
@@ -57660,20 +57667,20 @@ var app = (function () {
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
     			attr_dev(svg, "version", "1.1");
-    			add_location(svg, file$1, 137, 16, 5290);
+    			add_location(svg, file$1, 137, 16, 5276);
     			attr_dev(div2, "class", "p-4");
     			add_location(div2, file$1, 130, 12, 4719);
     			attr_dev(p1, "class", "m-0");
-    			add_location(p1, file$1, 140, 16, 6370);
+    			add_location(p1, file$1, 141, 16, 6616);
     			if (!src_url_equal(img1.src, img1_src_value = "assets/github.svg")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "alt", "github");
     			attr_dev(img1, "height", "30px");
     			attr_dev(img1, "width", "30px");
-    			add_location(img1, file$1, 142, 20, 6519);
+    			add_location(img1, file$1, 143, 20, 6765);
     			attr_dev(a, "href", a_href_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].srcGithub);
-    			add_location(a, file$1, 141, 16, 6449);
+    			add_location(a, file$1, 142, 16, 6695);
     			attr_dev(div3, "class", "d-flex justify-content-between align-items-center ");
-    			add_location(div3, file$1, 139, 12, 6288);
+    			add_location(div3, file$1, 140, 12, 6534);
     			attr_dev(div4, "class", "position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative");
     			add_location(div4, file$1, 129, 8, 4583);
     			attr_dev(div5, "class", "position-relative container m-0 col-8");
@@ -57681,44 +57688,44 @@ var app = (function () {
     			set_style(div5, "width", "30%");
     			set_style(div5, "padding-bottom", "30%");
     			add_location(div5, file$1, 128, 4, 4475);
-    			add_location(small0, file$1, 150, 20, 6879);
+    			add_location(small0, file$1, 151, 20, 7125);
     			attr_dev(div6, "class", "w-100 rounded-3");
     			set_style(div6, "height", "5px");
     			set_style(div6, "background-color", "var(--secondaryColor)");
-    			add_location(div6, file$1, 152, 24, 7006);
+    			add_location(div6, file$1, 153, 24, 7252);
     			attr_dev(div7, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-1tjbkbn");
     			set_style(div7, "background-image", "var(--gradient)");
     			set_style(div7, "width", /*percentProjectBar*/ ctx[2] + "%");
     			set_style(div7, "height", "8px");
     			set_style(div7, "transform", "translateY(-50%)");
-    			add_location(div7, file$1, 153, 24, 7129);
+    			add_location(div7, file$1, 154, 24, 7375);
     			set_style(div8, "width", "80%");
     			set_style(div8, "position", "relative");
-    			add_location(div8, file$1, 151, 20, 6935);
-    			add_location(small1, file$1, 155, 20, 7368);
+    			add_location(div8, file$1, 152, 20, 7181);
+    			add_location(small1, file$1, 156, 20, 7614);
     			attr_dev(div9, "class", "d-flex justify-content-center align-items-center w-100");
     			set_style(div9, "gap", "10px");
-    			add_location(div9, file$1, 149, 12, 6770);
+    			add_location(div9, file$1, 150, 12, 7016);
     			if (!src_url_equal(img2.src, img2_src_value = "assets/arrow.png")) attr_dev(img2, "src", img2_src_value);
     			attr_dev(img2, "alt", "left arrow(see previous project)");
-    			add_location(img2, file$1, 159, 20, 7606);
+    			add_location(img2, file$1, 160, 20, 7852);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-1tjbkbn");
-    			add_location(button0, file$1, 158, 16, 7500);
+    			add_location(button0, file$1, 159, 16, 7746);
     			set_style(img3, "transform", "rotate(180deg)");
     			if (!src_url_equal(img3.src, img3_src_value = "assets/arrow.png")) attr_dev(img3, "src", img3_src_value);
     			attr_dev(img3, "alt", "right arrow(see next project)");
-    			add_location(img3, file$1, 162, 20, 7829);
+    			add_location(img3, file$1, 163, 20, 8075);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-primary-outline noHighLight svelte-1tjbkbn");
-    			add_location(button1, file$1, 161, 16, 7718);
+    			add_location(button1, file$1, 162, 16, 7964);
     			attr_dev(div10, "class", "d-flex justify-content-center mb-2");
-    			add_location(div10, file$1, 157, 12, 7434);
+    			add_location(div10, file$1, 158, 12, 7680);
     			attr_dev(div11, "class", "d-flex flex-column justify-content-end h-100");
-    			add_location(div11, file$1, 148, 8, 6698);
+    			add_location(div11, file$1, 149, 8, 6944);
     			attr_dev(div12, "class", "col-2 ms-4");
-    			add_location(div12, file$1, 147, 4, 6664);
-    			attr_dev(div13, "class", "mt-5 d-flex justify-content-center");
+    			add_location(div12, file$1, 148, 4, 6910);
+    			attr_dev(div13, "class", "my-5 d-flex justify-content-center");
     			add_location(div13, file$1, 127, 0, 4421);
     		},
     		l: function claim(nodes) {
@@ -57801,6 +57808,34 @@ var app = (function () {
     				attr_dev(img0, "src", img0_src_value);
     			}
 
+    			if (dirty & /*selectedProject*/ 1 && rect_fill_value !== (rect_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1])) {
+    				attr_dev(rect, "fill", rect_fill_value);
+    			}
+
+    			if (dirty & /*selectedProject*/ 1 && circle0_fill_value !== (circle0_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0])) {
+    				attr_dev(circle0, "fill", circle0_fill_value);
+    			}
+
+    			if (dirty & /*selectedProject*/ 1 && circle1_fill_value !== (circle1_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1])) {
+    				attr_dev(circle1, "fill", circle1_fill_value);
+    			}
+
+    			if (dirty & /*selectedProject*/ 1 && circle2_fill_value !== (circle2_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0])) {
+    				attr_dev(circle2, "fill", circle2_fill_value);
+    			}
+
+    			if (dirty & /*selectedProject*/ 1 && circle3_fill_value !== (circle3_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0])) {
+    				attr_dev(circle3, "fill", circle3_fill_value);
+    			}
+
+    			if (dirty & /*selectedProject*/ 1 && circle4_fill_value !== (circle4_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1])) {
+    				attr_dev(circle4, "fill", circle4_fill_value);
+    			}
+
+    			if (dirty & /*selectedProject*/ 1 && circle5_fill_value !== (circle5_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0])) {
+    				attr_dev(circle5, "fill", circle5_fill_value);
+    			}
+
     			if (dirty & /*selectedProject*/ 1 && t8_value !== (t8_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].tech + "")) set_data_dev(t8, t8_value);
 
     			if (dirty & /*selectedProject*/ 1 && a_href_value !== (a_href_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].srcGithub)) {
@@ -57874,7 +57909,7 @@ var app = (function () {
     			"tech": "Socket.io & JavaScript",
     			"srcGithub": "www.github.com",
     			"src": "assets/projectImages/Chatter.png",
-    			"colorsHex": ["00C9FF", "00FF8B"]
+    			"colorsHex": ["FF9900", "FF00A8"]
     		},
     		{
     			"title": "Chat app3",
@@ -57882,7 +57917,7 @@ var app = (function () {
     			"tech": "Socket.io & JavaScript",
     			"srcGithub": "www.github.com",
     			"src": "assets/projectImages/Chatter.png",
-    			"colorsHex": ["00C9FF", "00FF8B"]
+    			"colorsHex": ["00FFE0", "BD00FF"]
     		}
     	];
 
@@ -58173,19 +58208,36 @@ var app = (function () {
     	let div1;
     	let h2;
     	let t7;
-    	let p;
+    	let p0;
     	let t9;
     	let memodel;
     	let t10;
     	let div5;
     	let t11;
-    	let div9;
+    	let div12;
     	let div8;
     	let div7;
-    	let h3;
+    	let h30;
     	let t13;
     	let skills;
     	let t14;
+    	let div11;
+    	let div10;
+    	let h31;
+    	let t16;
+    	let div9;
+    	let p1;
+    	let t18;
+    	let br0;
+    	let t19;
+    	let p2;
+    	let br1;
+    	let t21;
+    	let p3;
+    	let t23;
+    	let img;
+    	let img_src_value;
+    	let t24;
     	let projectcard;
     	let current;
     	let each_value = "I'm Jonas";
@@ -58249,21 +58301,41 @@ var app = (function () {
     			}
 
     			t7 = space();
-    			p = element("p");
-    			p.textContent = "An IT student passionate about building awesome full stack software solutions";
+    			p0 = element("p");
+    			p0.textContent = "An IT student passionate about building awesome full stack software solutions";
     			t9 = space();
     			create_component(memodel.$$.fragment);
     			t10 = space();
     			div5 = element("div");
     			t11 = space();
-    			div9 = element("div");
+    			div12 = element("div");
     			div8 = element("div");
     			div7 = element("div");
-    			h3 = element("h3");
-    			h3.textContent = "I love learning new technologies and comming up with new software ideas";
+    			h30 = element("h3");
+    			h30.textContent = "I work in alot of different technolgies and love learning new";
     			t13 = space();
     			create_component(skills.$$.fragment);
     			t14 = space();
+    			div11 = element("div");
+    			div10 = element("div");
+    			h31 = element("h3");
+    			h31.textContent = "About me";
+    			t16 = space();
+    			div9 = element("div");
+    			p1 = element("p");
+    			p1.textContent = "My name is Jonas Stjerne i’m 22 and on my 4th semester of Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation.";
+    			t18 = space();
+    			br0 = element("br");
+    			t19 = space();
+    			p2 = element("p");
+    			p2.textContent = "I’m currently working at Openomic as a full stack junior developer & doing freelance.";
+    			br1 = element("br");
+    			t21 = space();
+    			p3 = element("p");
+    			p3.textContent = "Feel free to contact me if you have any questions or would like me to work on a project";
+    			t23 = space();
+    			img = element("img");
+    			t24 = space();
     			create_component(projectcard.$$.fragment);
     			add_location(title0, file, 40, 4, 1213);
     			attr_dev(circle0, "class", "social-group__outline svelte-11mldha");
@@ -58344,11 +58416,11 @@ var app = (function () {
     			attr_dev(div1, "data-aos-duration", "800");
     			attr_dev(div1, "class", "nameContainer rounded svelte-11mldha");
     			add_location(div1, file, 75, 5, 4275);
-    			attr_dev(p, "class", "underText svelte-11mldha");
-    			attr_dev(p, "data-aos", "fade-right");
-    			attr_dev(p, "data-aos-delay", "200");
-    			attr_dev(p, "data-aos-duration", "800");
-    			add_location(p, file, 86, 5, 4611);
+    			attr_dev(p0, "class", "underText svelte-11mldha");
+    			attr_dev(p0, "data-aos", "fade-right");
+    			attr_dev(p0, "data-aos-delay", "200");
+    			attr_dev(p0, "data-aos-duration", "800");
+    			add_location(p0, file, 86, 5, 4611);
     			attr_dev(div2, "class", "introContainer svelte-11mldha");
     			add_location(div2, file, 73, 4, 4150);
     			attr_dev(div3, "class", "content svelte-11mldha");
@@ -58361,19 +58433,34 @@ var app = (function () {
     			add_location(div5, file, 110, 2, 5290);
     			attr_dev(div6, "class", "position-relative vh-50");
     			add_location(div6, file, 36, 1, 963);
-    			attr_dev(h3, "class", "skillsText text-white text-center text-md-start svelte-11mldha");
-    			attr_dev(h3, "data-aos", "fade-in");
-    			attr_dev(h3, "data-aos-duration", "800");
-    			add_location(h3, file, 115, 4, 5604);
+    			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-11mldha");
+    			attr_dev(h30, "data-aos", "fade-in");
+    			attr_dev(h30, "data-aos-duration", "800");
+    			add_location(h30, file, 115, 4, 5608);
     			attr_dev(div7, "class", "col-10 col-md-6 m-auto d-flex justify-content-center");
-    			add_location(div7, file, 114, 3, 5531);
+    			add_location(div7, file, 114, 3, 5535);
     			attr_dev(div8, "class", "row my-5 my-md-0");
-    			add_location(div8, file, 113, 2, 5496);
-    			attr_dev(div9, "class", "container-fluid");
-    			set_style(div9, "background-color", "var(--mainColor)");
-    			set_style(div9, "margin-top", "-2px");
-    			set_style(div9, "padding-top", "1px");
-    			add_location(div9, file, 112, 1, 5383);
+    			add_location(div8, file, 113, 2, 5500);
+    			attr_dev(h31, "class", "w-100");
+    			add_location(h31, file, 121, 4, 5944);
+    			add_location(p1, file, 123, 5, 5993);
+    			add_location(br0, file, 124, 203, 6201);
+    			add_location(p2, file, 125, 6, 6213);
+    			add_location(br1, file, 125, 98, 6305);
+    			add_location(p3, file, 126, 6, 6317);
+    			add_location(div9, file, 122, 4, 5981);
+    			attr_dev(div10, "class", "col-10 col-md-8 col-lg-6");
+    			add_location(div10, file, 120, 3, 5900);
+    			attr_dev(div11, "class", "row my-5 text-white d-flex flex-column align-items-center");
+    			add_location(div11, file, 119, 2, 5824);
+    			if (!src_url_equal(img.src, img_src_value = "assets/multiWaveDivider.png")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "");
+    			add_location(img, file, 130, 2, 6448);
+    			attr_dev(div12, "class", "container-fluid p-0");
+    			set_style(div12, "background-color", "var(--mainColor)");
+    			set_style(div12, "margin-top", "-2px");
+    			set_style(div12, "padding-top", "1px");
+    			add_location(div12, file, 112, 1, 5383);
     			add_location(main, file, 35, 0, 954);
     		},
     		l: function claim(nodes) {
@@ -58416,19 +58503,35 @@ var app = (function () {
     			}
 
     			append_dev(div2, t7);
-    			append_dev(div2, p);
+    			append_dev(div2, p0);
     			append_dev(div4, t9);
     			mount_component(memodel, div4, null);
     			append_dev(div6, t10);
     			append_dev(div6, div5);
     			append_dev(main, t11);
-    			append_dev(main, div9);
-    			append_dev(div9, div8);
+    			append_dev(main, div12);
+    			append_dev(div12, div8);
     			append_dev(div8, div7);
-    			append_dev(div7, h3);
+    			append_dev(div7, h30);
     			append_dev(div8, t13);
     			mount_component(skills, div8, null);
-    			append_dev(main, t14);
+    			append_dev(div12, t14);
+    			append_dev(div12, div11);
+    			append_dev(div11, div10);
+    			append_dev(div10, h31);
+    			append_dev(div10, t16);
+    			append_dev(div10, div9);
+    			append_dev(div9, p1);
+    			append_dev(div9, t18);
+    			append_dev(div9, br0);
+    			append_dev(div9, t19);
+    			append_dev(div9, p2);
+    			append_dev(div9, br1);
+    			append_dev(div9, t21);
+    			append_dev(div9, p3);
+    			append_dev(div12, t23);
+    			append_dev(div12, img);
+    			append_dev(main, t24);
     			mount_component(projectcard, main, null);
     			current = true;
     		},

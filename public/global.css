@@ -89,19 +89,19 @@ button:focus {
   }
 
   .c_slideOutLeft {
-	animation: c_slideOut 1s cubic-bezier(0, 0, 0, 1.04) forwards;
+	animation: c_slideOut 1.5s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
 .c_slideInLeft {
-	animation: c_slideInLeft 1s cubic-bezier(0, 0, 0, 1.04) forwards;
+	animation: c_slideInLeft 1.5s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
 .c_slideInRight {
-	animation: c_slideIn 1s cubic-bezier(0, 0, 0, 1.04) forwards;
+	animation: c_slideIn 1.5s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
 .c_slideOutRight {
-	animation: c_slideOutRight 1s cubic-bezier(0, 0, 0, 1.04) forwards;
+	animation: c_slideOutRight 1.5s cubic-bezier(0, 0, 0, 1.04) forwards;
 }
 
 @keyframes c_slideOut {
