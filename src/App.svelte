@@ -117,20 +117,31 @@ onMount(() => {
 			</div>
 			<Skills></Skills>
 		</div>
-		<div class="row my-5 text-white d-flex flex-column align-items-center">
+		<div class="row my-5 text-white d-flex flex-column align-items-center w-100">
 			<div class="col-10 col-md-8 col-lg-6">
 				<h3 class="w-100">About me</h3>
 				<div>
 					<p>
-						My name is Jonas Stjerne i’m 22 and on my 4th semester of Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation.</p> <br>
+						My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation.</p> <br>
 						<p>I’m currently working at Openomic as a full stack junior developer & doing freelance.</p><br>
 						<p>Feel free to contact me if you have any questions or would like me to work on a project</p>
 				</div>
 			</div>
 		</div>
-		<img src="assets/multiWaveDivider.png" alt="">
+		<img class="w-100" style="margin-bottom: -2px;" src="assets/multiWaveDivider.png" alt="">
 	</div>
+	<div><h1 class="text-center my-5">See my work</h1></div>
 	<ProjectCard Title={"Test Tilte"} Text={"Test text"} Tech={"Test tech"} ImgSrc={"assets/projectImages/Chatter.png"}/>
+	<div class="fluid-container">
+		<div class="row justify-content-center">
+			<form action="" class="d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6">
+				<input type="text">
+				<input type="text">
+				<textarea name="message" id="" cols="30" rows="10"></textarea>
+			</form>
+		</div>
+	</div>
+	<img src="assets/bottomWave.png" class="w-100">
 </main>
 
 <style>
