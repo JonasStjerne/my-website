@@ -56854,10 +56854,10 @@ var app = (function () {
     			svg = svg_element("svg");
     			attr_dev(svg, "id", "svgchart");
     			attr_dev(svg, "class", "svelte-qvu6yc");
-    			add_location(svg, file$3, 214, 4, 6420);
+    			add_location(svg, file$3, 219, 4, 7126);
     			attr_dev(div, "id", "mainContainer");
     			attr_dev(div, "class", "col-12 col-md-6 gx-0");
-    			add_location(div, file$3, 213, 0, 6361);
+    			add_location(div, file$3, 218, 0, 7067);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -56896,7 +56896,7 @@ var app = (function () {
     			{
     				"id": 0,
     				"text": "Angular",
-    				"r": "40",
+    				"r": "55",
     				"types": "Framework",
     				"initialX": "345.31596164743587",
     				"initialY": "189.15349152740902"
@@ -56904,7 +56904,7 @@ var app = (function () {
     			{
     				"id": 1,
     				"text": "Vue",
-    				"r": "40",
+    				"r": "55",
     				"types": "Framework",
     				"initialX": "355.45314764282796",
     				"initialY": "268.4997049720481"
@@ -56981,7 +56981,11 @@ var app = (function () {
     				"initialX": "278.7683508949712",
     				"initialY": "154.55739227994252"
     			}
-    		],
+    		], // {"id" : 12, "text": "React","r": "55", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 13, "text": "React","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 14, "text": "Svelte","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 15, "text": "TypeScript","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 16, "text": "CSS & HTML","r": "45", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
     		"links": [
     			{ "target": 1, "source": 0 },
     			{ "target": 2, "source": 1 },
@@ -58227,31 +58231,38 @@ var app = (function () {
     	let t16;
     	let div9;
     	let p1;
-    	let t18;
+    	let t17;
     	let br0;
-    	let t19;
-    	let p2;
     	let br1;
-    	let t21;
+    	let t18;
+    	let t19;
+    	let br2;
+    	let t20;
+    	let p2;
+    	let br3;
+    	let t22;
     	let p3;
     	let t23;
+    	let a2;
+    	let t25;
+    	let t26;
     	let img0;
     	let img0_src_value;
-    	let t24;
+    	let t27;
     	let div13;
     	let h11;
-    	let t26;
+    	let t29;
     	let projectcard;
-    	let t27;
+    	let t30;
     	let div15;
     	let div14;
     	let form;
     	let input0;
-    	let t28;
+    	let t31;
     	let input1;
-    	let t29;
+    	let t32;
     	let textarea;
-    	let t30;
+    	let t33;
     	let img1;
     	let img1_src_value;
     	let current;
@@ -58338,34 +58349,40 @@ var app = (function () {
     			t16 = space();
     			div9 = element("div");
     			p1 = element("p");
-    			p1.textContent = "My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation.";
-    			t18 = space();
+    			t17 = text("My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT like advertising, project management, business development, UI design, front & backend development and many more! ");
     			br0 = element("br");
+    			br1 = element("br");
+    			t18 = text("\r\n\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
     			t19 = space();
+    			br2 = element("br");
+    			t20 = space();
     			p2 = element("p");
     			p2.textContent = "I’m currently working at Openomic as a full stack junior developer & doing freelance.";
-    			br1 = element("br");
-    			t21 = space();
+    			br3 = element("br");
+    			t22 = space();
     			p3 = element("p");
-    			p3.textContent = "Feel free to contact me if you have any questions or would like me to work on a project";
-    			t23 = space();
+    			t23 = text("Feel free to ");
+    			a2 = element("a");
+    			a2.textContent = "contact me";
+    			t25 = text(" if you have any questions or would like me to work on a project");
+    			t26 = space();
     			img0 = element("img");
-    			t24 = space();
+    			t27 = space();
     			div13 = element("div");
     			h11 = element("h1");
     			h11.textContent = "See my work";
-    			t26 = space();
+    			t29 = space();
     			create_component(projectcard.$$.fragment);
-    			t27 = space();
+    			t30 = space();
     			div15 = element("div");
     			div14 = element("div");
     			form = element("form");
     			input0 = element("input");
-    			t28 = space();
+    			t31 = space();
     			input1 = element("input");
-    			t29 = space();
+    			t32 = space();
     			textarea = element("textarea");
-    			t30 = space();
+    			t33 = space();
     			img1 = element("img");
     			add_location(title0, file, 40, 4, 1213);
     			attr_dev(circle0, "class", "social-group__outline svelte-11mldha");
@@ -58473,11 +58490,16 @@ var app = (function () {
     			add_location(div8, file, 113, 2, 5500);
     			attr_dev(h31, "class", "w-100");
     			add_location(h31, file, 121, 4, 5950);
+    			add_location(br0, file, 124, 387, 6391);
+    			add_location(br1, file, 124, 391, 6395);
     			add_location(p1, file, 123, 5, 5999);
-    			add_location(br0, file, 124, 203, 6207);
-    			add_location(p2, file, 125, 6, 6219);
-    			add_location(br1, file, 125, 98, 6311);
-    			add_location(p3, file, 126, 6, 6323);
+    			add_location(br2, file, 125, 167, 6568);
+    			add_location(p2, file, 126, 6, 6580);
+    			add_location(br3, file, 126, 98, 6672);
+    			attr_dev(a2, "class", "text-white");
+    			attr_dev(a2, "href", "#contactForm");
+    			add_location(a2, file, 127, 22, 6700);
+    			add_location(p3, file, 127, 6, 6684);
     			add_location(div9, file, 122, 4, 5987);
     			attr_dev(div10, "class", "col-10 col-md-8 col-lg-6");
     			add_location(div10, file, 120, 3, 5906);
@@ -58487,34 +58509,35 @@ var app = (function () {
     			set_style(img0, "margin-bottom", "-2px");
     			if (!src_url_equal(img0.src, img0_src_value = "assets/multiWaveDivider.png")) attr_dev(img0, "src", img0_src_value);
     			attr_dev(img0, "alt", "");
-    			add_location(img0, file, 130, 2, 6454);
+    			add_location(img0, file, 131, 2, 6861);
     			attr_dev(div12, "class", "container-fluid p-0");
     			set_style(div12, "background-color", "var(--mainColor)");
     			set_style(div12, "margin-top", "-2px");
     			set_style(div12, "padding-top", "1px");
     			add_location(div12, file, 112, 1, 5383);
     			attr_dev(h11, "class", "text-center my-5");
-    			add_location(h11, file, 132, 6, 6560);
-    			add_location(div13, file, 132, 1, 6555);
+    			add_location(h11, file, 133, 6, 6967);
+    			add_location(div13, file, 133, 1, 6962);
     			attr_dev(input0, "type", "text");
-    			add_location(input0, file, 137, 4, 6909);
+    			add_location(input0, file, 138, 4, 7333);
     			attr_dev(input1, "type", "text");
-    			add_location(input1, file, 138, 4, 6934);
+    			add_location(input1, file, 139, 4, 7358);
     			attr_dev(textarea, "name", "message");
     			attr_dev(textarea, "id", "");
     			attr_dev(textarea, "cols", "30");
     			attr_dev(textarea, "rows", "10");
-    			add_location(textarea, file, 139, 4, 6959);
+    			add_location(textarea, file, 140, 4, 7383);
     			attr_dev(form, "action", "");
     			attr_dev(form, "class", "d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6");
-    			add_location(form, file, 136, 3, 6812);
+    			add_location(form, file, 137, 3, 7236);
     			attr_dev(div14, "class", "row justify-content-center");
-    			add_location(div14, file, 135, 2, 6767);
+    			add_location(div14, file, 136, 2, 7191);
     			attr_dev(div15, "class", "fluid-container");
-    			add_location(div15, file, 134, 1, 6734);
+    			attr_dev(div15, "id", "contactForm");
+    			add_location(div15, file, 135, 1, 7141);
     			if (!src_url_equal(img1.src, img1_src_value = "assets/bottomWave.png")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "class", "w-100");
-    			add_location(img1, file, 143, 1, 7055);
+    			add_location(img1, file, 144, 1, 7479);
     			add_location(main, file, 35, 0, 954);
     		},
     		l: function claim(nodes) {
@@ -58576,30 +58599,37 @@ var app = (function () {
     			append_dev(div10, t16);
     			append_dev(div10, div9);
     			append_dev(div9, p1);
-    			append_dev(div9, t18);
-    			append_dev(div9, br0);
+    			append_dev(p1, t17);
+    			append_dev(p1, br0);
+    			append_dev(p1, br1);
+    			append_dev(p1, t18);
     			append_dev(div9, t19);
+    			append_dev(div9, br2);
+    			append_dev(div9, t20);
     			append_dev(div9, p2);
-    			append_dev(div9, br1);
-    			append_dev(div9, t21);
+    			append_dev(div9, br3);
+    			append_dev(div9, t22);
     			append_dev(div9, p3);
-    			append_dev(div12, t23);
+    			append_dev(p3, t23);
+    			append_dev(p3, a2);
+    			append_dev(p3, t25);
+    			append_dev(div12, t26);
     			append_dev(div12, img0);
-    			append_dev(main, t24);
+    			append_dev(main, t27);
     			append_dev(main, div13);
     			append_dev(div13, h11);
-    			append_dev(main, t26);
+    			append_dev(main, t29);
     			mount_component(projectcard, main, null);
-    			append_dev(main, t27);
+    			append_dev(main, t30);
     			append_dev(main, div15);
     			append_dev(div15, div14);
     			append_dev(div14, form);
     			append_dev(form, input0);
-    			append_dev(form, t28);
+    			append_dev(form, t31);
     			append_dev(form, input1);
-    			append_dev(form, t29);
+    			append_dev(form, t32);
     			append_dev(form, textarea);
-    			append_dev(main, t30);
+    			append_dev(main, t33);
     			append_dev(main, img1);
     			current = true;
     		},

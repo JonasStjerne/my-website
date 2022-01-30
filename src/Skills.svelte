@@ -6,8 +6,8 @@
   let link, node, text, h, w, simulation, grade;
    const data = {
   "nodes": [
-    {"id" : 0, "text": "Angular", "r": "40", "types": "Framework", "initialX" : "345.31596164743587", "initialY" : "189.15349152740902"},
-    {"id" : 1, "text": "Vue","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    {"id" : 0, "text": "Angular", "r": "55", "types": "Framework", "initialX" : "345.31596164743587", "initialY" : "189.15349152740902"},
+    {"id" : 1, "text": "Vue","r": "55", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
     {"id" : 3, "text": "JavaScript", "r": "50", "types": "Language", "initialX" : "270.43616060491706", "initialY" : "239.08718406127946"},
     {"id" : 4, "text": "C#", "r": "40", "types": "Language", "initialX" : "298.3934782289567", "initialY" : "324.5876401317703"},
     {"id" : 5, "text": "PHP", "r": "40", "types": "Language", "initialX" : "219.26882601831906", "initialY" : "313.0955897542832"},
@@ -17,6 +17,11 @@
     {"id" : 9, "text": ".Net Core","r": "40", "types": ".Net", "initialX" : "375.42842288639594", "initialY" : "1345.9764636192515"},
     {"id" : 10, "text": "Blazor","r": "35", "types": ".Net", "initialX" : "426.8418927251777", "initialY" : "291.401994824919"},
     {"id" : 11, "text": "Node.js","r": "35", "types": "RPA", "initialX" : "278.7683508949712", "initialY" : "154.55739227994252"},
+    // {"id" : 12, "text": "React","r": "55", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    // {"id" : 13, "text": "React","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    // {"id" : 14, "text": "Svelte","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    // {"id" : 15, "text": "TypeScript","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    // {"id" : 16, "text": "CSS & HTML","r": "45", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
   ],
   "links": [
     { "target": 1, "source": 0 },
