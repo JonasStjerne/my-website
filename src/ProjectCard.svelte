@@ -9,7 +9,7 @@
             "title" : "Chat app",
             "text" : "Small chat app made with Socket.io to get familiar with it",
             "tech" : "Socket.io & JavaScript",
-            "srcGithub" : "www.github.com",
+            "srcGithub" : "https://github.com/",
             "src" : "assets/projectImages/Chatter.png",
             "colorsHex" : ["00C9FF", "00FF8B"]
         },
@@ -17,7 +17,7 @@
             "title" : "Chat app2",
             "text" : "Small chat app made with Socket.io to get familiar with it",
             "tech" : "Socket.io & JavaScript",
-            "srcGithub" : "www.github.com",
+            "srcGithub" : "https://github.com/",
             "src" : "assets/projectImages/Chatter.png",
             "colorsHex" : ["FF9900", "FF00A8"]
         },
@@ -25,7 +25,7 @@
             "title" : "Chat app3",
             "text" : "Small chat app made with Socket.io to get familiar with it",
             "tech" : "Socket.io & JavaScript",
-            "srcGithub" : "www.github.com",
+            "srcGithub" : "https://github.com/",
             "src" : "assets/projectImages/Chatter.png",
             "colorsHex" : ["00FFE0", "BD00FF"]
         }

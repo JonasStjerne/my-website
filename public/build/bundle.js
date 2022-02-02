@@ -57185,15 +57185,15 @@ var app = (function () {
     			attr_dev(canvas, "id", "model");
     			set_style(canvas, "display", "block");
     			attr_dev(canvas, "class", "mx-auto");
-    			add_location(canvas, file$2, 159, 12, 5352);
+    			add_location(canvas, file$2, 162, 12, 5493);
     			attr_dev(div0, "class", "maskWindow svelte-1g33j91");
-    			add_location(div0, file$2, 158, 8, 5314);
+    			add_location(div0, file$2, 161, 8, 5455);
     			attr_dev(div1, "class", "modelWindow svelte-1g33j91");
-    			set_style(div1, "width", /*w*/ ctx[0] / Math.sqrt(2) - 50 + "px");
-    			set_style(div1, "height", /*w*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
-    			add_location(div1, file$2, 161, 8, 5445);
+    			set_style(div1, "width", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px");
+    			set_style(div1, "height", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
+    			add_location(div1, file$2, 164, 8, 5586);
     			attr_dev(div2, "class", "position-relative");
-    			add_location(div2, file$2, 157, 4, 5273);
+    			add_location(div2, file$2, 160, 4, 5414);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57206,12 +57206,12 @@ var app = (function () {
     			append_dev(div2, div1);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*w*/ 1) {
-    				set_style(div1, "width", /*w*/ ctx[0] / Math.sqrt(2) - 50 + "px");
+    			if (dirty & /*h*/ 1) {
+    				set_style(div1, "width", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px");
     			}
 
-    			if (dirty & /*w*/ 1) {
-    				set_style(div1, "height", /*w*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
+    			if (dirty & /*h*/ 1) {
+    				set_style(div1, "height", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
     			}
     		},
     		i: noop,
@@ -57250,17 +57250,15 @@ var app = (function () {
     	const scene = new Scene();
 
     	//Add ambient light
-    	const light = new AmbientLight(0x404040, 2); // soft white light
+    	const light = new AmbientLight(0x404040, 6); // soft white light
 
     	scene.add(light);
 
     	//Add directional light
-    	const directionalLight = new DirectionalLight(0xffffff, 2);
-
-    	directionalLight.position.set(0, 1, 2);
-    	directionalLight.castShadow = true;
-    	scene.add(directionalLight);
-
+    	// const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    	// directionalLight.position.set(0, 30,10);
+    	// directionalLight.castShadow = true;
+    	// scene.add(directionalLight);
     	//Animation tick
     	const tick = () => {
     		//Tell browser to call tick function on next animation frame
@@ -57322,17 +57320,17 @@ var app = (function () {
     		//  const controls = new OrbitControls( camera,  renderer.domElement);
     		// controls.addEventListener('mousechange', renderer);
     		//Set size and pixel ratio
-    		$$invalidate(0, w = 400);
+    		w = 700;
 
-    		h = 400;
+    		$$invalidate(0, h = 400);
     		renderer.setPixelRatio(window.devicePixelRatio);
     		renderer.setSize(w, h);
 
     		//Defining camera and propeties
     		camera = new PerspectiveCamera(75, w / h, 1, 1000);
 
-    		camera.position.setZ(1.5);
-    		camera.position.setY(0);
+    		camera.position.setZ(3.5);
+    		camera.position.setY(2.8);
     		camera.zoom = 1.8;
     		camera.updateProjectionMatrix();
 
@@ -57340,14 +57338,15 @@ var app = (function () {
     		const loader = new GLTFLoader();
 
     		loader.load(
-    			'assets/Xbot.glb',
+    			'assets/model.gltf',
     			function (gltf) {
     				model = gltf.scene;
+    				console.log(gltf.animations);
 
     				//Add to scene
     				scene.add(model);
 
-    				model.position.setY(-1.5);
+    				model.position.setY(-2);
 
     				//Setup skelton
     				skeleton = new SkeletonHelper(model);
@@ -57359,13 +57358,15 @@ var app = (function () {
     				mixer = new AnimationMixer(model);
 
     				//Start hello animation
-    				mixer.clipAction(gltf.animations[3]).play(); //Change this to hello animation
+    				mixer.clipAction(gltf.animations[0]).play(); //Change this to hello animation
 
     				//Magic to get three.js to render the model correctly.
     				gltf.scene.traverse(child => {
     					if (child.type == 'SkinnedMesh') {
     						child.frustumCulled = false;
     					}
+
+    					if (child.material) child.material.metalness = 0;
     				});
 
     				//Call tick function to start animation
@@ -57374,7 +57375,7 @@ var app = (function () {
     				//Add eventlistiner for mouse move and call function to move model head after hello-animation has run
     				setTimeout(
     					() => {
-    						mixer.clipAction(gltf.animations[3]).fadeOut(1);
+    						mixer.clipAction(gltf.animations[0]).fadeOut(1);
     						document.addEventListener("mousemove", e => RotateHead(e.pageX, e.pageY));
     					},
     					2000
@@ -57411,7 +57412,6 @@ var app = (function () {
     		animations,
     		scene,
     		light,
-    		directionalLight,
     		tick,
     		calcAngle,
     		RotateHead
@@ -57420,8 +57420,8 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('originY' in $$props) originY = $$props.originY;
     		if ('originX' in $$props) originX = $$props.originX;
-    		if ('w' in $$props) $$invalidate(0, w = $$props.w);
-    		if ('h' in $$props) h = $$props.h;
+    		if ('w' in $$props) w = $$props.w;
+    		if ('h' in $$props) $$invalidate(0, h = $$props.h);
     		if ('camera' in $$props) camera = $$props.camera;
     		if ('model' in $$props) model = $$props.model;
     		if ('skeleton' in $$props) skeleton = $$props.skeleton;
@@ -57434,7 +57434,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [w];
+    	return [h];
     }
 
     class MeModel extends SvelteComponentDev {
@@ -57594,74 +57594,74 @@ var app = (function () {
     			button1 = element("button");
     			img3 = element("img");
     			attr_dev(h3, "class", "row text-white pb-2");
-    			add_location(h3, file$1, 131, 16, 4754);
+    			add_location(h3, file$1, 131, 16, 4769);
     			attr_dev(p0, "class", "col-7 p-0 text-white");
-    			add_location(p0, file$1, 133, 20, 4915);
+    			add_location(p0, file$1, 133, 20, 4930);
     			attr_dev(div0, "class", "col-5");
-    			add_location(div0, file$1, 134, 20, 5005);
+    			add_location(div0, file$1, 134, 20, 5020);
     			attr_dev(img0, "class", "h-50 position-absolute top-50 shadowDarker p-0 projectImage svelte-1tjbkbn");
     			attr_dev(img0, "id", "0");
     			set_style(img0, "transform", "translateY(-50%)");
     			set_style(img0, "border-radius", "8px");
     			if (!src_url_equal(img0.src, img0_src_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].src)) attr_dev(img0, "src", img0_src_value);
     			attr_dev(img0, "alt", "");
-    			add_location(img0, file$1, 135, 20, 5052);
+    			add_location(img0, file$1, 135, 20, 5067);
     			attr_dev(div1, "class", "row");
-    			add_location(div1, file$1, 132, 16, 4842);
+    			add_location(div1, file$1, 132, 16, 4857);
     			attr_dev(feFlood, "flood-opacity", "0");
     			attr_dev(feFlood, "result", "BackgroundImageFix");
-    			add_location(feFlood, file$1, 137, 290, 5550);
+    			add_location(feFlood, file$1, 137, 290, 5565);
     			attr_dev(feBlend, "mode", "normal");
     			attr_dev(feBlend, "in", "SourceGraphic");
     			attr_dev(feBlend, "in2", "BackgroundImageFix");
     			attr_dev(feBlend, "result", "shape");
-    			add_location(feBlend, file$1, 137, 355, 5615);
+    			add_location(feBlend, file$1, 137, 355, 5630);
     			attr_dev(feGaussianBlur, "stdDeviation", "161");
     			attr_dev(feGaussianBlur, "result", "effect1_foregroundBlur");
-    			add_location(feGaussianBlur, file$1, 137, 447, 5707);
+    			add_location(feGaussianBlur, file$1, 137, 447, 5722);
     			attr_dev(filter, "id", "blur1");
     			attr_dev(filter, "x", "-10%");
     			attr_dev(filter, "y", "-10%");
     			attr_dev(filter, "width", "120%");
     			attr_dev(filter, "height", "120%");
-    			add_location(filter, file$1, 137, 226, 5486);
-    			add_location(defs, file$1, 137, 220, 5480);
+    			add_location(filter, file$1, 137, 226, 5501);
+    			add_location(defs, file$1, 137, 220, 5495);
     			attr_dev(rect, "width", "900");
     			attr_dev(rect, "height", "600");
     			attr_dev(rect, "fill", rect_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
-    			add_location(rect, file$1, 137, 547, 5807);
+    			add_location(rect, file$1, 137, 547, 5822);
     			attr_dev(circle0, "cx", "877");
     			attr_dev(circle0, "cy", "11");
     			attr_dev(circle0, "fill", circle0_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle0, "r", "357");
-    			add_location(circle0, file$1, 138, 20, 5940);
+    			add_location(circle0, file$1, 138, 20, 5955);
     			attr_dev(circle1, "cx", "259");
     			attr_dev(circle1, "cy", "45");
     			attr_dev(circle1, "fill", circle1_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle1, "r", "357");
-    			add_location(circle1, file$1, 138, 111, 6031);
+    			add_location(circle1, file$1, 138, 111, 6046);
     			attr_dev(circle2, "cx", "866");
     			attr_dev(circle2, "cy", "592");
     			attr_dev(circle2, "fill", circle2_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle2, "r", "357");
-    			add_location(circle2, file$1, 138, 202, 6122);
+    			add_location(circle2, file$1, 138, 202, 6137);
     			attr_dev(circle3, "cx", "743");
     			attr_dev(circle3, "cy", "302");
     			attr_dev(circle3, "fill", circle3_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle3, "r", "357");
-    			add_location(circle3, file$1, 138, 294, 6214);
+    			add_location(circle3, file$1, 138, 294, 6229);
     			attr_dev(circle4, "cx", "288");
     			attr_dev(circle4, "cy", "498");
     			attr_dev(circle4, "fill", circle4_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle4, "r", "357");
-    			add_location(circle4, file$1, 138, 386, 6306);
+    			add_location(circle4, file$1, 138, 386, 6321);
     			attr_dev(circle5, "cx", "192");
     			attr_dev(circle5, "cy", "260");
     			attr_dev(circle5, "fill", circle5_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle5, "r", "357");
-    			add_location(circle5, file$1, 138, 478, 6398);
+    			add_location(circle5, file$1, 138, 478, 6413);
     			attr_dev(g, "filter", "url(#blur1)");
-    			add_location(g, file$1, 137, 634, 5894);
+    			add_location(g, file$1, 137, 634, 5909);
     			attr_dev(svg, "class", "position-absolute w-100 h-100");
     			set_style(svg, "top", "0");
     			set_style(svg, "left", "0");
@@ -57671,66 +57671,66 @@ var app = (function () {
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
     			attr_dev(svg, "version", "1.1");
-    			add_location(svg, file$1, 137, 16, 5276);
+    			add_location(svg, file$1, 137, 16, 5291);
     			attr_dev(div2, "class", "p-4");
-    			add_location(div2, file$1, 130, 12, 4719);
+    			add_location(div2, file$1, 130, 12, 4734);
     			attr_dev(p1, "class", "m-0");
-    			add_location(p1, file$1, 141, 16, 6616);
+    			add_location(p1, file$1, 141, 16, 6631);
     			if (!src_url_equal(img1.src, img1_src_value = "assets/github.svg")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "alt", "github");
     			attr_dev(img1, "height", "30px");
     			attr_dev(img1, "width", "30px");
-    			add_location(img1, file$1, 143, 20, 6765);
+    			add_location(img1, file$1, 143, 20, 6780);
     			attr_dev(a, "href", a_href_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].srcGithub);
-    			add_location(a, file$1, 142, 16, 6695);
+    			add_location(a, file$1, 142, 16, 6710);
     			attr_dev(div3, "class", "d-flex justify-content-between align-items-center ");
-    			add_location(div3, file$1, 140, 12, 6534);
+    			add_location(div3, file$1, 140, 12, 6549);
     			attr_dev(div4, "class", "position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative");
-    			add_location(div4, file$1, 129, 8, 4583);
+    			add_location(div4, file$1, 129, 8, 4598);
     			attr_dev(div5, "class", "position-relative container m-0 col-8");
     			set_style(div5, "height", "0");
     			set_style(div5, "width", "30%");
     			set_style(div5, "padding-bottom", "30%");
-    			add_location(div5, file$1, 128, 4, 4475);
-    			add_location(small0, file$1, 151, 20, 7125);
+    			add_location(div5, file$1, 128, 4, 4490);
+    			add_location(small0, file$1, 151, 20, 7140);
     			attr_dev(div6, "class", "w-100 rounded-3");
     			set_style(div6, "height", "5px");
     			set_style(div6, "background-color", "var(--secondaryColor)");
-    			add_location(div6, file$1, 153, 24, 7252);
+    			add_location(div6, file$1, 153, 24, 7267);
     			attr_dev(div7, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-1tjbkbn");
     			set_style(div7, "background-image", "var(--gradient)");
     			set_style(div7, "width", /*percentProjectBar*/ ctx[2] + "%");
     			set_style(div7, "height", "8px");
     			set_style(div7, "transform", "translateY(-50%)");
-    			add_location(div7, file$1, 154, 24, 7375);
+    			add_location(div7, file$1, 154, 24, 7390);
     			set_style(div8, "width", "80%");
     			set_style(div8, "position", "relative");
-    			add_location(div8, file$1, 152, 20, 7181);
-    			add_location(small1, file$1, 156, 20, 7614);
+    			add_location(div8, file$1, 152, 20, 7196);
+    			add_location(small1, file$1, 156, 20, 7629);
     			attr_dev(div9, "class", "d-flex justify-content-center align-items-center w-100");
     			set_style(div9, "gap", "10px");
-    			add_location(div9, file$1, 150, 12, 7016);
+    			add_location(div9, file$1, 150, 12, 7031);
     			if (!src_url_equal(img2.src, img2_src_value = "assets/arrow.png")) attr_dev(img2, "src", img2_src_value);
     			attr_dev(img2, "alt", "left arrow(see previous project)");
-    			add_location(img2, file$1, 160, 20, 7852);
+    			add_location(img2, file$1, 160, 20, 7867);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-1tjbkbn");
-    			add_location(button0, file$1, 159, 16, 7746);
+    			add_location(button0, file$1, 159, 16, 7761);
     			set_style(img3, "transform", "rotate(180deg)");
     			if (!src_url_equal(img3.src, img3_src_value = "assets/arrow.png")) attr_dev(img3, "src", img3_src_value);
     			attr_dev(img3, "alt", "right arrow(see next project)");
-    			add_location(img3, file$1, 163, 20, 8075);
+    			add_location(img3, file$1, 163, 20, 8090);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-primary-outline noHighLight svelte-1tjbkbn");
-    			add_location(button1, file$1, 162, 16, 7964);
+    			add_location(button1, file$1, 162, 16, 7979);
     			attr_dev(div10, "class", "d-flex justify-content-center mb-2");
-    			add_location(div10, file$1, 158, 12, 7680);
+    			add_location(div10, file$1, 158, 12, 7695);
     			attr_dev(div11, "class", "d-flex flex-column justify-content-end h-100");
-    			add_location(div11, file$1, 149, 8, 6944);
+    			add_location(div11, file$1, 149, 8, 6959);
     			attr_dev(div12, "class", "col-2 ms-4");
-    			add_location(div12, file$1, 148, 4, 6910);
+    			add_location(div12, file$1, 148, 4, 6925);
     			attr_dev(div13, "class", "my-5 d-flex justify-content-center");
-    			add_location(div13, file$1, 127, 0, 4421);
+    			add_location(div13, file$1, 127, 0, 4436);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57903,7 +57903,7 @@ var app = (function () {
     			"title": "Chat app",
     			"text": "Small chat app made with Socket.io to get familiar with it",
     			"tech": "Socket.io & JavaScript",
-    			"srcGithub": "www.github.com",
+    			"srcGithub": "https://github.com/",
     			"src": "assets/projectImages/Chatter.png",
     			"colorsHex": ["00C9FF", "00FF8B"]
     		},
@@ -57911,7 +57911,7 @@ var app = (function () {
     			"title": "Chat app2",
     			"text": "Small chat app made with Socket.io to get familiar with it",
     			"tech": "Socket.io & JavaScript",
-    			"srcGithub": "www.github.com",
+    			"srcGithub": "https://github.com/",
     			"src": "assets/projectImages/Chatter.png",
     			"colorsHex": ["FF9900", "FF00A8"]
     		},
@@ -57919,7 +57919,7 @@ var app = (function () {
     			"title": "Chat app3",
     			"text": "Small chat app made with Socket.io to get familiar with it",
     			"tech": "Socket.io & JavaScript",
-    			"srcGithub": "www.github.com",
+    			"srcGithub": "https://github.com/",
     			"src": "assets/projectImages/Chatter.png",
     			"colorsHex": ["00FFE0", "BD00FF"]
     		}
@@ -58349,7 +58349,7 @@ var app = (function () {
     			t16 = space();
     			div9 = element("div");
     			p1 = element("p");
-    			t17 = text("My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT like advertising, project management, business development, UI design, front & backend development and many more! ");
+    			t17 = text("My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT project management, business development, UI design, front & backend development and many more! ");
     			br0 = element("br");
     			br1 = element("br");
     			t18 = text("\r\n\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
@@ -58490,16 +58490,16 @@ var app = (function () {
     			add_location(div8, file, 113, 2, 5500);
     			attr_dev(h31, "class", "w-100");
     			add_location(h31, file, 121, 4, 5950);
-    			add_location(br0, file, 124, 387, 6391);
-    			add_location(br1, file, 124, 391, 6395);
+    			add_location(br0, file, 124, 369, 6373);
+    			add_location(br1, file, 124, 373, 6377);
     			add_location(p1, file, 123, 5, 5999);
-    			add_location(br2, file, 125, 167, 6568);
-    			add_location(p2, file, 126, 6, 6580);
-    			add_location(br3, file, 126, 98, 6672);
+    			add_location(br2, file, 125, 167, 6550);
+    			add_location(p2, file, 126, 6, 6562);
+    			add_location(br3, file, 126, 98, 6654);
     			attr_dev(a2, "class", "text-white");
     			attr_dev(a2, "href", "#contactForm");
-    			add_location(a2, file, 127, 22, 6700);
-    			add_location(p3, file, 127, 6, 6684);
+    			add_location(a2, file, 127, 22, 6682);
+    			add_location(p3, file, 127, 6, 6666);
     			add_location(div9, file, 122, 4, 5987);
     			attr_dev(div10, "class", "col-10 col-md-8 col-lg-6");
     			add_location(div10, file, 120, 3, 5906);
@@ -58509,35 +58509,35 @@ var app = (function () {
     			set_style(img0, "margin-bottom", "-2px");
     			if (!src_url_equal(img0.src, img0_src_value = "assets/multiWaveDivider.png")) attr_dev(img0, "src", img0_src_value);
     			attr_dev(img0, "alt", "");
-    			add_location(img0, file, 131, 2, 6861);
+    			add_location(img0, file, 131, 2, 6843);
     			attr_dev(div12, "class", "container-fluid p-0");
     			set_style(div12, "background-color", "var(--mainColor)");
     			set_style(div12, "margin-top", "-2px");
     			set_style(div12, "padding-top", "1px");
     			add_location(div12, file, 112, 1, 5383);
     			attr_dev(h11, "class", "text-center my-5");
-    			add_location(h11, file, 133, 6, 6967);
-    			add_location(div13, file, 133, 1, 6962);
+    			add_location(h11, file, 133, 6, 6949);
+    			add_location(div13, file, 133, 1, 6944);
     			attr_dev(input0, "type", "text");
-    			add_location(input0, file, 138, 4, 7333);
+    			add_location(input0, file, 138, 4, 7315);
     			attr_dev(input1, "type", "text");
-    			add_location(input1, file, 139, 4, 7358);
+    			add_location(input1, file, 139, 4, 7340);
     			attr_dev(textarea, "name", "message");
     			attr_dev(textarea, "id", "");
     			attr_dev(textarea, "cols", "30");
     			attr_dev(textarea, "rows", "10");
-    			add_location(textarea, file, 140, 4, 7383);
+    			add_location(textarea, file, 140, 4, 7365);
     			attr_dev(form, "action", "");
     			attr_dev(form, "class", "d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6");
-    			add_location(form, file, 137, 3, 7236);
+    			add_location(form, file, 137, 3, 7218);
     			attr_dev(div14, "class", "row justify-content-center");
-    			add_location(div14, file, 136, 2, 7191);
+    			add_location(div14, file, 136, 2, 7173);
     			attr_dev(div15, "class", "fluid-container");
     			attr_dev(div15, "id", "contactForm");
-    			add_location(div15, file, 135, 1, 7141);
+    			add_location(div15, file, 135, 1, 7123);
     			if (!src_url_equal(img1.src, img1_src_value = "assets/bottomWave.png")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "class", "w-100");
-    			add_location(img1, file, 144, 1, 7479);
+    			add_location(img1, file, 144, 1, 7461);
     			add_location(main, file, 35, 0, 954);
     		},
     		l: function claim(nodes) {

@@ -122,7 +122,7 @@ onMount(() => {
 				<h3 class="w-100">About me</h3>
 				<div>
 					<p>
-						My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT like advertising, project management, business development, UI design, front & backend development and many more! <br><br>
+						My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT project management, business development, UI design, front & backend development and many more! <br><br>
 						I strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.</p> <br>
 						<p>I’m currently working at Openomic as a full stack junior developer & doing freelance.</p><br>
 						<p>Feel free to <a class="text-white" href="#contactForm">contact me</a> if you have any questions or would like me to work on a project</p>

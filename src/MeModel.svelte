@@ -17,14 +17,14 @@
    
     
     //Add ambient light
-    const light = new THREE.AmbientLight( 0x404040, 2 ); // soft white light
+    const light = new THREE.AmbientLight( 0x404040, 6); // soft white light
     scene.add( light );
     
     //Add directional light
-    const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
-    directionalLight.position.set(0,1,2);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
+    // const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    // directionalLight.position.set(0, 30,10);
+    // directionalLight.castShadow = true;
+    // scene.add(directionalLight);
     
     //Animation tick
     const tick = () => {
@@ -101,14 +101,14 @@
         // controls.addEventListener('mousechange', renderer);
     
         //Set size and pixel ratio
-        w = 400;
+        w = 700;
         h = 400;
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( w, h );
         //Defining camera and propeties
         camera = new THREE.PerspectiveCamera( 75, w/h, 1, 1000);
-        camera.position.setZ(1.5);
-        camera.position.setY(0);
+        camera.position.setZ(3.5);
+        camera.position.setY(2.8);
         camera.zoom = 1.8;
         camera.updateProjectionMatrix();
 
@@ -116,11 +116,13 @@
 
         //Load custom object
         const loader = new GLTFLoader();
-        loader.load( 'assets/Xbot.glb', function ( gltf ) {
+        loader.load( 'assets/model.gltf', function ( gltf ) {
+            
             model = gltf.scene;
+            console.log(gltf.animations)
             //Add to scene
             scene.add( model );
-            model.position.setY(-1.5);
+            model.position.setY(-2);
             //Setup skelton
             skeleton = new THREE.SkeletonHelper(model);
             skeleton.visible = false;
@@ -129,13 +131,14 @@
             //Setup animations
             mixer = new THREE.AnimationMixer( model );
             //Start hello animation
-            mixer.clipAction(gltf.animations[3]).play(); //Change this to hello animation
+            mixer.clipAction(gltf.animations[0]).play(); //Change this to hello animation
             
             //Magic to get three.js to render the model correctly.
             gltf.scene.traverse((child) => {
                 if ( child.type == 'SkinnedMesh' ) {
                     child.frustumCulled = false;
                 }
+                if ( child.material ) child.material.metalness = 0;
             });
             
             //Call tick function to start animation
@@ -143,7 +146,7 @@
     
             //Add eventlistiner for mouse move and call function to move model head after hello-animation has run
             setTimeout(() => {
-                mixer.clipAction(gltf.animations[3]).fadeOut(1);
+                mixer.clipAction(gltf.animations[0]).fadeOut(1);
                  document.addEventListener("mousemove", e => RotateHead(e.pageX, e.pageY));
             }, 2000);
     
@@ -159,7 +162,7 @@
         <div class="maskWindow">
             <canvas id="model" style="display:block;" class="mx-auto"></canvas>
         </div>
-        <div class="modelWindow" style="width: {w/Math.sqrt(2)-50}px; height: {w/Math.sqrt(2)-50}px ;"></div>
+        <div class="modelWindow" style="width: {h/Math.sqrt(2)-50}px; height: {h/Math.sqrt(2)-50}px ;"></div>
     </div>
 
    <style>
