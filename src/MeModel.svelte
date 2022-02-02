@@ -107,22 +107,22 @@
         renderer.setSize( w, h );
         //Defining camera and propeties
         camera = new THREE.PerspectiveCamera( 75, w/h, 1, 1000);
-        camera.position.setZ(3.5);
-        camera.position.setY(2.8);
-        camera.zoom = 1.8;
+        camera.position.setZ(5);
+        camera.position.setY(4);
+        camera.zoom = 2;
         camera.updateProjectionMatrix();
 
 
 
         //Load custom object
         const loader = new GLTFLoader();
-        loader.load( 'assets/model.gltf', function ( gltf ) {
+        loader.load( 'assets/model3.gltf', function ( gltf ) {
             
             model = gltf.scene;
             console.log(gltf.animations)
             //Add to scene
             scene.add( model );
-            model.position.setY(-2);
+            model.position.setY(-1.5);
             //Setup skelton
             skeleton = new THREE.SkeletonHelper(model);
             skeleton.visible = false;

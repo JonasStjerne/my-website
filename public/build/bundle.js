@@ -57185,15 +57185,15 @@ var app = (function () {
     			attr_dev(canvas, "id", "model");
     			set_style(canvas, "display", "block");
     			attr_dev(canvas, "class", "mx-auto");
-    			add_location(canvas, file$2, 162, 12, 5493);
+    			add_location(canvas, file$2, 162, 12, 5490);
     			attr_dev(div0, "class", "maskWindow svelte-1g33j91");
-    			add_location(div0, file$2, 161, 8, 5455);
+    			add_location(div0, file$2, 161, 8, 5452);
     			attr_dev(div1, "class", "modelWindow svelte-1g33j91");
     			set_style(div1, "width", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px");
     			set_style(div1, "height", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
-    			add_location(div1, file$2, 164, 8, 5586);
+    			add_location(div1, file$2, 164, 8, 5583);
     			attr_dev(div2, "class", "position-relative");
-    			add_location(div2, file$2, 160, 4, 5414);
+    			add_location(div2, file$2, 160, 4, 5411);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57329,16 +57329,16 @@ var app = (function () {
     		//Defining camera and propeties
     		camera = new PerspectiveCamera(75, w / h, 1, 1000);
 
-    		camera.position.setZ(3.5);
-    		camera.position.setY(2.8);
-    		camera.zoom = 1.8;
+    		camera.position.setZ(5);
+    		camera.position.setY(4);
+    		camera.zoom = 2;
     		camera.updateProjectionMatrix();
 
     		//Load custom object
     		const loader = new GLTFLoader();
 
     		loader.load(
-    			'assets/model.gltf',
+    			'assets/model3.gltf',
     			function (gltf) {
     				model = gltf.scene;
     				console.log(gltf.animations);
@@ -57346,7 +57346,7 @@ var app = (function () {
     				//Add to scene
     				scene.add(model);
 
-    				model.position.setY(-2);
+    				model.position.setY(-1.5);
 
     				//Setup skelton
     				skeleton = new SkeletonHelper(model);
