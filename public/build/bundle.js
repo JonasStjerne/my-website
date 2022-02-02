@@ -57185,15 +57185,15 @@ var app = (function () {
     			attr_dev(canvas, "id", "model");
     			set_style(canvas, "display", "block");
     			attr_dev(canvas, "class", "mx-auto");
-    			add_location(canvas, file$2, 162, 12, 5490);
+    			add_location(canvas, file$2, 164, 12, 5549);
     			attr_dev(div0, "class", "maskWindow svelte-1g33j91");
-    			add_location(div0, file$2, 161, 8, 5452);
+    			add_location(div0, file$2, 163, 8, 5511);
     			attr_dev(div1, "class", "modelWindow svelte-1g33j91");
     			set_style(div1, "width", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px");
     			set_style(div1, "height", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
-    			add_location(div1, file$2, 164, 8, 5583);
+    			add_location(div1, file$2, 166, 8, 5642);
     			attr_dev(div2, "class", "position-relative");
-    			add_location(div2, file$2, 160, 4, 5411);
+    			add_location(div2, file$2, 162, 4, 5470);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57358,7 +57358,12 @@ var app = (function () {
     				mixer = new AnimationMixer(model);
 
     				//Start hello animation
-    				mixer.clipAction(gltf.animations[0]).play(); //Change this to hello animation
+    				setTimeout(
+    					() => {
+    						mixer.clipAction(gltf.animations[0]).play(); //Change this to hello animation
+    					},
+    					1000
+    				);
 
     				//Magic to get three.js to render the model correctly.
     				gltf.scene.traverse(child => {
@@ -57378,7 +57383,7 @@ var app = (function () {
     						mixer.clipAction(gltf.animations[0]).fadeOut(1);
     						document.addEventListener("mousemove", e => RotateHead(e.pageX, e.pageY));
     					},
-    					2000
+    					4000
     				);
     			},
     			undefined,

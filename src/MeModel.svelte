@@ -131,7 +131,9 @@
             //Setup animations
             mixer = new THREE.AnimationMixer( model );
             //Start hello animation
-            mixer.clipAction(gltf.animations[0]).play(); //Change this to hello animation
+            setTimeout(() => {
+                mixer.clipAction(gltf.animations[0]).play(); //Change this to hello animation
+            }, 1000);
             
             //Magic to get three.js to render the model correctly.
             gltf.scene.traverse((child) => {
@@ -148,7 +150,7 @@
             setTimeout(() => {
                 mixer.clipAction(gltf.animations[0]).fadeOut(1);
                  document.addEventListener("mousemove", e => RotateHead(e.pageX, e.pageY));
-            }, 2000);
+            }, 4000);
     
         }, undefined, function ( error ) {
             console.error( error );
