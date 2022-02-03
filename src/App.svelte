@@ -73,14 +73,14 @@ onMount(() => {
 		<div class="d-flex justify-content-center flex-column-reverse flex-md-row pb-5">
 			<div class="content">
 				<div class="introContainer">
-					<h1 data-aos="fade-right" data-aos-duration="800"><span>H</span><span>i</span></h1>
+					<h1 data-aos="fade-right" data-aos-duration="800" aria-label="Hi"><span aria-hidden="true">H</span><span aria-hidden="true">i</span></h1>
 					<div data-aos="fade-right" data-aos-delay="100" data-aos-duration="800" class="nameContainer rounded">
-						<h2 class="nameEl font-weight-bold">
+						<h2 class="nameEl font-weight-bold" aria-label="I'm Jonas">
 							{#each "I'm Jonas" as char}
 								{#if char == " "}
 									&#160
 								{:else}
-									<span>{char}</span>
+									<span aria-hidden="true">{char}</span>
 								{/if}
 							{/each}
 						</h2>
