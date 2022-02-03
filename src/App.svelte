@@ -11,6 +11,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
 import ProjectCard from './ProjectCard.svelte';
+import ContactForm from "./ContactForm.svelte";
 
 
 onMount(() => {
@@ -122,27 +123,23 @@ onMount(() => {
 				<h3 class="w-100">About me</h3>
 				<div>
 					<p>
-						My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT project management, business development, UI design, front & backend development and many more! <br><br>
+						My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! <br>
 						I strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.</p> <br>
 						<p>I’m currently working at Openomic as a full stack junior developer & doing freelance.</p><br>
 						<p>Feel free to <a class="text-white" href="#contactForm">contact me</a> if you have any questions or would like me to work on a project</p>
 				</div>
 			</div>
 		</div>
-		<img class="w-100" style="margin-bottom: -2px;" src="assets/multiWaveDivider.png" alt="">
+		<img class="w-100" style="margin-bottom: -2px;" src="assets/multiWaveDivider.png"  alt="background wave" aria-hidden="true">
 	</div>
 	<div><h1 class="text-center my-5">See my work</h1></div>
 	<ProjectCard Title={"Test Tilte"} Text={"Test text"} Tech={"Test tech"} ImgSrc={"assets/projectImages/Chatter.png"}/>
-	<div class="fluid-container" id="contactForm">
-		<div class="row justify-content-center">
-			<form action="" class="d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6">
-				<input type="text">
-				<input type="text">
-				<textarea name="message" id="" cols="30" rows="10"></textarea>
-			</form>
-		</div>
+	<!-- <div class="position-relative">
+		<img src="assets/bottomWave.png" class="w-100 h-50 position-absolute" alt="bottom footer background image" aria-hidden="true" style="bottom:0; z-index: -2;">
+	</div> -->
+	<div class="position-relative container-fluid" style="background-image: url('assets/bottomWave.png'); background-psotion: left bottom; background-repeat: no-repeat; height:200px">
+		<ContactForm/>
 	</div>
-	<img src="assets/bottomWave.png" class="w-100">
 </main>
 
 <style>
