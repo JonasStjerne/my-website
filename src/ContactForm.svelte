@@ -1,16 +1,25 @@
 <script>
-        
-</script>
 
-<div class="w-100 my-5 position-relative" id="contactForm" style="z-index: 999;">
+        function submitForm() {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LfMGWMeAAAAABozdCIiE0gMNyJXqAZFOyiZ1WF7', {action: 'submit'}).then(function(token) {
+                    document.getElementById("g-token").value = token;
+                    document.getElementById("contactForm").submit();
+                });
+            });
+        }
+
+</script>
+<div class="w-100 my-5">
     <div class="row justify-content-center">
-        <form action="mail.php" class="d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6 shadow p-5 position-relative"
-        style="border-radius: 10px; gap:20px;">
+        <form action="http://localhost/my_website_backend/sendForm.php" id="contactForm" method="POST" class="d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6 shadow p-5"
+        style="border-radius: 10px; gap:20px; background-color: white;">
+            <input type="hidden" id="g-token" name="g-token">
             <h2 class="text-center">Get in touch</h2>
-            <input type="text" style="border-radius: 5px;">
-            <input type="text" style="border-radius: 5px;">
-            <textarea name="message" id="" cols="30" rows="10" required style="resize:none; border-radius: 5px;"></textarea>
-            <button type="submit" class="w-80 round text-white" style="background-image: var(--gradient); border-radius: 5px;" >Send</button>
+            <input required type="text" style="border-radius: 5px;" name="name" placeholder="Name">
+            <input required type="email" style="border-radius: 5px;" name="email" placeholder="Email">
+            <textarea name="message" id="" cols="30" rows="10" required style="resize:none; border-radius: 5px;" placeholder="Message"></textarea>
+            <button type="button" on:click={submitForm} class="w-80 round text-white" style="background-image: var(--gradient); border-radius: 5px;" >Send</button>
         </form>
     </div>
 </div>
