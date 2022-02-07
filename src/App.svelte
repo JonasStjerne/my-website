@@ -12,6 +12,7 @@ import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
 import ProjectCard from './ProjectCard.svelte';
 import ContactForm from "./ContactForm.svelte";
+import LoadingScreen from "./LoadingScreen.svelte";
 
 
 onMount(() => {
@@ -35,6 +36,7 @@ onMount(() => {
 </script>
 
 <main>
+	<LoadingScreen/>
 	<div class="position-relative vh-50">
 		<div id="header">
 			<a class="social-link social-link--github" id="github" href="https://github.com/JonasStjerne">
