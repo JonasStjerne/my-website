@@ -132,12 +132,8 @@ onMount(() => {
 		</div>
 		<img class="w-100" style="margin-bottom: -2px;" src="assets/multiWaveDivider.png"  alt="background wave" aria-hidden="true">
 	</div>
-	<div><h1 class="text-center my-5">See my work</h1></div>
-	<ProjectCard Title={"Test Tilte"} Text={"Test text"} Tech={"Test tech"} ImgSrc={"assets/projectImages/Chatter.png"}/>
-	<!-- <div class="position-relative">
-		<img src="assets/bottomWave.png" class="w-100 h-50 position-absolute" alt="bottom footer background image" aria-hidden="true" style="bottom:0; z-index: -2;">
-	</div> -->
-	<div class="position-relative container-fluid" style="background-image: url('assets/bottomWave.png'); background-psotion: left bottom; background-repeat: no-repeat; height:200px">
+	<ProjectCard/>
+	<div class="postion-relative py-5" style="background-image: url('assets/bottomWave.png'); background-repeat: no-repeat; background-size: contain; background-position: bottom">
 		<ContactForm/>
 	</div>
 </main>
