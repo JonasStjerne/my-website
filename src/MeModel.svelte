@@ -3,8 +3,8 @@
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
     import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-    
-    
+    import { createEventDispatcher } from 'svelte';
+
     let originY, originX, w, h, camera;
     
     //Define clock from three.js
@@ -14,8 +14,17 @@
     //Decaling a new scene object
     const scene = new THREE.Scene();
     
-   
+    //Load Manager
+   const manager = new THREE.LoadingManager();
     
+   //Define dispatch
+   const dispatch = createEventDispatcher();
+
+    manager.onLoad = function () {
+        dispatch("loaded", "meModel" )
+    }
+
+
     //Add ambient light
     const light = new THREE.AmbientLight( 0x404040, 6); // soft white light
     scene.add( light );
@@ -83,7 +92,7 @@
     
     
     onMount(() => {
-    
+        
         renderer = new THREE.WebGLRenderer({ 
             antialias: true,
             alpha: true,
@@ -115,7 +124,7 @@
 
 
         //Load custom object
-        const loader = new GLTFLoader();
+        const loader = new GLTFLoader(manager);
         loader.load( 'assets/model3.gltf', function ( gltf ) {
             
             model = gltf.scene;

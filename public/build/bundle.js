@@ -114,6 +114,20 @@ var app = (function () {
     function onMount(fn) {
         get_current_component().$$.on_mount.push(fn);
     }
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail);
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+            }
+        };
+    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -198,6 +212,19 @@ var app = (function () {
     }
     const outroing = new Set();
     let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
@@ -57185,15 +57212,15 @@ var app = (function () {
     			attr_dev(canvas, "id", "model");
     			set_style(canvas, "display", "block");
     			attr_dev(canvas, "class", "mx-auto");
-    			add_location(canvas, file$4, 163, 12, 5507);
+    			add_location(canvas, file$4, 172, 12, 5781);
     			attr_dev(div0, "class", "maskWindow svelte-1g33j91");
-    			add_location(div0, file$4, 162, 8, 5469);
+    			add_location(div0, file$4, 171, 8, 5743);
     			attr_dev(div1, "class", "modelWindow svelte-1g33j91");
     			set_style(div1, "width", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px");
     			set_style(div1, "height", /*h*/ ctx[0] / Math.sqrt(2) - 50 + "px ");
-    			add_location(div1, file$4, 165, 8, 5600);
+    			add_location(div1, file$4, 174, 8, 5874);
     			attr_dev(div2, "class", "position-relative");
-    			add_location(div2, file$4, 161, 4, 5428);
+    			add_location(div2, file$4, 170, 4, 5702);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -57248,6 +57275,16 @@ var app = (function () {
 
     	//Decaling a new scene object
     	const scene = new Scene();
+
+    	//Load Manager
+    	const manager = new LoadingManager();
+
+    	//Define dispatch
+    	const dispatch = createEventDispatcher();
+
+    	manager.onLoad = function () {
+    		dispatch("loaded", "meModel");
+    	};
 
     	//Add ambient light
     	const light = new AmbientLight(0x404040, 6); // soft white light
@@ -57335,7 +57372,7 @@ var app = (function () {
     		camera.updateProjectionMatrix();
 
     		//Load custom object
-    		const loader = new GLTFLoader();
+    		const loader = new GLTFLoader(manager);
 
     		loader.load(
     			'assets/model3.gltf',
@@ -57403,6 +57440,7 @@ var app = (function () {
     		THREE,
     		GLTFLoader,
     		OrbitControls,
+    		createEventDispatcher,
     		originY,
     		originX,
     		w,
@@ -57415,6 +57453,8 @@ var app = (function () {
     		mixer,
     		animations,
     		scene,
+    		manager,
+    		dispatch,
     		light,
     		tick,
     		calcAngle,
@@ -58367,11 +58407,481 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[0] = list[i];
+    	child_ctx[4] = list[i];
     	return child_ctx;
     }
 
-    // (84:8) {:else}
+    // (51:1) {#if !meModelLoaded}
+    function create_if_block_2(ctx) {
+    	let loadingscreen;
+    	let current;
+    	loadingscreen = new LoadingScreen({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(loadingscreen.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(loadingscreen, target, anchor);
+    			current = true;
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(loadingscreen.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(loadingscreen.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(loadingscreen, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(51:1) {#if !meModelLoaded}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (54:1) { #if loadElements }
+    function create_if_block(ctx) {
+    	let div6;
+    	let div0;
+    	let a0;
+    	let svg0;
+    	let title0;
+    	let t0;
+    	let g0;
+    	let circle0;
+    	let circle1;
+    	let path0;
+    	let t1;
+    	let a1;
+    	let svg1;
+    	let title1;
+    	let t2;
+    	let g1;
+    	let circle2;
+    	let circle3;
+    	let path1;
+    	let t3;
+    	let div4;
+    	let div3;
+    	let div2;
+    	let h1;
+    	let span0;
+    	let span1;
+    	let t6;
+    	let div1;
+    	let h2;
+    	let t7;
+    	let p0;
+    	let t9;
+    	let memodel;
+    	let t10;
+    	let div5;
+    	let t11;
+    	let div12;
+    	let div8;
+    	let div7;
+    	let h30;
+    	let t13;
+    	let skills;
+    	let t14;
+    	let div11;
+    	let div10;
+    	let h31;
+    	let t16;
+    	let div9;
+    	let p1;
+    	let t17;
+    	let br0;
+    	let t18;
+    	let t19;
+    	let br1;
+    	let t20;
+    	let p2;
+    	let br2;
+    	let t22;
+    	let p3;
+    	let t23;
+    	let a2;
+    	let t25;
+    	let t26;
+    	let img;
+    	let img_src_value;
+    	let t27;
+    	let projectcard;
+    	let t28;
+    	let div13;
+    	let contactform;
+    	let current;
+    	let each_value = "I'm Jonas";
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	memodel = new MeModel({ $$inline: true });
+    	memodel.$on("loaded", /*handleLoad*/ ctx[2]);
+    	skills = new Skills({ $$inline: true });
+    	projectcard = new ProjectCard({ $$inline: true });
+    	contactform = new ContactForm({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			div6 = element("div");
+    			div0 = element("div");
+    			a0 = element("a");
+    			svg0 = svg_element("svg");
+    			title0 = svg_element("title");
+    			t0 = text("github\r\n\t\t\t\t\t");
+    			g0 = svg_element("g");
+    			circle0 = svg_element("circle");
+    			circle1 = svg_element("circle");
+    			path0 = svg_element("path");
+    			t1 = space();
+    			a1 = element("a");
+    			svg1 = svg_element("svg");
+    			title1 = svg_element("title");
+    			t2 = text("linkedin\r\n\t\t\t\t\t");
+    			g1 = svg_element("g");
+    			circle2 = svg_element("circle");
+    			circle3 = svg_element("circle");
+    			path1 = svg_element("path");
+    			t3 = space();
+    			div4 = element("div");
+    			div3 = element("div");
+    			div2 = element("div");
+    			h1 = element("h1");
+    			span0 = element("span");
+    			span0.textContent = "H";
+    			span1 = element("span");
+    			span1.textContent = "i";
+    			t6 = space();
+    			div1 = element("div");
+    			h2 = element("h2");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t7 = space();
+    			p0 = element("p");
+    			p0.textContent = "An IT student passionate about building awesome full stack software solutions";
+    			t9 = space();
+    			create_component(memodel.$$.fragment);
+    			t10 = space();
+    			div5 = element("div");
+    			t11 = space();
+    			div12 = element("div");
+    			div8 = element("div");
+    			div7 = element("div");
+    			h30 = element("h3");
+    			h30.textContent = "I work in alot of different technolgies and love learning new";
+    			t13 = space();
+    			create_component(skills.$$.fragment);
+    			t14 = space();
+    			div11 = element("div");
+    			div10 = element("div");
+    			h31 = element("h3");
+    			h31.textContent = "About me";
+    			t16 = space();
+    			div9 = element("div");
+    			p1 = element("p");
+    			t17 = text("My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
+    			br0 = element("br");
+    			t18 = text("\r\n\t\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
+    			t19 = space();
+    			br1 = element("br");
+    			t20 = space();
+    			p2 = element("p");
+    			p2.textContent = "I’m currently working at Openomic as a full stack junior developer & doing freelance.";
+    			br2 = element("br");
+    			t22 = space();
+    			p3 = element("p");
+    			t23 = text("Feel free to ");
+    			a2 = element("a");
+    			a2.textContent = "contact me";
+    			t25 = text(" if you have any questions or would like me to work on a project");
+    			t26 = space();
+    			img = element("img");
+    			t27 = space();
+    			create_component(projectcard.$$.fragment);
+    			t28 = space();
+    			div13 = element("div");
+    			create_component(contactform.$$.fragment);
+    			add_location(title0, file, 58, 5, 1678);
+    			attr_dev(circle0, "class", "social-group__outline svelte-11mldha");
+    			attr_dev(circle0, "stroke", "#000");
+    			attr_dev(circle0, "stroke-width", "20");
+    			attr_dev(circle0, "cx", "300");
+    			attr_dev(circle0, "cy", "300");
+    			attr_dev(circle0, "r", "262.5");
+    			add_location(circle0, file, 62, 6, 1785);
+    			attr_dev(circle1, "class", "social-group__inner-circle svelte-11mldha");
+    			attr_dev(circle1, "fill", "#000");
+    			attr_dev(circle1, "cx", "300");
+    			attr_dev(circle1, "cy", "300");
+    			attr_dev(circle1, "r", "252.5");
+    			add_location(circle1, file, 63, 6, 1893);
+    			attr_dev(path0, "class", "social-group__icon svelte-11mldha");
+    			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
+    			attr_dev(path0, "fill", "#FFF");
+    			attr_dev(path0, "fill-rule", "nonzero");
+    			add_location(path0, file, 64, 6, 1986);
+    			attr_dev(g0, "class", "social-group");
+    			attr_dev(g0, "fill", "none");
+    			attr_dev(g0, "fill-rule", "evenodd");
+    			add_location(g0, file, 61, 5, 1721);
+    			attr_dev(svg0, "class", "social-svg svelte-11mldha");
+    			attr_dev(svg0, "viewBox", "0 0 600 600");
+    			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
+    			add_location(svg0, file, 57, 5, 1590);
+    			attr_dev(a0, "class", "social-link social-link--github svelte-11mldha");
+    			attr_dev(a0, "id", "github");
+    			attr_dev(a0, "href", "https://github.com/JonasStjerne");
+    			add_location(a0, file, 56, 4, 1489);
+    			add_location(title1, file, 71, 5, 3354);
+    			attr_dev(circle2, "class", "social-group__outline svelte-11mldha");
+    			attr_dev(circle2, "stroke", "#000");
+    			attr_dev(circle2, "stroke-width", "20");
+    			attr_dev(circle2, "cx", "300");
+    			attr_dev(circle2, "cy", "300");
+    			attr_dev(circle2, "r", "262.5");
+    			add_location(circle2, file, 75, 6, 3463);
+    			attr_dev(circle3, "class", "social-group__inner-circle svelte-11mldha");
+    			attr_dev(circle3, "fill", "#2D76B0");
+    			attr_dev(circle3, "cx", "300");
+    			attr_dev(circle3, "cy", "300");
+    			attr_dev(circle3, "r", "252.5");
+    			add_location(circle3, file, 76, 6, 3571);
+    			attr_dev(path1, "class", "social-group__icon svelte-11mldha");
+    			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
+    			attr_dev(path1, "fill", "#000");
+    			attr_dev(path1, "fill-rule", "nonzero");
+    			add_location(path1, file, 77, 6, 3667);
+    			attr_dev(g1, "class", "social-group");
+    			attr_dev(g1, "fill", "none");
+    			attr_dev(g1, "fill-rule", "evenodd");
+    			add_location(g1, file, 74, 5, 3399);
+    			attr_dev(svg1, "class", "social-svg svelte-11mldha");
+    			attr_dev(svg1, "viewBox", "0 0 600 600");
+    			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
+    			add_location(svg1, file, 70, 5, 3266);
+    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-11mldha");
+    			attr_dev(a1, "id", "linkedin");
+    			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
+    			add_location(a1, file, 69, 4, 3140);
+    			attr_dev(div0, "id", "header");
+    			attr_dev(div0, "class", "svelte-11mldha");
+    			add_location(div0, file, 55, 3, 1466);
+    			attr_dev(span0, "aria-hidden", "true");
+    			attr_dev(span0, "class", "svelte-11mldha");
+    			add_location(span0, file, 92, 72, 4750);
+    			attr_dev(span1, "aria-hidden", "true");
+    			attr_dev(span1, "class", "svelte-11mldha");
+    			add_location(span1, file, 92, 105, 4783);
+    			attr_dev(h1, "data-aos", "fade-right");
+    			attr_dev(h1, "data-aos-duration", "800");
+    			attr_dev(h1, "aria-label", "Hi");
+    			add_location(h1, file, 92, 6, 4684);
+    			attr_dev(h2, "class", "nameEl font-weight-bold svelte-11mldha");
+    			attr_dev(h2, "aria-label", "I'm Jonas");
+    			add_location(h2, file, 94, 7, 4940);
+    			attr_dev(div1, "data-aos", "fade-right");
+    			attr_dev(div1, "data-aos-delay", "100");
+    			attr_dev(div1, "data-aos-duration", "800");
+    			attr_dev(div1, "class", "nameContainer rounded svelte-11mldha");
+    			add_location(div1, file, 93, 6, 4829);
+    			attr_dev(p0, "class", "underText svelte-11mldha");
+    			attr_dev(p0, "data-aos", "fade-right");
+    			attr_dev(p0, "data-aos-delay", "200");
+    			attr_dev(p0, "data-aos-duration", "800");
+    			add_location(p0, file, 104, 6, 5218);
+    			attr_dev(div2, "class", "introContainer svelte-11mldha");
+    			add_location(div2, file, 91, 5, 4648);
+    			attr_dev(div3, "class", "content svelte-11mldha");
+    			add_location(div3, file, 90, 4, 4620);
+    			attr_dev(div4, "class", "d-flex justify-content-center flex-column-reverse flex-md-row pb-5");
+    			add_location(div4, file, 89, 3, 4534);
+    			attr_dev(div5, "id", "waveBackground");
+    			set_style(div5, "background-image", "url('assets/wave.png')");
+    			attr_dev(div5, "class", "svelte-11mldha");
+    			add_location(div5, file, 128, 3, 5944);
+    			attr_dev(div6, "class", "position-relative vh-50");
+    			add_location(div6, file, 54, 2, 1424);
+    			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-11mldha");
+    			attr_dev(h30, "data-aos", "fade-in");
+    			attr_dev(h30, "data-aos-duration", "800");
+    			add_location(h30, file, 133, 5, 6267);
+    			attr_dev(div7, "class", "col-10 col-md-6 m-auto d-flex justify-content-center");
+    			add_location(div7, file, 132, 4, 6193);
+    			attr_dev(div8, "class", "row my-5 my-md-0");
+    			add_location(div8, file, 131, 3, 6157);
+    			attr_dev(h31, "class", "w-100");
+    			add_location(h31, file, 139, 5, 6615);
+    			add_location(br0, file, 142, 380, 7051);
+    			add_location(p1, file, 141, 6, 6666);
+    			add_location(br1, file, 143, 168, 7225);
+    			add_location(p2, file, 144, 7, 7238);
+    			add_location(br2, file, 144, 99, 7330);
+    			attr_dev(a2, "class", "text-white");
+    			attr_dev(a2, "href", "#contactForm");
+    			add_location(a2, file, 145, 23, 7359);
+    			add_location(p3, file, 145, 7, 7343);
+    			add_location(div9, file, 140, 5, 6653);
+    			attr_dev(div10, "class", "col-10 col-md-8 col-lg-6");
+    			add_location(div10, file, 138, 4, 6570);
+    			attr_dev(div11, "class", "row my-5 text-white d-flex flex-column align-items-center w-100");
+    			add_location(div11, file, 137, 3, 6487);
+    			attr_dev(img, "class", "w-100");
+    			set_style(img, "margin-bottom", "-2px");
+    			if (!src_url_equal(img.src, img_src_value = "assets/multiWaveDivider.png")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "background wave");
+    			attr_dev(img, "aria-hidden", "true");
+    			add_location(img, file, 149, 3, 7524);
+    			attr_dev(div12, "class", "container-fluid p-0");
+    			set_style(div12, "background-color", "var(--mainColor)");
+    			set_style(div12, "margin-top", "-2px");
+    			set_style(div12, "padding-top", "1px");
+    			add_location(div12, file, 130, 2, 6039);
+    			attr_dev(div13, "class", "postion-relative py-5");
+    			set_style(div13, "background-image", "url('assets/bottomWave.png')");
+    			set_style(div13, "background-repeat", "no-repeat");
+    			set_style(div13, "background-size", "contain");
+    			set_style(div13, "background-position", "bottom");
+    			add_location(div13, file, 152, 2, 7680);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div6, anchor);
+    			append_dev(div6, div0);
+    			append_dev(div0, a0);
+    			append_dev(a0, svg0);
+    			append_dev(svg0, title0);
+    			append_dev(title0, t0);
+    			append_dev(svg0, g0);
+    			append_dev(g0, circle0);
+    			append_dev(g0, circle1);
+    			append_dev(g0, path0);
+    			append_dev(div0, t1);
+    			append_dev(div0, a1);
+    			append_dev(a1, svg1);
+    			append_dev(svg1, title1);
+    			append_dev(title1, t2);
+    			append_dev(svg1, g1);
+    			append_dev(g1, circle2);
+    			append_dev(g1, circle3);
+    			append_dev(g1, path1);
+    			append_dev(div6, t3);
+    			append_dev(div6, div4);
+    			append_dev(div4, div3);
+    			append_dev(div3, div2);
+    			append_dev(div2, h1);
+    			append_dev(h1, span0);
+    			append_dev(h1, span1);
+    			append_dev(div2, t6);
+    			append_dev(div2, div1);
+    			append_dev(div1, h2);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(h2, null);
+    			}
+
+    			append_dev(div2, t7);
+    			append_dev(div2, p0);
+    			append_dev(div4, t9);
+    			mount_component(memodel, div4, null);
+    			append_dev(div6, t10);
+    			append_dev(div6, div5);
+    			insert_dev(target, t11, anchor);
+    			insert_dev(target, div12, anchor);
+    			append_dev(div12, div8);
+    			append_dev(div8, div7);
+    			append_dev(div7, h30);
+    			append_dev(div8, t13);
+    			mount_component(skills, div8, null);
+    			append_dev(div12, t14);
+    			append_dev(div12, div11);
+    			append_dev(div11, div10);
+    			append_dev(div10, h31);
+    			append_dev(div10, t16);
+    			append_dev(div10, div9);
+    			append_dev(div9, p1);
+    			append_dev(p1, t17);
+    			append_dev(p1, br0);
+    			append_dev(p1, t18);
+    			append_dev(div9, t19);
+    			append_dev(div9, br1);
+    			append_dev(div9, t20);
+    			append_dev(div9, p2);
+    			append_dev(div9, br2);
+    			append_dev(div9, t22);
+    			append_dev(div9, p3);
+    			append_dev(p3, t23);
+    			append_dev(p3, a2);
+    			append_dev(p3, t25);
+    			append_dev(div12, t26);
+    			append_dev(div12, img);
+    			insert_dev(target, t27, anchor);
+    			mount_component(projectcard, target, anchor);
+    			insert_dev(target, t28, anchor);
+    			insert_dev(target, div13, anchor);
+    			mount_component(contactform, div13, null);
+    			current = true;
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(memodel.$$.fragment, local);
+    			transition_in(skills.$$.fragment, local);
+    			transition_in(projectcard.$$.fragment, local);
+    			transition_in(contactform.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(memodel.$$.fragment, local);
+    			transition_out(skills.$$.fragment, local);
+    			transition_out(projectcard.$$.fragment, local);
+    			transition_out(contactform.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div6);
+    			destroy_each(each_blocks, detaching);
+    			destroy_component(memodel);
+    			if (detaching) detach_dev(t11);
+    			if (detaching) detach_dev(div12);
+    			destroy_component(skills);
+    			if (detaching) detach_dev(t27);
+    			destroy_component(projectcard, detaching);
+    			if (detaching) detach_dev(t28);
+    			if (detaching) detach_dev(div13);
+    			destroy_component(contactform);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(54:1) { #if loadElements }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (99:9) {:else}
     function create_else_block(ctx) {
     	let span;
     	let t;
@@ -58379,10 +58889,10 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			span = element("span");
-    			t = text(/*char*/ ctx[0]);
+    			t = text(/*char*/ ctx[4]);
     			attr_dev(span, "aria-hidden", "true");
     			attr_dev(span, "class", "svelte-11mldha");
-    			add_location(span, file, 84, 9, 4726);
+    			add_location(span, file, 99, 10, 5111);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -58397,15 +58907,15 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(84:8) {:else}",
+    		source: "(99:9) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (82:8) {#if char == " "}
-    function create_if_block(ctx) {
+    // (97:9) {#if char == " "}
+    function create_if_block_1(ctx) {
     	let t;
 
     	const block = {
@@ -58422,21 +58932,21 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
+    		id: create_if_block_1.name,
     		type: "if",
-    		source: "(82:8) {#if char == \\\" \\\"}",
+    		source: "(97:9) {#if char == \\\" \\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (81:7) {#each "I'm Jonas" as char}
+    // (96:8) {#each "I'm Jonas" as char}
     function create_each_block(ctx) {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*char*/ ctx[0] == " ") return create_if_block;
+    		if (/*char*/ ctx[4] == " ") return create_if_block_1;
     		return create_else_block;
     	}
 
@@ -58463,7 +58973,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(81:7) {#each \\\"I'm Jonas\\\" as char}",
+    		source: "(96:8) {#each \\\"I'm Jonas\\\" as char}",
     		ctx
     	});
 
@@ -58472,431 +58982,89 @@ var app = (function () {
 
     function create_fragment(ctx) {
     	let main;
-    	let loadingscreen;
-    	let t0;
-    	let div6;
-    	let div0;
-    	let a0;
-    	let svg0;
-    	let title0;
-    	let t1;
-    	let g0;
-    	let circle0;
-    	let circle1;
-    	let path0;
-    	let t2;
-    	let a1;
-    	let svg1;
-    	let title1;
-    	let t3;
-    	let g1;
-    	let circle2;
-    	let circle3;
-    	let path1;
-    	let t4;
-    	let div4;
-    	let div3;
-    	let div2;
-    	let h1;
-    	let span0;
-    	let span1;
-    	let t7;
-    	let div1;
-    	let h2;
-    	let t8;
-    	let p0;
-    	let t10;
-    	let memodel;
-    	let t11;
-    	let div5;
-    	let t12;
-    	let div12;
-    	let div8;
-    	let div7;
-    	let h30;
-    	let t14;
-    	let skills;
-    	let t15;
-    	let div11;
-    	let div10;
-    	let h31;
-    	let t17;
-    	let div9;
-    	let p1;
-    	let t18;
-    	let br0;
-    	let t19;
-    	let t20;
-    	let br1;
-    	let t21;
-    	let p2;
-    	let br2;
-    	let t23;
-    	let p3;
-    	let t24;
-    	let a2;
-    	let t26;
-    	let t27;
-    	let img;
-    	let img_src_value;
-    	let t28;
-    	let projectcard;
-    	let t29;
-    	let div13;
-    	let contactform;
+    	let t;
     	let current;
-    	loadingscreen = new LoadingScreen({ $$inline: true });
-    	let each_value = "I'm Jonas";
-    	validate_each_argument(each_value);
-    	let each_blocks = [];
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
-    	}
-
-    	memodel = new MeModel({ $$inline: true });
-    	skills = new Skills({ $$inline: true });
-    	projectcard = new ProjectCard({ $$inline: true });
-    	contactform = new ContactForm({ $$inline: true });
+    	let if_block0 = !/*meModelLoaded*/ ctx[0] && create_if_block_2(ctx);
+    	let if_block1 = /*loadElements*/ ctx[1] && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
     			main = element("main");
-    			create_component(loadingscreen.$$.fragment);
-    			t0 = space();
-    			div6 = element("div");
-    			div0 = element("div");
-    			a0 = element("a");
-    			svg0 = svg_element("svg");
-    			title0 = svg_element("title");
-    			t1 = text("github\r\n\t\t\t\t");
-    			g0 = svg_element("g");
-    			circle0 = svg_element("circle");
-    			circle1 = svg_element("circle");
-    			path0 = svg_element("path");
-    			t2 = space();
-    			a1 = element("a");
-    			svg1 = svg_element("svg");
-    			title1 = svg_element("title");
-    			t3 = text("linkedin\r\n\t\t\t\t");
-    			g1 = svg_element("g");
-    			circle2 = svg_element("circle");
-    			circle3 = svg_element("circle");
-    			path1 = svg_element("path");
-    			t4 = space();
-    			div4 = element("div");
-    			div3 = element("div");
-    			div2 = element("div");
-    			h1 = element("h1");
-    			span0 = element("span");
-    			span0.textContent = "H";
-    			span1 = element("span");
-    			span1.textContent = "i";
-    			t7 = space();
-    			div1 = element("div");
-    			h2 = element("h2");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			t8 = space();
-    			p0 = element("p");
-    			p0.textContent = "An IT student passionate about building awesome full stack software solutions";
-    			t10 = space();
-    			create_component(memodel.$$.fragment);
-    			t11 = space();
-    			div5 = element("div");
-    			t12 = space();
-    			div12 = element("div");
-    			div8 = element("div");
-    			div7 = element("div");
-    			h30 = element("h3");
-    			h30.textContent = "I work in alot of different technolgies and love learning new";
-    			t14 = space();
-    			create_component(skills.$$.fragment);
-    			t15 = space();
-    			div11 = element("div");
-    			div10 = element("div");
-    			h31 = element("h3");
-    			h31.textContent = "About me";
-    			t17 = space();
-    			div9 = element("div");
-    			p1 = element("p");
-    			t18 = text("My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
-    			br0 = element("br");
-    			t19 = text("\r\n\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
-    			t20 = space();
-    			br1 = element("br");
-    			t21 = space();
-    			p2 = element("p");
-    			p2.textContent = "I’m currently working at Openomic as a full stack junior developer & doing freelance.";
-    			br2 = element("br");
-    			t23 = space();
-    			p3 = element("p");
-    			t24 = text("Feel free to ");
-    			a2 = element("a");
-    			a2.textContent = "contact me";
-    			t26 = text(" if you have any questions or would like me to work on a project");
-    			t27 = space();
-    			img = element("img");
-    			t28 = space();
-    			create_component(projectcard.$$.fragment);
-    			t29 = space();
-    			div13 = element("div");
-    			create_component(contactform.$$.fragment);
-    			add_location(title0, file, 43, 4, 1334);
-    			attr_dev(circle0, "class", "social-group__outline svelte-11mldha");
-    			attr_dev(circle0, "stroke", "#000");
-    			attr_dev(circle0, "stroke-width", "20");
-    			attr_dev(circle0, "cx", "300");
-    			attr_dev(circle0, "cy", "300");
-    			attr_dev(circle0, "r", "262.5");
-    			add_location(circle0, file, 47, 5, 1437);
-    			attr_dev(circle1, "class", "social-group__inner-circle svelte-11mldha");
-    			attr_dev(circle1, "fill", "#000");
-    			attr_dev(circle1, "cx", "300");
-    			attr_dev(circle1, "cy", "300");
-    			attr_dev(circle1, "r", "252.5");
-    			add_location(circle1, file, 48, 5, 1544);
-    			attr_dev(path0, "class", "social-group__icon svelte-11mldha");
-    			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
-    			attr_dev(path0, "fill", "#FFF");
-    			attr_dev(path0, "fill-rule", "nonzero");
-    			add_location(path0, file, 49, 5, 1636);
-    			attr_dev(g0, "class", "social-group");
-    			attr_dev(g0, "fill", "none");
-    			attr_dev(g0, "fill-rule", "evenodd");
-    			add_location(g0, file, 46, 4, 1374);
-    			attr_dev(svg0, "class", "social-svg svelte-11mldha");
-    			attr_dev(svg0, "viewBox", "0 0 600 600");
-    			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg0, file, 42, 4, 1247);
-    			attr_dev(a0, "class", "social-link social-link--github svelte-11mldha");
-    			attr_dev(a0, "id", "github");
-    			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 41, 3, 1147);
-    			add_location(title1, file, 56, 4, 2997);
-    			attr_dev(circle2, "class", "social-group__outline svelte-11mldha");
-    			attr_dev(circle2, "stroke", "#000");
-    			attr_dev(circle2, "stroke-width", "20");
-    			attr_dev(circle2, "cx", "300");
-    			attr_dev(circle2, "cy", "300");
-    			attr_dev(circle2, "r", "262.5");
-    			add_location(circle2, file, 60, 5, 3102);
-    			attr_dev(circle3, "class", "social-group__inner-circle svelte-11mldha");
-    			attr_dev(circle3, "fill", "#2D76B0");
-    			attr_dev(circle3, "cx", "300");
-    			attr_dev(circle3, "cy", "300");
-    			attr_dev(circle3, "r", "252.5");
-    			add_location(circle3, file, 61, 5, 3209);
-    			attr_dev(path1, "class", "social-group__icon svelte-11mldha");
-    			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
-    			attr_dev(path1, "fill", "#000");
-    			attr_dev(path1, "fill-rule", "nonzero");
-    			add_location(path1, file, 62, 5, 3304);
-    			attr_dev(g1, "class", "social-group");
-    			attr_dev(g1, "fill", "none");
-    			attr_dev(g1, "fill-rule", "evenodd");
-    			add_location(g1, file, 59, 4, 3039);
-    			attr_dev(svg1, "class", "social-svg svelte-11mldha");
-    			attr_dev(svg1, "viewBox", "0 0 600 600");
-    			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg1, file, 55, 4, 2910);
-    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-11mldha");
-    			attr_dev(a1, "id", "linkedin");
-    			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 54, 3, 2785);
-    			attr_dev(div0, "id", "header");
-    			attr_dev(div0, "class", "svelte-11mldha");
-    			add_location(div0, file, 40, 2, 1125);
-    			attr_dev(span0, "aria-hidden", "true");
-    			attr_dev(span0, "class", "svelte-11mldha");
-    			add_location(span0, file, 77, 71, 4372);
-    			attr_dev(span1, "aria-hidden", "true");
-    			attr_dev(span1, "class", "svelte-11mldha");
-    			add_location(span1, file, 77, 104, 4405);
-    			attr_dev(h1, "data-aos", "fade-right");
-    			attr_dev(h1, "data-aos-duration", "800");
-    			attr_dev(h1, "aria-label", "Hi");
-    			add_location(h1, file, 77, 5, 4306);
-    			attr_dev(h2, "class", "nameEl font-weight-bold svelte-11mldha");
-    			attr_dev(h2, "aria-label", "I'm Jonas");
-    			add_location(h2, file, 79, 6, 4560);
-    			attr_dev(div1, "data-aos", "fade-right");
-    			attr_dev(div1, "data-aos-delay", "100");
-    			attr_dev(div1, "data-aos-duration", "800");
-    			attr_dev(div1, "class", "nameContainer rounded svelte-11mldha");
-    			add_location(div1, file, 78, 5, 4450);
-    			attr_dev(p0, "class", "underText svelte-11mldha");
-    			attr_dev(p0, "data-aos", "fade-right");
-    			attr_dev(p0, "data-aos-delay", "200");
-    			attr_dev(p0, "data-aos-duration", "800");
-    			add_location(p0, file, 89, 5, 4828);
-    			attr_dev(div2, "class", "introContainer svelte-11mldha");
-    			add_location(div2, file, 76, 4, 4271);
-    			attr_dev(div3, "class", "content svelte-11mldha");
-    			add_location(div3, file, 75, 3, 4244);
-    			attr_dev(div4, "class", "d-flex justify-content-center flex-column-reverse flex-md-row pb-5");
-    			add_location(div4, file, 74, 2, 4159);
-    			attr_dev(div5, "id", "waveBackground");
-    			set_style(div5, "background-image", "url('assets/wave.png')");
-    			attr_dev(div5, "class", "svelte-11mldha");
-    			add_location(div5, file, 113, 2, 5507);
-    			attr_dev(div6, "class", "position-relative vh-50");
-    			add_location(div6, file, 39, 1, 1084);
-    			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-11mldha");
-    			attr_dev(h30, "data-aos", "fade-in");
-    			attr_dev(h30, "data-aos-duration", "800");
-    			add_location(h30, file, 118, 4, 5825);
-    			attr_dev(div7, "class", "col-10 col-md-6 m-auto d-flex justify-content-center");
-    			add_location(div7, file, 117, 3, 5752);
-    			attr_dev(div8, "class", "row my-5 my-md-0");
-    			add_location(div8, file, 116, 2, 5717);
-    			attr_dev(h31, "class", "w-100");
-    			add_location(h31, file, 124, 4, 6167);
-    			add_location(br0, file, 127, 379, 6600);
-    			add_location(p1, file, 126, 5, 6216);
-    			add_location(br1, file, 128, 167, 6773);
-    			add_location(p2, file, 129, 6, 6785);
-    			add_location(br2, file, 129, 98, 6877);
-    			attr_dev(a2, "class", "text-white");
-    			attr_dev(a2, "href", "#contactForm");
-    			add_location(a2, file, 130, 22, 6905);
-    			add_location(p3, file, 130, 6, 6889);
-    			add_location(div9, file, 125, 4, 6204);
-    			attr_dev(div10, "class", "col-10 col-md-8 col-lg-6");
-    			add_location(div10, file, 123, 3, 6123);
-    			attr_dev(div11, "class", "row my-5 text-white d-flex flex-column align-items-center w-100");
-    			add_location(div11, file, 122, 2, 6041);
-    			attr_dev(img, "class", "w-100");
-    			set_style(img, "margin-bottom", "-2px");
-    			if (!src_url_equal(img.src, img_src_value = "assets/multiWaveDivider.png")) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", "background wave");
-    			attr_dev(img, "aria-hidden", "true");
-    			add_location(img, file, 134, 2, 7066);
-    			attr_dev(div12, "class", "container-fluid p-0");
-    			set_style(div12, "background-color", "var(--mainColor)");
-    			set_style(div12, "margin-top", "-2px");
-    			set_style(div12, "padding-top", "1px");
-    			add_location(div12, file, 115, 1, 5600);
-    			attr_dev(div13, "class", "postion-relative py-5");
-    			set_style(div13, "background-image", "url('assets/bottomWave.png')");
-    			set_style(div13, "background-repeat", "no-repeat");
-    			set_style(div13, "background-size", "contain");
-    			set_style(div13, "background-position", "bottom");
-    			add_location(div13, file, 137, 1, 7219);
-    			add_location(main, file, 37, 0, 1056);
+    			if (if_block0) if_block0.c();
+    			t = space();
+    			if (if_block1) if_block1.c();
+    			add_location(main, file, 49, 0, 1340);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
-    			mount_component(loadingscreen, main, null);
-    			append_dev(main, t0);
-    			append_dev(main, div6);
-    			append_dev(div6, div0);
-    			append_dev(div0, a0);
-    			append_dev(a0, svg0);
-    			append_dev(svg0, title0);
-    			append_dev(title0, t1);
-    			append_dev(svg0, g0);
-    			append_dev(g0, circle0);
-    			append_dev(g0, circle1);
-    			append_dev(g0, path0);
-    			append_dev(div0, t2);
-    			append_dev(div0, a1);
-    			append_dev(a1, svg1);
-    			append_dev(svg1, title1);
-    			append_dev(title1, t3);
-    			append_dev(svg1, g1);
-    			append_dev(g1, circle2);
-    			append_dev(g1, circle3);
-    			append_dev(g1, path1);
-    			append_dev(div6, t4);
-    			append_dev(div6, div4);
-    			append_dev(div4, div3);
-    			append_dev(div3, div2);
-    			append_dev(div2, h1);
-    			append_dev(h1, span0);
-    			append_dev(h1, span1);
-    			append_dev(div2, t7);
-    			append_dev(div2, div1);
-    			append_dev(div1, h2);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(h2, null);
-    			}
-
-    			append_dev(div2, t8);
-    			append_dev(div2, p0);
-    			append_dev(div4, t10);
-    			mount_component(memodel, div4, null);
-    			append_dev(div6, t11);
-    			append_dev(div6, div5);
-    			append_dev(main, t12);
-    			append_dev(main, div12);
-    			append_dev(div12, div8);
-    			append_dev(div8, div7);
-    			append_dev(div7, h30);
-    			append_dev(div8, t14);
-    			mount_component(skills, div8, null);
-    			append_dev(div12, t15);
-    			append_dev(div12, div11);
-    			append_dev(div11, div10);
-    			append_dev(div10, h31);
-    			append_dev(div10, t17);
-    			append_dev(div10, div9);
-    			append_dev(div9, p1);
-    			append_dev(p1, t18);
-    			append_dev(p1, br0);
-    			append_dev(p1, t19);
-    			append_dev(div9, t20);
-    			append_dev(div9, br1);
-    			append_dev(div9, t21);
-    			append_dev(div9, p2);
-    			append_dev(div9, br2);
-    			append_dev(div9, t23);
-    			append_dev(div9, p3);
-    			append_dev(p3, t24);
-    			append_dev(p3, a2);
-    			append_dev(p3, t26);
-    			append_dev(div12, t27);
-    			append_dev(div12, img);
-    			append_dev(main, t28);
-    			mount_component(projectcard, main, null);
-    			append_dev(main, t29);
-    			append_dev(main, div13);
-    			mount_component(contactform, div13, null);
+    			if (if_block0) if_block0.m(main, null);
+    			append_dev(main, t);
+    			if (if_block1) if_block1.m(main, null);
     			current = true;
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (!/*meModelLoaded*/ ctx[0]) {
+    				if (if_block0) {
+    					if (dirty & /*meModelLoaded*/ 1) {
+    						transition_in(if_block0, 1);
+    					}
+    				} else {
+    					if_block0 = create_if_block_2(ctx);
+    					if_block0.c();
+    					transition_in(if_block0, 1);
+    					if_block0.m(main, t);
+    				}
+    			} else if (if_block0) {
+    				group_outros();
+
+    				transition_out(if_block0, 1, 1, () => {
+    					if_block0 = null;
+    				});
+
+    				check_outros();
+    			}
+
+    			if (/*loadElements*/ ctx[1]) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+
+    					if (dirty & /*loadElements*/ 2) {
+    						transition_in(if_block1, 1);
+    					}
+    				} else {
+    					if_block1 = create_if_block(ctx);
+    					if_block1.c();
+    					transition_in(if_block1, 1);
+    					if_block1.m(main, null);
+    				}
+    			} else if (if_block1) {
+    				group_outros();
+
+    				transition_out(if_block1, 1, 1, () => {
+    					if_block1 = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(loadingscreen.$$.fragment, local);
-    			transition_in(memodel.$$.fragment, local);
-    			transition_in(skills.$$.fragment, local);
-    			transition_in(projectcard.$$.fragment, local);
-    			transition_in(contactform.$$.fragment, local);
+    			transition_in(if_block0);
+    			transition_in(if_block1);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(loadingscreen.$$.fragment, local);
-    			transition_out(memodel.$$.fragment, local);
-    			transition_out(skills.$$.fragment, local);
-    			transition_out(projectcard.$$.fragment, local);
-    			transition_out(contactform.$$.fragment, local);
+    			transition_out(if_block0);
+    			transition_out(if_block1);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
-    			destroy_component(loadingscreen);
-    			destroy_each(each_blocks, detaching);
-    			destroy_component(memodel);
-    			destroy_component(skills);
-    			destroy_component(projectcard);
-    			destroy_component(contactform);
+    			if (if_block0) if_block0.d();
+    			if (if_block1) if_block1.d();
     		}
     	};
 
@@ -58914,6 +59082,7 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
+    	let meModelLoaded, skillsLoaded, loadElements = false;
 
     	onMount(() => {
     		aos.init();
@@ -58930,7 +59099,22 @@ var app = (function () {
     				elements[i].classList.add('animate__rubberBand');
     			});
     		}
+
+    		setTimeout(
+    			() => {
+    				$$invalidate(1, loadElements = true);
+    			},
+    			3000
+    		);
     	});
+
+    	function handleLoad(element) {
+    		if (element.detail == "meModel") {
+    			$$invalidate(0, meModelLoaded = true);
+    		} else if (element.detail == "skills") {
+    			skillsLoaded = true;
+    		}
+    	}
 
     	const writable_props = [];
 
@@ -58948,10 +59132,24 @@ var app = (function () {
     		MeModel,
     		ProjectCard,
     		ContactForm,
-    		LoadingScreen
+    		LoadingScreen,
+    		meModelLoaded,
+    		skillsLoaded,
+    		loadElements,
+    		handleLoad
     	});
 
-    	return [];
+    	$$self.$inject_state = $$props => {
+    		if ('meModelLoaded' in $$props) $$invalidate(0, meModelLoaded = $$props.meModelLoaded);
+    		if ('skillsLoaded' in $$props) skillsLoaded = $$props.skillsLoaded;
+    		if ('loadElements' in $$props) $$invalidate(1, loadElements = $$props.loadElements);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [meModelLoaded, loadElements, handleLoad];
     }
 
     class App extends SvelteComponentDev {
