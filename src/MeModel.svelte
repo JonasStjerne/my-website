@@ -119,7 +119,6 @@
         loader.load( 'assets/model3.gltf', function ( gltf ) {
             
             model = gltf.scene;
-            console.log(gltf.animations)
             //Add to scene
             scene.add( model );
             model.position.setY(-1.5);
