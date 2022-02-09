@@ -2,7 +2,7 @@
     export let loaded;
 </script>
 
-<div class="position-fixed {loaded === true ? 'dissapear' : ''}" style="width: 100vw; height: 100vw; top: 0; left: 0; z-index: 20;">
+<div class="position-fixed {loaded === true ? 'dissapear' : ''}" style="width: 100vw; height: 100vh; top: 0; left: 0; z-index: 20;">
     <div class="w-100 h-100 d-flex justify-content-center align-items-center" style="background-color: {loaded === true ? 'transparent' : 'white'}; z-index: 10;">
         <img src="assets/jsLogoWhite.png" alt="Logo" style="min-width: 100px; width: 15vw; postion relative; margin: auto; z-index: 20; animation-fill-mode: forwards;" class="{loaded === true ? 'animate__bounceOut' : '' }">
     </div>
@@ -13,7 +13,7 @@
 
 <style>
     .fadeUpBaground {
-        animation: fillOut 2s ease-in-out forwards 0.5s;
+        animation: fillOut 1s ease-in-out forwards 0.5s;
         bottom: 0;
     }
 
@@ -21,6 +21,7 @@
         animation: foldUp 1s ease-in-out forwards;
         bottom: unset;
         top: 0;
+        height: 100%;
     }
 
     .dissapear {

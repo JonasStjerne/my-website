@@ -33,7 +33,7 @@ onMount(() => {
 
 	setTimeout(() => {
 		loadElements = true;
-	}, 3000)
+	}, 1500)
 
 })
 

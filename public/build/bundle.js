@@ -19,6 +19,7 @@ var app = (function () {
     }
 
     function noop() { }
+    const identity = x => x;
     function add_location(element, file, line, column, char) {
         element.__svelte_meta = {
             loc: { file, line, column, char }
@@ -53,8 +54,60 @@ var app = (function () {
     function null_to_empty(value) {
         return value == null ? '' : value;
     }
+
+    const is_client = typeof window !== 'undefined';
+    let now$1 = is_client
+        ? () => window.performance.now()
+        : () => Date.now();
+    let raf = is_client ? cb => requestAnimationFrame(cb) : noop;
+
+    const tasks = new Set();
+    function run_tasks(now) {
+        tasks.forEach(task => {
+            if (!task.c(now)) {
+                tasks.delete(task);
+                task.f();
+            }
+        });
+        if (tasks.size !== 0)
+            raf(run_tasks);
+    }
+    /**
+     * Creates a new task that runs on each raf frame
+     * until it returns a falsy value or is aborted
+     */
+    function loop(callback) {
+        let task;
+        if (tasks.size === 0)
+            raf(run_tasks);
+        return {
+            promise: new Promise(fulfill => {
+                tasks.add(task = { c: callback, f: fulfill });
+            }),
+            abort() {
+                tasks.delete(task);
+            }
+        };
+    }
     function append(target, node) {
         target.appendChild(node);
+    }
+    function get_root_for_style(node) {
+        if (!node)
+            return document;
+        const root = node.getRootNode ? node.getRootNode() : node.ownerDocument;
+        if (root && root.host) {
+            return root;
+        }
+        return node.ownerDocument;
+    }
+    function append_empty_stylesheet(node) {
+        const style_element = element('style');
+        append_stylesheet(get_root_for_style(node), style_element);
+        return style_element;
+    }
+    function append_stylesheet(node, style) {
+        append(node.head || node, style);
     }
     function insert(target, node, anchor) {
         target.insertBefore(node, anchor || null);
@@ -103,6 +156,67 @@ var app = (function () {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, bubbles, false, detail);
         return e;
+    }
+
+    const active_docs = new Set();
+    let active = 0;
+    // https://github.com/darkskyapp/string-hash/blob/master/index.js
+    function hash(str) {
+        let hash = 5381;
+        let i = str.length;
+        while (i--)
+            hash = ((hash << 5) - hash) ^ str.charCodeAt(i);
+        return hash >>> 0;
+    }
+    function create_rule(node, a, b, duration, delay, ease, fn, uid = 0) {
+        const step = 16.666 / duration;
+        let keyframes = '{\n';
+        for (let p = 0; p <= 1; p += step) {
+            const t = a + (b - a) * ease(p);
+            keyframes += p * 100 + `%{${fn(t, 1 - t)}}\n`;
+        }
+        const rule = keyframes + `100% {${fn(b, 1 - b)}}\n}`;
+        const name = `__svelte_${hash(rule)}_${uid}`;
+        const doc = get_root_for_style(node);
+        active_docs.add(doc);
+        const stylesheet = doc.__svelte_stylesheet || (doc.__svelte_stylesheet = append_empty_stylesheet(node).sheet);
+        const current_rules = doc.__svelte_rules || (doc.__svelte_rules = {});
+        if (!current_rules[name]) {
+            current_rules[name] = true;
+            stylesheet.insertRule(`@keyframes ${name} ${rule}`, stylesheet.cssRules.length);
+        }
+        const animation = node.style.animation || '';
+        node.style.animation = `${animation ? `${animation}, ` : ''}${name} ${duration}ms linear ${delay}ms 1 both`;
+        active += 1;
+        return name;
+    }
+    function delete_rule(node, name) {
+        const previous = (node.style.animation || '').split(', ');
+        const next = previous.filter(name
+            ? anim => anim.indexOf(name) < 0 // remove specific animation
+            : anim => anim.indexOf('__svelte') === -1 // remove all Svelte animations
+        );
+        const deleted = previous.length - next.length;
+        if (deleted) {
+            node.style.animation = next.join(', ');
+            active -= deleted;
+            if (!active)
+                clear_rules();
+        }
+    }
+    function clear_rules() {
+        raf(() => {
+            if (active)
+                return;
+            active_docs.forEach(doc => {
+                const stylesheet = doc.__svelte_stylesheet;
+                let i = stylesheet.cssRules.length;
+                while (i--)
+                    stylesheet.deleteRule(i);
+                doc.__svelte_rules = {};
+            });
+            active_docs.clear();
+        });
     }
 
     let current_component;
@@ -213,6 +327,20 @@ var app = (function () {
             $$.after_update.forEach(add_render_callback);
         }
     }
+
+    let promise;
+    function wait() {
+        if (!promise) {
+            promise = Promise.resolve();
+            promise.then(() => {
+                promise = null;
+            });
+        }
+        return promise;
+    }
+    function dispatch(node, direction, kind) {
+        node.dispatchEvent(custom_event(`${direction ? 'intro' : 'outro'}${kind}`));
+    }
     const outroing = new Set();
     let outros;
     function group_outros() {
@@ -249,6 +377,70 @@ var app = (function () {
             });
             block.o(local);
         }
+    }
+    const null_transition = { duration: 0 };
+    function create_in_transition(node, fn, params) {
+        let config = fn(node, params);
+        let running = false;
+        let animation_name;
+        let task;
+        let uid = 0;
+        function cleanup() {
+            if (animation_name)
+                delete_rule(node, animation_name);
+        }
+        function go() {
+            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
+            if (css)
+                animation_name = create_rule(node, 0, 1, duration, delay, easing, css, uid++);
+            tick(0, 1);
+            const start_time = now$1() + delay;
+            const end_time = start_time + duration;
+            if (task)
+                task.abort();
+            running = true;
+            add_render_callback(() => dispatch(node, true, 'start'));
+            task = loop(now => {
+                if (running) {
+                    if (now >= end_time) {
+                        tick(1, 0);
+                        dispatch(node, true, 'end');
+                        cleanup();
+                        return running = false;
+                    }
+                    if (now >= start_time) {
+                        const t = easing((now - start_time) / duration);
+                        tick(t, 1 - t);
+                    }
+                }
+                return running;
+            });
+        }
+        let started = false;
+        return {
+            start() {
+                if (started)
+                    return;
+                started = true;
+                delete_rule(node);
+                if (is_function(config)) {
+                    config = config();
+                    wait().then(go);
+                }
+                else {
+                    go();
+                }
+            },
+            invalidate() {
+                started = false;
+            },
+            end() {
+                if (running) {
+                    cleanup();
+                    running = false;
+                }
+            }
+        };
     }
 
     const globals = (typeof window !== 'undefined'
@@ -57503,28 +57695,454 @@ var app = (function () {
     const { console: console_1$1 } = globals;
     const file$3 = "src\\ProjectCard.svelte";
 
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[10] = list[i];
+    	child_ctx[12] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[13] = list[i];
+    	child_ctx[12] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[10] = list[i];
+    	child_ctx[12] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[10] = list[i];
+    	child_ctx[12] = i;
+    	return child_ctx;
+    }
+
+    // (123:24) {#if i == selectedProject}
+    function create_if_block_2$1(ctx) {
+    	let h3;
+    	let t_value = /*project*/ ctx[10].title + "";
+    	let t;
+    	let h3_intro;
+
+    	const block = {
+    		c: function create() {
+    			h3 = element("h3");
+    			t = text(t_value);
+    			attr_dev(h3, "class", "row pb-2 text-white");
+    			add_location(h3, file$3, 123, 28, 4052);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, h3, anchor);
+    			append_dev(h3, t);
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (!h3_intro) {
+    				add_render_callback(() => {
+    					h3_intro = create_in_transition(h3, fade2, { delay: 1000 });
+    					h3_intro.start();
+    				});
+    			}
+    		},
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(h3);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2$1.name,
+    		type: "if",
+    		source: "(123:24) {#if i == selectedProject}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (122:20) {#each projects as project, i}
+    function create_each_block_3(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*i*/ ctx[12] == /*selectedProject*/ ctx[0] && create_if_block_2$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*i*/ ctx[12] == /*selectedProject*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*selectedProject*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block_2$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: function intro(local) {
+    			transition_in(if_block);
+    		},
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_3.name,
+    		type: "each",
+    		source: "(122:20) {#each projects as project, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (129:28) {#if i == selectedProject}
+    function create_if_block_1$1(ctx) {
+    	let p;
+    	let t_value = /*project*/ ctx[10].text + "";
+    	let t;
+    	let p_intro;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			attr_dev(p, "class", "col-7 p-0 text-white");
+    			add_location(p, file$3, 129, 32, 4377);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t);
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (!p_intro) {
+    				add_render_callback(() => {
+    					p_intro = create_in_transition(p, fade2, { delay: 1200 });
+    					p_intro.start();
+    				});
+    			}
+    		},
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$1.name,
+    		type: "if",
+    		source: "(129:28) {#if i == selectedProject}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (128:24) {#each projects as project, i}
+    function create_each_block_2(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*i*/ ctx[12] == /*selectedProject*/ ctx[0] && create_if_block_1$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*i*/ ctx[12] == /*selectedProject*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*selectedProject*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block_1$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: function intro(local) {
+    			transition_in(if_block);
+    		},
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(128:24) {#each projects as project, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (134:24) {#each projects as projectImage, i}
+    function create_each_block_1(ctx) {
+    	let div;
+    	let img;
+    	let img_src_value;
+    	let t;
+    	let div_class_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			img = element("img");
+    			t = space();
+    			attr_dev(img, "class", "h-100 projectImage shadowDarker svelte-qvbhck");
+    			set_style(img, "border-radius", "8px");
+    			if (!src_url_equal(img.src, img_src_value = /*projectImage*/ ctx[13].src)) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "");
+    			add_location(img, file$3, 141, 32, 5380);
+
+    			attr_dev(div, "class", div_class_value = "h-50 position-absolute p-0 fitter " + (/*selectedProject*/ ctx[0] == /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Left"
+    			? 'c_slideInLeft'
+    			: '') + " " + (/*selectedProject*/ ctx[0] == /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Right"
+    			? 'c_slideInRight'
+    			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Left"
+    			? 'c_slideOutRight'
+    			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Right"
+    			? 'c_slideOutLeft'
+    			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == null
+    			? 'outside'
+    			: '') + " svelte-qvbhck");
+
+    			set_style(div, "width", "fit-content");
+    			set_style(div, "perspective", "1000px");
+    			add_location(div, file$3, 134, 28, 4672);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, img);
+    			append_dev(div, t);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(img, "mouseleave", /*mouseLeft*/ ctx[7], false, false, false),
+    					listen_dev(img, "mousemove", /*rotateToMouse*/ ctx[6], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*selectedProject, animationDirection*/ 3 && div_class_value !== (div_class_value = "h-50 position-absolute p-0 fitter " + (/*selectedProject*/ ctx[0] == /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Left"
+    			? 'c_slideInLeft'
+    			: '') + " " + (/*selectedProject*/ ctx[0] == /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Right"
+    			? 'c_slideInRight'
+    			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Left"
+    			? 'c_slideOutRight'
+    			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == "Right"
+    			? 'c_slideOutLeft'
+    			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[12] && /*animationDirection*/ ctx[1] == null
+    			? 'outside'
+    			: '') + " svelte-qvbhck")) {
+    				attr_dev(div, "class", div_class_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(134:24) {#each projects as projectImage, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (152:20) {#if i == selectedProject}
+    function create_if_block$1(ctx) {
+    	let div;
+    	let p;
+    	let t0;
+    	let t1_value = /*project*/ ctx[10].tech + "";
+    	let t1;
+    	let t2;
+    	let a;
+    	let img;
+    	let img_src_value;
+    	let t3;
+    	let div_intro;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			p = element("p");
+    			t0 = text("Made with ");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			a = element("a");
+    			img = element("img");
+    			t3 = space();
+    			attr_dev(p, "class", "m-0");
+    			add_location(p, file$3, 153, 28, 7228);
+    			if (!src_url_equal(img.src, img_src_value = "assets/github.svg")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "github");
+    			attr_dev(img, "height", "30px");
+    			attr_dev(img, "width", "30px");
+    			add_location(img, file$3, 155, 32, 7365);
+    			attr_dev(a, "href", /*project*/ ctx[10].srcGithub);
+    			add_location(a, file$3, 154, 28, 7301);
+    			attr_dev(div, "class", "d-flex justify-content-between align-items-center ");
+    			add_location(div, file$3, 152, 24, 7106);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, p);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(div, t2);
+    			append_dev(div, a);
+    			append_dev(a, img);
+    			append_dev(div, t3);
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (!div_intro) {
+    				add_render_callback(() => {
+    					div_intro = create_in_transition(div, fade2, { delay: 1400 });
+    					div_intro.start();
+    				});
+    			}
+    		},
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(152:20) {#if i == selectedProject}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (151:16) {#each projects as project, i}
+    function create_each_block$1(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*i*/ ctx[12] == /*selectedProject*/ ctx[0] && create_if_block$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*i*/ ctx[12] == /*selectedProject*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*selectedProject*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: function intro(local) {
+    			transition_in(if_block);
+    		},
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$1.name,
+    		type: "each",
+    		source: "(151:16) {#each projects as project, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$3(ctx) {
-    	let div14;
+    	let div13;
     	let h1;
     	let t1;
-    	let div13;
-    	let div5;
+    	let div12;
     	let div4;
+    	let div3;
     	let div2;
-    	let h3;
-    	let t2_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].title + "";
     	let t2;
-    	let t3;
     	let div1;
-    	let p0;
-    	let t4_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].text + "";
+    	let t3;
+    	let div0;
     	let t4;
     	let t5;
-    	let div0;
-    	let t6;
-    	let img0;
-    	let img0_src_value;
-    	let t7;
     	let svg;
     	let defs;
     	let filter;
@@ -57546,64 +58164,95 @@ var app = (function () {
     	let circle4_fill_value;
     	let circle5;
     	let circle5_fill_value;
+    	let t6;
+    	let t7;
+    	let div11;
+    	let div10;
+    	let div8;
+    	let small0;
+    	let t8_value = /*selectedProject*/ ctx[0] + 1 + "";
     	let t8;
-    	let div3;
-    	let p1;
     	let t9;
-    	let t10_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].tech + "";
+    	let div7;
+    	let div5;
     	let t10;
+    	let div6;
     	let t11;
-    	let a;
+    	let small1;
+    	let t13;
+    	let div9;
+    	let button0;
+    	let img0;
+    	let img0_src_value;
+    	let t14;
+    	let button1;
     	let img1;
     	let img1_src_value;
-    	let a_href_value;
-    	let t12;
-    	let div12;
-    	let div11;
-    	let div9;
-    	let small0;
-    	let t13_value = /*selectedProject*/ ctx[0] + 1 + "";
-    	let t13;
-    	let t14;
-    	let div8;
-    	let div6;
-    	let t15;
-    	let div7;
-    	let t16;
-    	let small1;
-    	let t18;
-    	let div10;
-    	let button0;
-    	let img2;
-    	let img2_src_value;
-    	let t19;
-    	let button1;
-    	let img3;
-    	let img3_src_value;
     	let mounted;
     	let dispose;
+    	let each_value_3 = /*projects*/ ctx[3];
+    	validate_each_argument(each_value_3);
+    	let each_blocks_3 = [];
+
+    	for (let i = 0; i < each_value_3.length; i += 1) {
+    		each_blocks_3[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
+    	}
+
+    	let each_value_2 = /*projects*/ ctx[3];
+    	validate_each_argument(each_value_2);
+    	let each_blocks_2 = [];
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks_2[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	let each_value_1 = /*projects*/ ctx[3];
+    	validate_each_argument(each_value_1);
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	let each_value = /*projects*/ ctx[3];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
 
     	const block = {
     		c: function create() {
-    			div14 = element("div");
+    			div13 = element("div");
     			h1 = element("h1");
     			h1.textContent = "See my work";
     			t1 = space();
-    			div13 = element("div");
-    			div5 = element("div");
+    			div12 = element("div");
     			div4 = element("div");
+    			div3 = element("div");
     			div2 = element("div");
-    			h3 = element("h3");
-    			t2 = text(t2_value);
-    			t3 = space();
+
+    			for (let i = 0; i < each_blocks_3.length; i += 1) {
+    				each_blocks_3[i].c();
+    			}
+
+    			t2 = space();
     			div1 = element("div");
-    			p0 = element("p");
-    			t4 = text(t4_value);
-    			t5 = space();
+
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].c();
+    			}
+
+    			t3 = space();
     			div0 = element("div");
-    			t6 = space();
-    			img0 = element("img");
-    			t7 = space();
+    			t4 = space();
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t5 = space();
     			svg = svg_element("svg");
     			defs = svg_element("defs");
     			filter = svg_element("filter");
@@ -57618,114 +58267,101 @@ var app = (function () {
     			circle3 = svg_element("circle");
     			circle4 = svg_element("circle");
     			circle5 = svg_element("circle");
-    			t8 = space();
-    			div3 = element("div");
-    			p1 = element("p");
-    			t9 = text("Made with ");
-    			t10 = text(t10_value);
-    			t11 = space();
-    			a = element("a");
-    			img1 = element("img");
-    			t12 = space();
-    			div12 = element("div");
+    			t6 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t7 = space();
     			div11 = element("div");
-    			div9 = element("div");
-    			small0 = element("small");
-    			t13 = text(t13_value);
-    			t14 = space();
+    			div10 = element("div");
     			div8 = element("div");
-    			div6 = element("div");
-    			t15 = space();
+    			small0 = element("small");
+    			t8 = text(t8_value);
+    			t9 = space();
     			div7 = element("div");
-    			t16 = space();
+    			div5 = element("div");
+    			t10 = space();
+    			div6 = element("div");
+    			t11 = space();
     			small1 = element("small");
     			small1.textContent = `${/*projects*/ ctx[3].length}`;
-    			t18 = space();
-    			div10 = element("div");
+    			t13 = space();
+    			div9 = element("div");
     			button0 = element("button");
-    			img2 = element("img");
-    			t19 = space();
+    			img0 = element("img");
+    			t14 = space();
     			button1 = element("button");
-    			img3 = element("img");
+    			img1 = element("img");
     			attr_dev(h1, "class", "text-center my-5");
-    			add_location(h1, file$3, 127, 4, 4469);
-    			attr_dev(h3, "class", "row text-white pb-2");
-    			add_location(h3, file$3, 132, 20, 4880);
-    			attr_dev(p0, "class", "col-7 p-0 text-white");
-    			add_location(p0, file$3, 134, 24, 5049);
+    			add_location(h1, file$3, 116, 4, 3529);
     			attr_dev(div0, "class", "col-5");
-    			add_location(div0, file$3, 135, 24, 5143);
-    			attr_dev(img0, "class", "h-50 position-absolute top-50 shadowDarker p-0 projectImage svelte-7uty2p");
-    			attr_dev(img0, "id", "0");
-    			set_style(img0, "transform", "translateY(-50%)");
-    			set_style(img0, "border-radius", "8px");
-    			if (!src_url_equal(img0.src, img0_src_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].src)) attr_dev(img0, "src", img0_src_value);
-    			attr_dev(img0, "alt", "");
-    			add_location(img0, file$3, 136, 24, 5194);
+    			add_location(div0, file$3, 132, 24, 4556);
     			attr_dev(div1, "class", "row");
-    			add_location(div1, file$3, 133, 20, 4972);
+    			add_location(div1, file$3, 126, 20, 4214);
     			attr_dev(feFlood, "flood-opacity", "0");
     			attr_dev(feFlood, "result", "BackgroundImageFix");
-    			add_location(feFlood, file$3, 138, 311, 5717);
+    			add_location(feFlood, file$3, 146, 311, 5984);
     			attr_dev(feBlend, "mode", "normal");
     			attr_dev(feBlend, "in", "SourceGraphic");
     			attr_dev(feBlend, "in2", "BackgroundImageFix");
     			attr_dev(feBlend, "result", "shape");
-    			add_location(feBlend, file$3, 138, 376, 5782);
+    			add_location(feBlend, file$3, 146, 376, 6049);
     			attr_dev(feGaussianBlur, "stdDeviation", "161");
     			attr_dev(feGaussianBlur, "result", "effect1_foregroundBlur");
-    			add_location(feGaussianBlur, file$3, 138, 468, 5874);
+    			add_location(feGaussianBlur, file$3, 146, 468, 6141);
     			attr_dev(filter, "id", "blur1");
     			attr_dev(filter, "x", "-10%");
     			attr_dev(filter, "y", "-10%");
     			attr_dev(filter, "width", "120%");
     			attr_dev(filter, "height", "120%");
-    			add_location(filter, file$3, 138, 247, 5653);
-    			add_location(defs, file$3, 138, 241, 5647);
+    			add_location(filter, file$3, 146, 247, 5920);
+    			add_location(defs, file$3, 146, 241, 5914);
     			attr_dev(rect, "width", "900");
     			attr_dev(rect, "height", "600");
     			attr_dev(rect, "fill", rect_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
-    			attr_dev(rect, "class", "svelte-7uty2p");
-    			add_location(rect, file$3, 138, 568, 5974);
+    			attr_dev(rect, "class", "svelte-qvbhck");
+    			add_location(rect, file$3, 146, 568, 6241);
     			attr_dev(circle0, "cx", "877");
     			attr_dev(circle0, "cy", "11");
     			attr_dev(circle0, "fill", circle0_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle0, "r", "357");
-    			attr_dev(circle0, "class", "svelte-7uty2p");
-    			add_location(circle0, file$3, 139, 24, 6111);
+    			attr_dev(circle0, "class", "svelte-qvbhck");
+    			add_location(circle0, file$3, 147, 24, 6378);
     			attr_dev(circle1, "cx", "259");
     			attr_dev(circle1, "cy", "45");
     			attr_dev(circle1, "fill", circle1_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle1, "r", "357");
-    			attr_dev(circle1, "class", "svelte-7uty2p");
-    			add_location(circle1, file$3, 139, 115, 6202);
+    			attr_dev(circle1, "class", "svelte-qvbhck");
+    			add_location(circle1, file$3, 147, 115, 6469);
     			attr_dev(circle2, "cx", "866");
     			attr_dev(circle2, "cy", "592");
     			attr_dev(circle2, "fill", circle2_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle2, "r", "357");
-    			attr_dev(circle2, "class", "svelte-7uty2p");
-    			add_location(circle2, file$3, 139, 206, 6293);
+    			attr_dev(circle2, "class", "svelte-qvbhck");
+    			add_location(circle2, file$3, 147, 206, 6560);
     			attr_dev(circle3, "cx", "743");
     			attr_dev(circle3, "cy", "302");
     			attr_dev(circle3, "fill", circle3_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle3, "r", "357");
-    			attr_dev(circle3, "class", "svelte-7uty2p");
-    			add_location(circle3, file$3, 139, 298, 6385);
+    			attr_dev(circle3, "class", "svelte-qvbhck");
+    			add_location(circle3, file$3, 147, 298, 6652);
     			attr_dev(circle4, "cx", "288");
     			attr_dev(circle4, "cy", "498");
     			attr_dev(circle4, "fill", circle4_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle4, "r", "357");
-    			attr_dev(circle4, "class", "svelte-7uty2p");
-    			add_location(circle4, file$3, 139, 390, 6477);
+    			attr_dev(circle4, "class", "svelte-qvbhck");
+    			add_location(circle4, file$3, 147, 390, 6744);
     			attr_dev(circle5, "cx", "192");
     			attr_dev(circle5, "cy", "260");
     			attr_dev(circle5, "fill", circle5_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle5, "r", "357");
-    			attr_dev(circle5, "class", "svelte-7uty2p");
-    			add_location(circle5, file$3, 139, 482, 6569);
+    			attr_dev(circle5, "class", "svelte-qvbhck");
+    			add_location(circle5, file$3, 147, 482, 6836);
     			attr_dev(g, "filter", "url(#blur1)");
-    			add_location(g, file$3, 138, 655, 6061);
-    			attr_dev(svg, "class", "position-absolute w-100 h-100 backgroundSquare svelte-7uty2p");
+    			add_location(g, file$3, 146, 655, 6328);
+    			attr_dev(svg, "class", "position-absolute w-100 h-100 backgroundSquare svelte-qvbhck");
     			set_style(svg, "top", "0");
     			set_style(svg, "left", "0");
     			set_style(svg, "z-index", "-1");
@@ -57734,92 +58370,91 @@ var app = (function () {
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
     			attr_dev(svg, "version", "1.1");
-    			add_location(svg, file$3, 138, 20, 5426);
+    			add_location(svg, file$3, 146, 20, 5693);
     			attr_dev(div2, "class", "p-4");
-    			add_location(div2, file$3, 131, 16, 4841);
-    			attr_dev(p1, "class", "m-0");
-    			add_location(p1, file$3, 143, 20, 6821);
-    			if (!src_url_equal(img1.src, img1_src_value = "assets/github.svg")) attr_dev(img1, "src", img1_src_value);
-    			attr_dev(img1, "alt", "github");
-    			attr_dev(img1, "height", "30px");
-    			attr_dev(img1, "width", "30px");
-    			add_location(img1, file$3, 145, 24, 6978);
-    			attr_dev(a, "href", a_href_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].srcGithub);
-    			add_location(a, file$3, 144, 20, 6904);
-    			attr_dev(div3, "class", "d-flex justify-content-between align-items-center ");
-    			add_location(div3, file$3, 142, 16, 6735);
-    			attr_dev(div4, "class", "position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative");
-    			add_location(div4, file$3, 130, 12, 4701);
-    			attr_dev(div5, "class", "position-relative container m-0 col-8");
-    			set_style(div5, "height", "0");
-    			set_style(div5, "width", "30%");
-    			set_style(div5, "padding-bottom", "30%");
-    			add_location(div5, file$3, 129, 8, 4589);
-    			add_location(small0, file$3, 153, 24, 7370);
-    			attr_dev(div6, "class", "w-100 rounded-3");
-    			set_style(div6, "height", "5px");
-    			set_style(div6, "background-color", "var(--secondaryColor)");
-    			add_location(div6, file$3, 155, 28, 7505);
-    			attr_dev(div7, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-7uty2p");
-    			set_style(div7, "background-image", "var(--gradient)");
-    			set_style(div7, "width", /*percentProjectBar*/ ctx[2] + "%");
-    			set_style(div7, "height", "8px");
-    			set_style(div7, "transform", "translateY(-50%)");
-    			add_location(div7, file$3, 156, 28, 7632);
-    			set_style(div8, "width", "80%");
-    			set_style(div8, "position", "relative");
-    			add_location(div8, file$3, 154, 24, 7430);
-    			add_location(small1, file$3, 158, 24, 7879);
-    			attr_dev(div9, "class", "d-flex justify-content-center align-items-center w-100");
-    			set_style(div9, "gap", "10px");
-    			add_location(div9, file$3, 152, 16, 7257);
-    			if (!src_url_equal(img2.src, img2_src_value = "assets/arrow.png")) attr_dev(img2, "src", img2_src_value);
-    			attr_dev(img2, "alt", "left arrow(see previous project)");
-    			add_location(img2, file$3, 162, 24, 8133);
+    			add_location(div2, file$3, 120, 16, 3901);
+    			attr_dev(div3, "class", "position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative");
+    			add_location(div3, file$3, 119, 12, 3761);
+    			attr_dev(div4, "class", "position-relative container m-0 col-8");
+    			set_style(div4, "height", "0");
+    			set_style(div4, "width", "30%");
+    			set_style(div4, "padding-bottom", "30%");
+    			add_location(div4, file$3, 118, 8, 3649);
+    			add_location(small0, file$3, 165, 24, 7825);
+    			attr_dev(div5, "class", "w-100 rounded-3");
+    			set_style(div5, "height", "5px");
+    			set_style(div5, "background-color", "var(--secondaryColor)");
+    			add_location(div5, file$3, 167, 28, 7960);
+    			attr_dev(div6, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-qvbhck");
+    			set_style(div6, "background-image", "var(--gradient)");
+    			set_style(div6, "width", /*percentProjectBar*/ ctx[2] + "%");
+    			set_style(div6, "height", "8px");
+    			set_style(div6, "transform", "translateY(-50%)");
+    			add_location(div6, file$3, 168, 28, 8087);
+    			set_style(div7, "width", "80%");
+    			set_style(div7, "position", "relative");
+    			add_location(div7, file$3, 166, 24, 7885);
+    			add_location(small1, file$3, 170, 24, 8334);
+    			attr_dev(div8, "class", "d-flex justify-content-center align-items-center w-100");
+    			set_style(div8, "gap", "10px");
+    			add_location(div8, file$3, 164, 16, 7712);
+    			if (!src_url_equal(img0.src, img0_src_value = "assets/arrow.png")) attr_dev(img0, "src", img0_src_value);
+    			attr_dev(img0, "alt", "left arrow(see previous project)");
+    			add_location(img0, file$3, 174, 24, 8588);
     			attr_dev(button0, "type", "button");
-    			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-7uty2p");
-    			add_location(button0, file$3, 161, 20, 8023);
-    			set_style(img3, "transform", "rotate(180deg)");
-    			if (!src_url_equal(img3.src, img3_src_value = "assets/arrow.png")) attr_dev(img3, "src", img3_src_value);
-    			attr_dev(img3, "alt", "right arrow(see next project)");
-    			add_location(img3, file$3, 165, 24, 8368);
+    			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-qvbhck");
+    			add_location(button0, file$3, 173, 20, 8478);
+    			set_style(img1, "transform", "rotate(180deg)");
+    			if (!src_url_equal(img1.src, img1_src_value = "assets/arrow.png")) attr_dev(img1, "src", img1_src_value);
+    			attr_dev(img1, "alt", "right arrow(see next project)");
+    			add_location(img1, file$3, 177, 24, 8823);
     			attr_dev(button1, "type", "button");
-    			attr_dev(button1, "class", "btn btn-primary-outline noHighLight svelte-7uty2p");
-    			add_location(button1, file$3, 164, 20, 8253);
-    			attr_dev(div10, "class", "d-flex justify-content-center mb-2");
-    			add_location(div10, file$3, 160, 16, 7953);
-    			attr_dev(div11, "class", "d-flex flex-column justify-content-end h-100");
-    			add_location(div11, file$3, 151, 12, 7181);
-    			attr_dev(div12, "class", "col-2 ms-4");
-    			add_location(div12, file$3, 150, 8, 7143);
-    			attr_dev(div13, "class", "d-flex justify-content-center overflow-hidden");
-    			add_location(div13, file$3, 128, 4, 4520);
-    			set_style(div14, "margin", "10vh 0");
-    			add_location(div14, file$3, 126, 0, 4434);
+    			attr_dev(button1, "class", "btn btn-primary-outline noHighLight svelte-qvbhck");
+    			add_location(button1, file$3, 176, 20, 8708);
+    			attr_dev(div9, "class", "d-flex justify-content-center mb-2");
+    			add_location(div9, file$3, 172, 16, 8408);
+    			attr_dev(div10, "class", "d-flex flex-column justify-content-end h-100");
+    			add_location(div10, file$3, 163, 12, 7636);
+    			attr_dev(div11, "class", "col-2 ms-4");
+    			add_location(div11, file$3, 162, 8, 7598);
+    			attr_dev(div12, "class", "d-flex justify-content-center overflow-hidden");
+    			add_location(div12, file$3, 117, 4, 3580);
+    			set_style(div13, "margin", "10vh 0");
+    			attr_dev(div13, "class", "projectShowcaseWrapper svelte-qvbhck");
+    			add_location(div13, file$3, 115, 0, 3463);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div14, anchor);
-    			append_dev(div14, h1);
-    			append_dev(div14, t1);
-    			append_dev(div14, div13);
-    			append_dev(div13, div5);
-    			append_dev(div5, div4);
-    			append_dev(div4, div2);
-    			append_dev(div2, h3);
-    			append_dev(h3, t2);
-    			append_dev(div2, t3);
+    			insert_dev(target, div13, anchor);
+    			append_dev(div13, h1);
+    			append_dev(div13, t1);
+    			append_dev(div13, div12);
+    			append_dev(div12, div4);
+    			append_dev(div4, div3);
+    			append_dev(div3, div2);
+
+    			for (let i = 0; i < each_blocks_3.length; i += 1) {
+    				each_blocks_3[i].m(div2, null);
+    			}
+
+    			append_dev(div2, t2);
     			append_dev(div2, div1);
-    			append_dev(div1, p0);
-    			append_dev(p0, t4);
-    			append_dev(div1, t5);
+
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].m(div1, null);
+    			}
+
+    			append_dev(div1, t3);
     			append_dev(div1, div0);
-    			append_dev(div1, t6);
-    			append_dev(div1, img0);
-    			/*div1_binding*/ ctx[6](div1);
-    			append_dev(div2, t7);
+    			append_dev(div1, t4);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(div1, null);
+    			}
+
+    			append_dev(div2, t5);
     			append_dev(div2, svg);
     			append_dev(svg, defs);
     			append_dev(defs, filter);
@@ -57834,34 +58469,32 @@ var app = (function () {
     			append_dev(g, circle3);
     			append_dev(g, circle4);
     			append_dev(g, circle5);
-    			append_dev(div4, t8);
-    			append_dev(div4, div3);
-    			append_dev(div3, p1);
-    			append_dev(p1, t9);
-    			append_dev(p1, t10);
-    			append_dev(div3, t11);
-    			append_dev(div3, a);
-    			append_dev(a, img1);
-    			append_dev(div13, t12);
-    			append_dev(div13, div12);
+    			append_dev(div3, t6);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div3, null);
+    			}
+
+    			append_dev(div12, t7);
     			append_dev(div12, div11);
-    			append_dev(div11, div9);
-    			append_dev(div9, small0);
-    			append_dev(small0, t13);
-    			append_dev(div9, t14);
-    			append_dev(div9, div8);
-    			append_dev(div8, div6);
-    			append_dev(div8, t15);
-    			append_dev(div8, div7);
-    			append_dev(div9, t16);
-    			append_dev(div9, small1);
-    			append_dev(div11, t18);
     			append_dev(div11, div10);
-    			append_dev(div10, button0);
-    			append_dev(button0, img2);
-    			append_dev(div10, t19);
-    			append_dev(div10, button1);
-    			append_dev(button1, img3);
+    			append_dev(div10, div8);
+    			append_dev(div8, small0);
+    			append_dev(small0, t8);
+    			append_dev(div8, t9);
+    			append_dev(div8, div7);
+    			append_dev(div7, div5);
+    			append_dev(div7, t10);
+    			append_dev(div7, div6);
+    			append_dev(div8, t11);
+    			append_dev(div8, small1);
+    			append_dev(div10, t13);
+    			append_dev(div10, div9);
+    			append_dev(div9, button0);
+    			append_dev(button0, img0);
+    			append_dev(div9, t14);
+    			append_dev(div9, button1);
+    			append_dev(button1, img1);
 
     			if (!mounted) {
     				dispose = [
@@ -57873,11 +58506,80 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*selectedProject*/ 1 && t2_value !== (t2_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].title + "")) set_data_dev(t2, t2_value);
-    			if (dirty & /*selectedProject*/ 1 && t4_value !== (t4_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].text + "")) set_data_dev(t4, t4_value);
+    			if (dirty & /*projects, selectedProject*/ 9) {
+    				each_value_3 = /*projects*/ ctx[3];
+    				validate_each_argument(each_value_3);
+    				let i;
 
-    			if (dirty & /*selectedProject*/ 1 && !src_url_equal(img0.src, img0_src_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].src)) {
-    				attr_dev(img0, "src", img0_src_value);
+    				for (i = 0; i < each_value_3.length; i += 1) {
+    					const child_ctx = get_each_context_3(ctx, each_value_3, i);
+
+    					if (each_blocks_3[i]) {
+    						each_blocks_3[i].p(child_ctx, dirty);
+    						transition_in(each_blocks_3[i], 1);
+    					} else {
+    						each_blocks_3[i] = create_each_block_3(child_ctx);
+    						each_blocks_3[i].c();
+    						transition_in(each_blocks_3[i], 1);
+    						each_blocks_3[i].m(div2, t2);
+    					}
+    				}
+
+    				for (; i < each_blocks_3.length; i += 1) {
+    					each_blocks_3[i].d(1);
+    				}
+
+    				each_blocks_3.length = each_value_3.length;
+    			}
+
+    			if (dirty & /*projects, selectedProject*/ 9) {
+    				each_value_2 = /*projects*/ ctx[3];
+    				validate_each_argument(each_value_2);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks_2[i]) {
+    						each_blocks_2[i].p(child_ctx, dirty);
+    						transition_in(each_blocks_2[i], 1);
+    					} else {
+    						each_blocks_2[i] = create_each_block_2(child_ctx);
+    						each_blocks_2[i].c();
+    						transition_in(each_blocks_2[i], 1);
+    						each_blocks_2[i].m(div1, t3);
+    					}
+    				}
+
+    				for (; i < each_blocks_2.length; i += 1) {
+    					each_blocks_2[i].d(1);
+    				}
+
+    				each_blocks_2.length = each_value_2.length;
+    			}
+
+    			if (dirty & /*selectedProject, animationDirection, projects, mouseLeft, rotateToMouse*/ 203) {
+    				each_value_1 = /*projects*/ ctx[3];
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks_1[i] = create_each_block_1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(div1, null);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+
+    				each_blocks_1.length = each_value_1.length;
     			}
 
     			if (dirty & /*selectedProject*/ 1 && rect_fill_value !== (rect_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1])) {
@@ -57908,23 +58610,58 @@ var app = (function () {
     				attr_dev(circle5, "fill", circle5_fill_value);
     			}
 
-    			if (dirty & /*selectedProject*/ 1 && t10_value !== (t10_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].tech + "")) set_data_dev(t10, t10_value);
+    			if (dirty & /*projects, selectedProject*/ 9) {
+    				each_value = /*projects*/ ctx[3];
+    				validate_each_argument(each_value);
+    				let i;
 
-    			if (dirty & /*selectedProject*/ 1 && a_href_value !== (a_href_value = /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].srcGithub)) {
-    				attr_dev(a, "href", a_href_value);
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(div3, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
     			}
 
-    			if (dirty & /*selectedProject*/ 1 && t13_value !== (t13_value = /*selectedProject*/ ctx[0] + 1 + "")) set_data_dev(t13, t13_value);
+    			if (dirty & /*selectedProject*/ 1 && t8_value !== (t8_value = /*selectedProject*/ ctx[0] + 1 + "")) set_data_dev(t8, t8_value);
 
     			if (dirty & /*percentProjectBar*/ 4) {
-    				set_style(div7, "width", /*percentProjectBar*/ ctx[2] + "%");
+    				set_style(div6, "width", /*percentProjectBar*/ ctx[2] + "%");
     			}
     		},
-    		i: noop,
+    		i: function intro(local) {
+    			for (let i = 0; i < each_value_3.length; i += 1) {
+    				transition_in(each_blocks_3[i]);
+    			}
+
+    			for (let i = 0; i < each_value_2.length; i += 1) {
+    				transition_in(each_blocks_2[i]);
+    			}
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+    		},
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div14);
-    			/*div1_binding*/ ctx[6](null);
+    			if (detaching) detach_dev(div13);
+    			destroy_each(each_blocks_3, detaching);
+    			destroy_each(each_blocks_2, detaching);
+    			destroy_each(each_blocks_1, detaching);
+    			destroy_each(each_blocks, detaching);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -57941,30 +58678,18 @@ var app = (function () {
     	return block;
     }
 
-    function removeAfterAnimation(elm) {
-    	elm.addEventListener(
-    		'animationend',
-    		e => {
-    			elm.remove();
-    			console.log("removed");
-    			console.log(elm);
-    		},
-    		{ once: true }
-    	);
-    }
-
-    function createNewImageElement() {
-    	let imageElement = document.createElement("img");
-    	imageElement.classList.add("h-50", "position-absolute", "top-50", "shadowDarker", "p-0", "projectImage");
-    	imageElement.style.cssText = 'transform: translateY(-50%); border-radius: 8px;';
-    	return imageElement;
-    }
+    function fade2(node, { delay = 0, duration = 800 }) {
+    	return {
+    		delay,
+    		duration,
+    		css: t => `opacity: ${t * 1};`
+    	};
+    } // display: ${(t > delay) ? 'unset' : 'none'};
 
     function instance$3($$self, $$props, $$invalidate) {
     	let percentProjectBar;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('ProjectCard', slots, []);
-    	aos.init();
 
     	const projects = [
     		{
@@ -57994,81 +58719,64 @@ var app = (function () {
     	];
 
     	let selectedProject = 0;
-    	let currentProjectImage, projectImageContainer;
-
-    	function slideImage(side, inOrOut, elm) {
-    		//remove existing animation classes
-    		elm.classList.remove('c_slideInRight');
-
-    		elm.classList.remove('c_slideInLeft');
-
-    		if (side == "left") {
-    			switch (inOrOut) {
-    				case "in":
-    					elm.classList.add("c_slideInLeft");
-    					currentProjectImage = elm;
-    					break;
-    				case "out":
-    					removeAfterAnimation(elm);
-    					elm.classList.add("c_slideOutLeft");
-    					break;
-    			}
-    		} else {
-    			switch (inOrOut) {
-    				case "in":
-    					elm.classList.add("c_slideInRight");
-    					currentProjectImage = elm;
-    					break;
-    				case "out":
-    					removeAfterAnimation(elm);
-    					elm.classList.add("c_slideOutRight");
-    					break;
-    			}
-    		}
-    	}
+    	let animationDirection;
 
     	function nextProject() {
     		if (selectedProject < projects.length - 1) {
     			//Increment to new project index
     			$$invalidate(0, selectedProject++, selectedProject);
 
-    			//Slide out current image
-    			slideImage("left", "out", currentProjectImage);
-
-    			//Create new image for the next project
-    			let newImageElement = createNewImageElement();
-
-    			newImageElement.src = projects[selectedProject].src;
-
-    			//Add the new image to the dom. The animation will automatically trigger
-    			projectImageContainer.appendChild(newImageElement);
-
-    			slideImage("right", "in", newImageElement);
+    			$$invalidate(1, animationDirection = "Right");
     		}
     	}
 
     	function prevProject() {
     		if (selectedProject > 0) {
-    			//Increment to new project index
+    			//Increment to prev project index
     			$$invalidate(0, selectedProject--, selectedProject);
 
-    			//Slide out current image
-    			slideImage("right", "out", currentProjectImage);
-
-    			//Create new image for the next project
-    			let newImageElement = createNewImageElement();
-
-    			newImageElement.src = projects[selectedProject].src;
-
-    			//Add the new image to the dom. The animation will automatically trigger
-    			projectImageContainer.appendChild(newImageElement);
-
-    			slideImage("left", "in", newImageElement);
+    			$$invalidate(1, animationDirection = "Left");
     		}
     	}
 
+    	let card, bounds;
+
+    	function rotateToMouse(e) {
+    		bounds = card.getBoundingClientRect();
+    		const mouseX = e.clientX;
+    		const mouseY = e.clientY;
+    		const leftX = mouseX - bounds.x;
+    		const topY = mouseY - bounds.y;
+
+    		({
+    			x: leftX - bounds.width / 2,
+    			y: topY - bounds.height / 2
+    		});
+
+    		card.style.transform = `
+        scale3d(1.05, 1.05,1.05)
+        rotateX(${topY / bounds.height * 15 - 7.5}deg)
+        rotateY(${(leftX / bounds.width * 15 - 7.5) * -1}deg)
+        `;
+
+    		console.log("🚀 ~ file: ProjectCard.svelte ~ line 82 ~ rotateToMouse ~ card.style.transform", topY / bounds.height);
+    	} // card.classList.remove("top-50");
+
+    	// function mouseEntered(){
+    	//     bounds = card.getBoundingClientRect();
+    	//     console.log("entered");
+    	//     document.addEventListener('mousemove', rotateToMouse);
+    	// }
+    	function mouseLeft() {
+    		card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    		card.style.background = '';
+    		console.log("left");
+    	}
+
     	onMount(() => {
-    		currentProjectImage = document.querySelector('.projectImage');
+    		card = document.querySelector('.projectImage');
+    		bounds = card.getBoundingClientRect();
+    		console.log("🚀 ~ file: ProjectCard.svelte ~ line 96 ~ onMount ~ card", card);
     	});
 
     	const writable_props = [];
@@ -58077,32 +58785,26 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<ProjectCard> was created with unknown prop '${key}'`);
     	});
 
-    	function div1_binding($$value) {
-    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
-    			projectImageContainer = $$value;
-    			$$invalidate(1, projectImageContainer);
-    		});
-    	}
-
     	$$self.$capture_state = () => ({
-    		AOS,
     		onMount,
     		projects,
+    		fade2,
     		selectedProject,
-    		currentProjectImage,
-    		projectImageContainer,
-    		removeAfterAnimation,
-    		slideImage,
-    		createNewImageElement,
+    		animationDirection,
     		nextProject,
     		prevProject,
+    		card,
+    		bounds,
+    		rotateToMouse,
+    		mouseLeft,
     		percentProjectBar
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('selectedProject' in $$props) $$invalidate(0, selectedProject = $$props.selectedProject);
-    		if ('currentProjectImage' in $$props) currentProjectImage = $$props.currentProjectImage;
-    		if ('projectImageContainer' in $$props) $$invalidate(1, projectImageContainer = $$props.projectImageContainer);
+    		if ('animationDirection' in $$props) $$invalidate(1, animationDirection = $$props.animationDirection);
+    		if ('card' in $$props) card = $$props.card;
+    		if ('bounds' in $$props) bounds = $$props.bounds;
     		if ('percentProjectBar' in $$props) $$invalidate(2, percentProjectBar = $$props.percentProjectBar);
     	};
 
@@ -58118,12 +58820,13 @@ var app = (function () {
 
     	return [
     		selectedProject,
-    		projectImageContainer,
+    		animationDirection,
     		percentProjectBar,
     		projects,
     		nextProject,
     		prevProject,
-    		div1_binding
+    		rotateToMouse,
+    		mouseLeft
     	];
     }
 
@@ -58345,12 +59048,12 @@ var app = (function () {
 
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(/*loaded*/ ctx[0] === true
     			? 'loadDone'
-    			: 'fadeUpBaground') + " svelte-1wh3xbn"));
+    			: 'fadeUpBaground') + " svelte-102miiq"));
 
     			add_location(div1, file$1, 9, 4, 588);
-    			attr_dev(div2, "class", div2_class_value = "position-fixed " + (/*loaded*/ ctx[0] === true ? 'dissapear' : '') + " svelte-1wh3xbn");
+    			attr_dev(div2, "class", div2_class_value = "position-fixed " + (/*loaded*/ ctx[0] === true ? 'dissapear' : '') + " svelte-102miiq");
     			set_style(div2, "width", "100vw");
-    			set_style(div2, "height", "100vw");
+    			set_style(div2, "height", "100vh");
     			set_style(div2, "top", "0");
     			set_style(div2, "left", "0");
     			set_style(div2, "z-index", "20");
@@ -58377,11 +59080,11 @@ var app = (function () {
 
     			if (dirty & /*loaded*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(/*loaded*/ ctx[0] === true
     			? 'loadDone'
-    			: 'fadeUpBaground') + " svelte-1wh3xbn"))) {
+    			: 'fadeUpBaground') + " svelte-102miiq"))) {
     				attr_dev(div1, "class", div1_class_value);
     			}
 
-    			if (dirty & /*loaded*/ 1 && div2_class_value !== (div2_class_value = "position-fixed " + (/*loaded*/ ctx[0] === true ? 'dissapear' : '') + " svelte-1wh3xbn")) {
+    			if (dirty & /*loaded*/ 1 && div2_class_value !== (div2_class_value = "position-fixed " + (/*loaded*/ ctx[0] === true ? 'dissapear' : '') + " svelte-102miiq")) {
     				attr_dev(div2, "class", div2_class_value);
     			}
     		},
@@ -59166,7 +59869,7 @@ var app = (function () {
     			() => {
     				$$invalidate(1, loadElements = true);
     			},
-    			3000
+    			1500
     		);
     	});
 
