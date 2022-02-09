@@ -1,9 +1,6 @@
 <script>
-    import * as AOS from 'aos';
-    import "../node_modules/aos/dist/aos.css";
     import { onMount } from 'svelte';
-    AOS.init();
-    
+
     const projects = [
         {
             "title" : "Chat app",
@@ -29,123 +26,138 @@
             "src" : "assets/projectImages/Chatter.png",
             "colorsHex" : ["00FFE0", "BD00FF"]
         }
-    ]; 
+    ];
+
+    function fade2(node, {
+        delay = 0,
+        duration = 800
+        }) 
+        {
+            return {
+                delay,
+                duration,
+                css: t => `opacity: ${t * 1};`
+            };
+            // display: ${(t > delay) ? 'unset' : 'none'};
+    }
+
+
     let selectedProject = 0;
-    let currentProjectImage, projectImageContainer;
+    let animationDirection;
     $ : percentProjectBar = ( (selectedProject + 1) / projects.length ) * 100;
 
-    function removeAfterAnimation(elm) {
-        elm.addEventListener('animationend', (e) => {
-                elm.remove()
-                console.log("removed");
-                console.log(elm);            
-		}, { once: true });
-    }
 
-    function slideImage(side, inOrOut, elm) {
-        //remove existing animation classes
-        elm.classList.remove('c_slideInRight');
-        elm.classList.remove('c_slideInLeft');
-
-        if (side =="left") {
-            switch (inOrOut) {
-                case "in":
-                    elm.classList.add("c_slideInLeft")
-                    currentProjectImage = elm;
-                break;
-                case "out":
-                    removeAfterAnimation(elm);
-                    elm.classList.add("c_slideOutLeft")
-                break;
-            }
-        } else {
-            switch (inOrOut) {
-                case "in":
-                    elm.classList.add("c_slideInRight")
-                    currentProjectImage = elm;
-                break;
-                case "out":
-                    removeAfterAnimation(elm);
-                    elm.classList.add("c_slideOutRight")
-                break;
-            }
-        }
-    }
-    
-
-    function createNewImageElement() {
-        let imageElement = document.createElement("img");
-        imageElement.classList.add("h-50", "position-absolute", "top-50", "shadowDarker", "p-0", "projectImage");
-        imageElement.style.cssText = 'transform: translateY(-50%); border-radius: 8px;';
-        return imageElement;
-    }
 
     function nextProject() {
-
         if (selectedProject < projects.length - 1) {
             //Increment to new project index
             selectedProject++;
-
-            //Slide out current image
-           slideImage("left", "out", currentProjectImage);
-
-            //Create new image for the next project
-            let newImageElement = createNewImageElement();
-            newImageElement.src = projects[selectedProject].src;
-
-            //Add the new image to the dom. The animation will automatically trigger
-            projectImageContainer.appendChild(newImageElement);
-            slideImage("right", "in", newImageElement)
-          
+            animationDirection = "Right";
         }
     }
 
     function prevProject() {
         if (selectedProject > 0) {
-            //Increment to new project index
+            //Increment to prev project index
             selectedProject--;
-
-            //Slide out current image
-           slideImage("right", "out", currentProjectImage);
-
-            //Create new image for the next project
-            let newImageElement = createNewImageElement();
-            newImageElement.src = projects[selectedProject].src;
-
-            //Add the new image to the dom. The animation will automatically trigger
-            projectImageContainer.appendChild(newImageElement);
-            slideImage("left", "in", newImageElement)
-          
+            animationDirection = "Left";
         }
     }
 
+
+    let card, bounds;
+
+    function rotateToMouse(e) {
+        bounds = card.getBoundingClientRect();
+
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const leftX = mouseX - bounds.x;
+        const topY = mouseY - bounds.y;
+
+        const center = {
+            x: leftX - bounds.width / 2,
+            y: topY - bounds.height / 2
+        }
+        const distance = Math.sqrt(center.x**2 + center.y**2);
+        
+        card.style.transform = `
+        scale3d(1.05, 1.05,1.05)
+        rotateX(${topY/bounds.height * 15 - 7.5}deg)
+        rotateY(${(leftX/bounds.width * 15 - 7.5)*-1}deg)
+        `;
+        console.log("🚀 ~ file: ProjectCard.svelte ~ line 82 ~ rotateToMouse ~ card.style.transform", topY/bounds.height)
+        
+        // card.classList.remove("top-50");
+        
+        
+    }
+
+    // function mouseEntered(){
+    //     bounds = card.getBoundingClientRect();
+    //     console.log("entered");
+    //     document.addEventListener('mousemove', rotateToMouse);
+    // }
+
+    function mouseLeft(){
+        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        card.style.background = '';
+        console.log("left");
+    }
+
     onMount(() => {
-        currentProjectImage = document.querySelector('.projectImage');
-    })
+        card = document.querySelector('.projectImage');
+        bounds = card.getBoundingClientRect();
+        console.log("🚀 ~ file: ProjectCard.svelte ~ line 96 ~ onMount ~ card", card)
+    });
+
 
 </script>
-<div style="margin: 10vh 0;">
+<div style="margin: 10vh 0;" class="projectShowcaseWrapper">
     <h1 class="text-center my-5">See my work</h1>
     <div class="d-flex justify-content-center overflow-hidden">
         <div class="position-relative container m-0 col-8" style="height:0;width:30%;padding-bottom:30%;">
             <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative" >
                 <div class="p-4">
-                    <h3 class="row text-white pb-2">{projects[selectedProject].title}</h3>
-                    <div class="row" bind:this={projectImageContainer}>
-                        <p class="col-7 p-0 text-white">{projects[selectedProject].text}</p>
+                    {#each projects as project, i}
+                        {#if i == selectedProject}
+                            <h3 class="row pb-2 text-white"  in:fade2="{{delay: 1000}}">{project.title}</h3>
+                        {/if}
+                    {/each}
+                    <div class="row">
+                        {#each projects as project, i}
+                            {#if i == selectedProject}
+                                <p class="col-7 p-0 text-white" in:fade2="{{delay: 1200}}">{project.text}</p>
+                            {/if}
+                        {/each}        
                         <div class="col-5"></div>
-                        <img class="h-50 position-absolute top-50 shadowDarker p-0 projectImage" id="0" style="transform: translateY(-50%); border-radius: 8px;" src="{projects[selectedProject].src}" alt="">
+                        {#each projects as projectImage, i}
+                            <div class="h-50 position-absolute p-0 
+                            fitter
+                            {(selectedProject == i && animationDirection == "Left" ) ? 'c_slideInLeft' : ''}
+                            {(selectedProject == i && animationDirection == "Right" ) ? 'c_slideInRight' : ''}
+                            {(selectedProject != i && animationDirection == "Left" ) ? 'c_slideOutRight' : ''}
+                            {(selectedProject != i && animationDirection == "Right" ) ? 'c_slideOutLeft' : ''}
+                            {(selectedProject != i && animationDirection == null ) ? 'outside' : ''}" style="width: fit-content; perspective: 1000px;">
+                                <img class="h-100 projectImage shadowDarker"
+                                style=" border-radius: 8px;" src="{projectImage.src}" alt="" on:mouseleave={mouseLeft} on:mousemove={rotateToMouse}>
+                            </div>
+                        {/each}
                     </div>
                     <svg class="position-absolute w-100 h-100 backgroundSquare" style="top: 0; left: 0; z-index: -1; border-radius: 3%;" id="visual" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><defs><filter id="blur1" x="-10%" y="-10%" width="120%" height="120%"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur stdDeviation="161" result="effect1_foregroundBlur"></feGaussianBlur></filter></defs><rect width="900" height="600" fill="#{projects[selectedProject].colorsHex[1]}"></rect><g filter="url(#blur1)">
                         <circle cx="877" cy="11" fill="#{projects[selectedProject].colorsHex[0]}" r="357"></circle><circle cx="259" cy="45" fill="#{projects[selectedProject].colorsHex[1]}" r="357"></circle><circle cx="866" cy="592" fill="#{projects[selectedProject].colorsHex[0]}" r="357"></circle><circle cx="743" cy="302" fill="#{projects[selectedProject].colorsHex[0]}" r="357"></circle><circle cx="288" cy="498" fill="#{projects[selectedProject].colorsHex[1]}" r="357"></circle><circle cx="192" cy="260" fill="#{projects[selectedProject].colorsHex[0]}" r="357"></circle></g>
                     </svg>
                 </div>
-                <div class="d-flex justify-content-between align-items-center ">
-                    <p class="m-0">Made with {projects[selectedProject].tech}</p>
-                    <a href="{projects[selectedProject].srcGithub}">
-                        <img src="assets/github.svg" alt="github" height="30px" width="30px">
-                    </a>
-                </div>
+                {#each projects as project, i}
+                    {#if i == selectedProject}
+                        <div class="d-flex justify-content-between align-items-center "  in:fade2="{{delay: 1400}}">
+                            <p class="m-0">Made with {project.tech}</p>
+                            <a href="{project.srcGithub}">
+                                <img src="assets/github.svg" alt="github" height="30px" width="30px">
+                            </a>
+                        </div>
+                    {/if}
+                {/each}
             </div>
         </div>
         <div class="col-2 ms-4">
@@ -172,6 +184,10 @@
 </div>
 
 <style>
+    .projectShowcaseWrapper {
+        
+    }
+
    .projectProgressBar {
        transition: width 1s ease-in-out;
    }
@@ -183,11 +199,26 @@
    }
 
     .projectImage {
-        left: 60%
+        transition-duration: 300ms;
+        transition-property: transform, box-shadow;
+        transition-timing-function: ease-out;
+    }
+
+    .fitter {
+        left: 60%;
+        transition-duration: 1s;
+        transition-property: box-shadow;
+    }
+    .fitter:hover {
+        box-shadow: 0 0 20px 5px #0000002a, #00000044 0 0 20px inset;
     }
 
     .backgroundSquare circle,  .backgroundSquare rect {
         transition: fill 0.5s linear 1s;
+    }
+
+    .outside {
+        left: 100vw;
     }
 
 
