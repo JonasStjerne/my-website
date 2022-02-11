@@ -10,6 +10,8 @@
 	--gradient: linear-gradient(90.15deg, #FF9900 0.13%, #FF00A8 99.89%);
 	--mainColor: #171322;
 	--secondaryColor: #DFDFDF;
+
+	--animate-delay: 0.3s !important;
 }
 
 html, body {

@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from 'svelte';
 
     const projects = [
         {
@@ -68,53 +67,39 @@
     let card, bounds;
 
     function rotateToMouse(e) {
+        card = document.querySelector('#projectImageId' + selectedProject);
         bounds = card.getBoundingClientRect();
 
         const mouseX = e.clientX;
         const mouseY = e.clientY;
         const leftX = mouseX - bounds.x;
         const topY = mouseY - bounds.y;
-
-        const center = {
-            x: leftX - bounds.width / 2,
-            y: topY - bounds.height / 2
-        }
-        const distance = Math.sqrt(center.x**2 + center.y**2);
         
         card.style.transform = `
         scale3d(1.05, 1.05,1.05)
         rotateX(${topY/bounds.height * 15 - 7.5}deg)
         rotateY(${(leftX/bounds.width * 15 - 7.5)*-1}deg)
         `;
-        console.log("🚀 ~ file: ProjectCard.svelte ~ line 82 ~ rotateToMouse ~ card.style.transform", topY/bounds.height)
-        
-        // card.classList.remove("top-50");
-        
-        
     }
 
-    // function mouseEntered(){
-    //     bounds = card.getBoundingClientRect();
-    //     console.log("entered");
-    //     document.addEventListener('mousemove', rotateToMouse);
-    // }
+    function mouseEnter(){
+        setTimeout(() => {
+            card.style.transitionDuration = '0s';
+        }, 300)
+        
+    }
 
     function mouseLeft(){
         card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         card.style.background = '';
         console.log("left");
+        card.style.transitionDuration = '300ms';
     }
-
-    onMount(() => {
-        card = document.querySelector('.projectImage');
-        bounds = card.getBoundingClientRect();
-        console.log("🚀 ~ file: ProjectCard.svelte ~ line 96 ~ onMount ~ card", card)
-    });
 
 
 </script>
 <div style="margin: 10vh 0;" class="projectShowcaseWrapper">
-    <h1 class="text-center my-5">See my work</h1>
+    <h1 class="text-center my-5"  data-aos="fade-in" data-aos-duration="800">See my work</h1>
     <div class="d-flex justify-content-center overflow-hidden">
         <div class="position-relative container m-0 col-8" style="height:0;width:30%;padding-bottom:30%;">
             <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative" >
@@ -139,8 +124,8 @@
                             {(selectedProject != i && animationDirection == "Left" ) ? 'c_slideOutRight' : ''}
                             {(selectedProject != i && animationDirection == "Right" ) ? 'c_slideOutLeft' : ''}
                             {(selectedProject != i && animationDirection == null ) ? 'outside' : ''}" style="width: fit-content; perspective: 1000px;">
-                                <img class="h-100 projectImage shadowDarker"
-                                style=" border-radius: 8px;" src="{projectImage.src}" alt="" on:mouseleave={mouseLeft} on:mousemove={rotateToMouse}>
+                                <img class="h-100 projectImage shadowDarker" id="projectImageId{i}"
+                                style=" border-radius: 8px;" src="{projectImage.src}" alt="" on:mouseleave={mouseLeft} on:mousemove={rotateToMouse} on:mouseenter={mouseEnter}>
                             </div>
                         {/each}
                     </div>
@@ -174,7 +159,7 @@
                     <button type="button" class="btn bg-transparent noHighLight" on:click={prevProject}>
                         <img src="assets/arrow.png" alt="left arrow(see previous project)">
                     </button>
-                    <button type="button" class="btn btn-primary-outline noHighLight" on:click={nextProject}>
+                    <button type="button" class="btn bg-transparent noHighLight" on:click={nextProject}>
                         <img style="transform: rotate(180deg);" src="assets/arrow.png" alt="right arrow(see next project)">
                     </button>
                 </div>
