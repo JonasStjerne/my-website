@@ -4,7 +4,7 @@
 
 <div class="position-fixed {loaded === true ? 'dissapear' : ''}" style="width: 100vw; height: 100vh; top: 0; left: 0; z-index: 20;">
     <div class="w-100 h-100 d-flex justify-content-center align-items-center" style="background-color: {loaded === true ? 'transparent' : 'white'}; z-index: 10;">
-        <img src="assets/jsLogoWhite.png" alt="Logo" style="min-width: 100px; width: 15vw; postion relative; margin: auto; z-index: 20; animation-fill-mode: forwards;" class="{loaded === true ? 'animate__bounceOut' : '' }">
+        <img src="assets/jsLogoWhite.png" alt="Logo" style="min-width: 100px; width: 15vw; postion relative; margin: auto; z-index: 20; animation-fill-mode: forwards;" class="{loaded === true ? 'animate__bounceOut' : 'animate__animated animate__bounce' } ">
     </div>
 
     <div style="background-color: #171717; position: absolute; width:100%; z-index:10;" class="{loaded === true ? 'loadDone' : 'fadeUpBaground' }">
@@ -57,6 +57,12 @@
         100% {
             top: -100vh;
         }
+    }
+
+
+    .animate__animated.animate__bounce {
+        animation-iteration-count: infinite;
+        animation-duration: 2s;
     }
     
 

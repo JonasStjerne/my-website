@@ -17,8 +17,6 @@ import LoadingScreen from "./LoadingScreen.svelte";
 let meModelLoaded, skillsLoaded, loadElements = false;
 onMount(() => {
 	AOS.init();
-
-	console.log("test");
 	setTimeout(() => {
 		loadElements = true;
 	}, 1500)
@@ -28,7 +26,6 @@ onMount(() => {
 function addEventListnersText() {
 	//Animation hover effect
 	const elements = document.querySelectorAll('span');
-	console.log("ran");
 	for (let i = 0; i < elements.length; i++) {
 			elements[i].addEventListener('animationend', function(e) {
 				elements[i].classList.remove('animate__rubberBand');
@@ -54,7 +51,7 @@ function handleLoad(element) {
 
 <LoadingScreen loaded={meModelLoaded}/>
 { #if loadElements }
-	<main>
+	<main style="{meModelLoaded ? '' : 'overflow: hidden; width: 100vw; height: 100vh;'}">
 		<div class="position-relative vh-50">
 			<div id="header">
 				<!-- https://codepen.io/frebliklo/pen/YeqaNB -->

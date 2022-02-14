@@ -92,14 +92,13 @@
     function mouseLeft(){
         card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         card.style.background = '';
-        console.log("left");
         card.style.transitionDuration = '300ms';
     }
 
 
 </script>
-<div style="margin: 10vh 0;" class="projectShowcaseWrapper">
-    <h1 class="text-center my-5"  data-aos="fade-in" data-aos-duration="800">See my work</h1>
+<div style="margin: 10vh 0;" class="projectShowcaseWrapper" data-aos="fade-in" data-aos-duration="800">
+    <h1 class="text-center my-5">See my work</h1>
     <div class="d-flex justify-content-center overflow-hidden">
         <div class="position-relative container m-0 col-8" style="height:0;width:30%;padding-bottom:30%;">
             <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative" >
