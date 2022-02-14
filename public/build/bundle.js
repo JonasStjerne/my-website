@@ -59174,7 +59174,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (52:0) { #if loadElements }
+    // (56:0) { #if loadElements }
     function create_if_block(ctx) {
     	let main;
     	let div6;
@@ -59329,7 +59329,7 @@ var app = (function () {
     			t16 = space();
     			div9 = element("div");
     			p1 = element("p");
-    			t17 = text("My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
+    			t17 = text("My name is Jonas Stjerne I’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
     			br0 = element("br");
     			t18 = text("\r\n\t\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
     			t19 = space();
@@ -59351,154 +59351,154 @@ var app = (function () {
     			t28 = space();
     			div13 = element("div");
     			create_component(contactform.$$.fragment);
-    			add_location(title0, file, 58, 5, 1831);
+    			add_location(title0, file, 62, 5, 1842);
     			attr_dev(circle0, "class", "social-group__outline svelte-1ar6gaa");
     			attr_dev(circle0, "stroke", "#000");
     			attr_dev(circle0, "stroke-width", "20");
     			attr_dev(circle0, "cx", "300");
     			attr_dev(circle0, "cy", "300");
     			attr_dev(circle0, "r", "262.5");
-    			add_location(circle0, file, 62, 6, 1938);
+    			add_location(circle0, file, 66, 6, 1949);
     			attr_dev(circle1, "class", "social-group__inner-circle svelte-1ar6gaa");
     			attr_dev(circle1, "fill", "#000");
     			attr_dev(circle1, "cx", "300");
     			attr_dev(circle1, "cy", "300");
     			attr_dev(circle1, "r", "252.5");
-    			add_location(circle1, file, 63, 6, 2046);
+    			add_location(circle1, file, 67, 6, 2057);
     			attr_dev(path0, "class", "social-group__icon svelte-1ar6gaa");
     			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
     			attr_dev(path0, "fill", "#FFF");
     			attr_dev(path0, "fill-rule", "nonzero");
-    			add_location(path0, file, 64, 6, 2139);
+    			add_location(path0, file, 68, 6, 2150);
     			attr_dev(g0, "class", "social-group");
     			attr_dev(g0, "fill", "none");
     			attr_dev(g0, "fill-rule", "evenodd");
-    			add_location(g0, file, 61, 5, 1874);
+    			add_location(g0, file, 65, 5, 1885);
     			attr_dev(svg0, "class", "social-svg svelte-1ar6gaa");
     			attr_dev(svg0, "viewBox", "0 0 600 600");
     			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg0, file, 57, 5, 1743);
+    			add_location(svg0, file, 61, 5, 1754);
     			attr_dev(a0, "class", "social-link social-link--github svelte-1ar6gaa");
     			attr_dev(a0, "id", "github");
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 56, 4, 1642);
-    			add_location(title1, file, 71, 5, 3507);
+    			add_location(a0, file, 60, 4, 1653);
+    			add_location(title1, file, 75, 5, 3518);
     			attr_dev(circle2, "class", "social-group__outline svelte-1ar6gaa");
     			attr_dev(circle2, "stroke", "#000");
     			attr_dev(circle2, "stroke-width", "20");
     			attr_dev(circle2, "cx", "300");
     			attr_dev(circle2, "cy", "300");
     			attr_dev(circle2, "r", "262.5");
-    			add_location(circle2, file, 75, 6, 3616);
+    			add_location(circle2, file, 79, 6, 3627);
     			attr_dev(circle3, "class", "social-group__inner-circle svelte-1ar6gaa");
     			attr_dev(circle3, "fill", "#2D76B0");
     			attr_dev(circle3, "cx", "300");
     			attr_dev(circle3, "cy", "300");
     			attr_dev(circle3, "r", "252.5");
-    			add_location(circle3, file, 76, 6, 3724);
+    			add_location(circle3, file, 80, 6, 3735);
     			attr_dev(path1, "class", "social-group__icon svelte-1ar6gaa");
     			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
     			attr_dev(path1, "fill", "#000");
     			attr_dev(path1, "fill-rule", "nonzero");
-    			add_location(path1, file, 77, 6, 3820);
+    			add_location(path1, file, 81, 6, 3831);
     			attr_dev(g1, "class", "social-group");
     			attr_dev(g1, "fill", "none");
     			attr_dev(g1, "fill-rule", "evenodd");
-    			add_location(g1, file, 74, 5, 3552);
+    			add_location(g1, file, 78, 5, 3563);
     			attr_dev(svg1, "class", "social-svg svelte-1ar6gaa");
     			attr_dev(svg1, "viewBox", "0 0 600 600");
     			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg1, file, 70, 5, 3419);
+    			add_location(svg1, file, 74, 5, 3430);
     			attr_dev(a1, "class", "social-link social-link--linkedin svelte-1ar6gaa");
     			attr_dev(a1, "id", "linkedin");
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 69, 4, 3293);
+    			add_location(a1, file, 73, 4, 3304);
     			attr_dev(div0, "id", "header");
     			attr_dev(div0, "class", "svelte-1ar6gaa");
-    			add_location(div0, file, 54, 3, 1565);
+    			add_location(div0, file, 58, 3, 1576);
     			attr_dev(span0, "aria-hidden", "true");
     			attr_dev(span0, "class", "svelte-1ar6gaa");
-    			add_location(span0, file, 92, 112, 4943);
+    			add_location(span0, file, 97, 7, 4963);
     			attr_dev(span1, "aria-hidden", "true");
     			attr_dev(span1, "class", "svelte-1ar6gaa");
-    			add_location(span1, file, 93, 15, 4985);
+    			add_location(span1, file, 98, 15, 5005);
 
     			attr_dev(h1, "class", h1_class_value = /*meModelLoaded*/ ctx[0]
     			? ' animate__animated animate__fadeIn animate__delay-2s'
     			: '');
 
     			attr_dev(h1, "aria-label", "Hi");
-    			add_location(h1, file, 92, 6, 4837);
+    			add_location(h1, file, 96, 6, 4848);
     			attr_dev(h2, "class", "nameEl font-weight-bold svelte-1ar6gaa");
     			attr_dev(h2, "aria-label", "I'm Jonas");
-    			add_location(h2, file, 96, 7, 5182);
+    			add_location(h2, file, 101, 7, 5202);
 
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(/*meModelLoaded*/ ctx[0]
     			? ' animate__animated animate__fadeIn animate__delay-3s nameContainer rounded'
     			: 'nameContainer rounded') + " svelte-1ar6gaa"));
 
-    			add_location(div1, file, 95, 6, 5039);
+    			add_location(div1, file, 100, 6, 5059);
     			attr_dev(p0, "class", "underText svelte-1ar6gaa");
     			toggle_class(p0, "animate__animated", /*meModelLoaded*/ ctx[0]);
     			toggle_class(p0, "animate__fadeIn", /*meModelLoaded*/ ctx[0]);
     			toggle_class(p0, "animate__delay-4s", /*meModelLoaded*/ ctx[0]);
-    			add_location(p0, file, 106, 6, 5460);
+    			add_location(p0, file, 111, 6, 5480);
     			attr_dev(div2, "class", "introContainer svelte-1ar6gaa");
-    			add_location(div2, file, 91, 5, 4801);
+    			add_location(div2, file, 95, 5, 4812);
     			attr_dev(div3, "class", "content svelte-1ar6gaa");
-    			add_location(div3, file, 90, 4, 4773);
+    			add_location(div3, file, 94, 4, 4784);
     			attr_dev(div4, "class", "d-flex justify-content-center flex-column-reverse flex-md-row pb-5");
-    			add_location(div4, file, 89, 3, 4687);
+    			add_location(div4, file, 93, 3, 4698);
     			attr_dev(div5, "id", "waveBackground");
     			set_style(div5, "background-image", "url('assets/wave.png')");
     			attr_dev(div5, "class", "svelte-1ar6gaa");
-    			add_location(div5, file, 130, 3, 6243);
+    			add_location(div5, file, 135, 3, 6263);
     			attr_dev(div6, "class", "position-relative vh-50");
-    			add_location(div6, file, 53, 2, 1523);
+    			add_location(div6, file, 57, 2, 1534);
     			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-1ar6gaa");
     			attr_dev(h30, "data-aos", "fade-in");
     			attr_dev(h30, "data-aos-duration", "800");
-    			add_location(h30, file, 135, 5, 6584);
+    			add_location(h30, file, 140, 5, 6604);
     			attr_dev(div7, "class", "col-10 col-md-6 m-auto d-flex justify-content-center position-relative");
-    			add_location(div7, file, 134, 4, 6492);
+    			add_location(div7, file, 139, 4, 6512);
     			attr_dev(div8, "class", "row my-5 my-md-0");
-    			add_location(div8, file, 133, 3, 6456);
+    			add_location(div8, file, 138, 3, 6476);
     			attr_dev(h31, "class", "w-100");
-    			add_location(h31, file, 145, 5, 7060);
-    			add_location(br0, file, 148, 380, 7539);
+    			add_location(h31, file, 150, 5, 7080);
+    			add_location(br0, file, 153, 380, 7559);
     			attr_dev(p1, "data-aos", "fade-up");
     			attr_dev(p1, "data-aos-duration", "800");
-    			add_location(p1, file, 147, 6, 7111);
-    			add_location(br1, file, 149, 168, 7713);
-    			add_location(p2, file, 150, 7, 7726);
-    			add_location(br2, file, 150, 99, 7818);
+    			add_location(p1, file, 152, 6, 7131);
+    			add_location(br1, file, 154, 168, 7733);
+    			add_location(p2, file, 155, 7, 7746);
+    			add_location(br2, file, 155, 99, 7838);
     			attr_dev(a2, "class", "text-white");
     			attr_dev(a2, "href", "#contactForm");
-    			add_location(a2, file, 151, 23, 7847);
-    			add_location(p3, file, 151, 7, 7831);
-    			add_location(div9, file, 146, 5, 7098);
+    			add_location(a2, file, 156, 23, 7867);
+    			add_location(p3, file, 156, 7, 7851);
+    			add_location(div9, file, 151, 5, 7118);
     			attr_dev(div10, "class", "col-10 col-md-8 col-lg-6");
-    			add_location(div10, file, 144, 4, 7015);
+    			add_location(div10, file, 149, 4, 7035);
     			attr_dev(div11, "class", "row my-5 text-white d-flex flex-column align-items-center w-100");
-    			add_location(div11, file, 143, 3, 6932);
+    			add_location(div11, file, 148, 3, 6952);
     			attr_dev(img, "class", "w-100");
     			set_style(img, "margin-bottom", "-2px");
     			if (!src_url_equal(img.src, img_src_value = "assets/multiWaveDivider.png")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "background wave");
     			attr_dev(img, "aria-hidden", "true");
-    			add_location(img, file, 155, 3, 8012);
+    			add_location(img, file, 160, 3, 8032);
     			attr_dev(div12, "class", "container-fluid p-0");
     			set_style(div12, "background-color", "var(--mainColor)");
     			set_style(div12, "margin-top", "-2px");
     			set_style(div12, "padding-top", "1px");
-    			add_location(div12, file, 132, 2, 6338);
+    			add_location(div12, file, 137, 2, 6358);
     			attr_dev(div13, "class", "postion-relative py-5");
     			set_style(div13, "background-image", "url('assets/bottomWave.png')");
     			set_style(div13, "background-repeat", "no-repeat");
     			set_style(div13, "background-size", "contain");
     			set_style(div13, "background-position", "bottom");
-    			add_location(div13, file, 158, 2, 8168);
-    			add_location(main, file, 52, 1, 1513);
+    			add_location(div13, file, 163, 2, 8188);
+    			add_location(main, file, 56, 1, 1524);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
@@ -59646,14 +59646,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(52:0) { #if loadElements }",
+    		source: "(56:0) { #if loadElements }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (101:9) {:else}
+    // (106:9) {:else}
     function create_else_block(ctx) {
     	let span;
     	let t;
@@ -59664,7 +59664,7 @@ var app = (function () {
     			t = text(/*char*/ ctx[4]);
     			attr_dev(span, "aria-hidden", "true");
     			attr_dev(span, "class", "svelte-1ar6gaa");
-    			add_location(span, file, 101, 10, 5353);
+    			add_location(span, file, 106, 10, 5373);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -59679,14 +59679,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(101:9) {:else}",
+    		source: "(106:9) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (99:9) {#if char == " "}
+    // (104:9) {#if char == " "}
     function create_if_block_2(ctx) {
     	let t;
 
@@ -59706,14 +59706,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(99:9) {#if char == \\\" \\\"}",
+    		source: "(104:9) {#if char == \\\" \\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (98:8) {#each "I'm Jonas" as char}
+    // (103:8) {#each "I'm Jonas" as char}
     function create_each_block(ctx) {
     	let if_block_anchor;
 
@@ -59745,14 +59745,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(98:8) {#each \\\"I'm Jonas\\\" as char}",
+    		source: "(103:8) {#each \\\"I'm Jonas\\\" as char}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (137:6) {#if meModelLoaded}
+    // (142:6) {#if meModelLoaded}
     function create_if_block_1(ctx) {
     	let div;
 
@@ -59760,7 +59760,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "class", "position-absolute w-100 h-100 start-0 top-0 underlineTarget svelte-1ar6gaa");
-    			add_location(div, file, 137, 7, 6784);
+    			add_location(div, file, 142, 7, 6804);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -59774,7 +59774,7 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(137:6) {#if meModelLoaded}",
+    		source: "(142:6) {#if meModelLoaded}",
     		ctx
     	});
 
@@ -59782,12 +59782,22 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
+    	let loadingscreen;
+    	let t;
     	let if_block_anchor;
     	let current;
+
+    	loadingscreen = new LoadingScreen({
+    			props: { loaded: /*meModelLoaded*/ ctx[0] },
+    			$$inline: true
+    		});
+
     	let if_block = /*loadElements*/ ctx[1] && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
+    			create_component(loadingscreen.$$.fragment);
+    			t = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     		},
@@ -59795,11 +59805,17 @@ var app = (function () {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
+    			mount_component(loadingscreen, target, anchor);
+    			insert_dev(target, t, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert_dev(target, if_block_anchor, anchor);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
+    			const loadingscreen_changes = {};
+    			if (dirty & /*meModelLoaded*/ 1) loadingscreen_changes.loaded = /*meModelLoaded*/ ctx[0];
+    			loadingscreen.$set(loadingscreen_changes);
+
     			if (/*loadElements*/ ctx[1]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
@@ -59825,14 +59841,18 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(loadingscreen.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
+    			transition_out(loadingscreen.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
+    			destroy_component(loadingscreen, detaching);
+    			if (detaching) detach_dev(t);
     			if (if_block) if_block.d(detaching);
     			if (detaching) detach_dev(if_block_anchor);
     		}
@@ -59849,6 +59869,23 @@ var app = (function () {
     	return block;
     }
 
+    function addEventListnersText() {
+    	//Animation hover effect
+    	const elements = document.querySelectorAll('span');
+
+    	console.log("ran");
+
+    	for (let i = 0; i < elements.length; i++) {
+    		elements[i].addEventListener('animationend', function (e) {
+    			elements[i].classList.remove('animate__rubberBand');
+    		});
+
+    		elements[i].addEventListener('mouseover', function (e) {
+    			elements[i].classList.add('animate__rubberBand');
+    		});
+    	}
+    }
+
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
@@ -59856,19 +59893,7 @@ var app = (function () {
 
     	onMount(() => {
     		aos.init();
-
-    		//Animation hover effect
-    		const elements = document.querySelectorAll('span');
-
-    		for (let i = 0; i < elements.length; i++) {
-    			elements[i].addEventListener('animationend', function (e) {
-    				elements[i].classList.remove('animate__rubberBand');
-    			});
-
-    			elements[i].addEventListener('mouseover', function (e) {
-    				elements[i].classList.add('animate__rubberBand');
-    			});
-    		}
+    		console.log("test");
 
     		setTimeout(
     			() => {
@@ -59881,7 +59906,7 @@ var app = (function () {
     	function handleLoad(element) {
     		if (element.detail == "meModel") {
     			$$invalidate(0, meModelLoaded = true);
-    			console.log("🚀 ~ file: App.svelte ~ line 43 ~ handleLoad ~ meModelLoaded", meModelLoaded);
+    			addEventListnersText();
     		} else if (element.detail == "skills") {
     			skillsLoaded = true;
     		}
@@ -59907,6 +59932,7 @@ var app = (function () {
     		meModelLoaded,
     		skillsLoaded,
     		loadElements,
+    		addEventListnersText,
     		handleLoad
     	});
 

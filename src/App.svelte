@@ -18,29 +18,33 @@ let meModelLoaded, skillsLoaded, loadElements = false;
 onMount(() => {
 	AOS.init();
 
-	//Animation hover effect
-	const elements = document.querySelectorAll('span');
-
-	for (let i = 0; i < elements.length; i++) {
-		elements[i].addEventListener('animationend', function(e) {
-			elements[i].classList.remove('animate__rubberBand');
-		});
-
-		elements[i].addEventListener('mouseover', function(e) {
-			elements[i].classList.add('animate__rubberBand')
-		})
-	}
-
+	console.log("test");
 	setTimeout(() => {
 		loadElements = true;
 	}, 1500)
-
+	
 })
 
+function addEventListnersText() {
+	//Animation hover effect
+	const elements = document.querySelectorAll('span');
+	console.log("ran");
+	for (let i = 0; i < elements.length; i++) {
+			elements[i].addEventListener('animationend', function(e) {
+				elements[i].classList.remove('animate__rubberBand');
+			});
+	
+			elements[i].addEventListener('mouseover', function(e) {
+				elements[i].classList.add('animate__rubberBand')
+			})
+		}
+}
+
+
 function handleLoad(element) {
-	if (element.detail == "meModel") {
+	if (element.detail == "meModel") { 
 		meModelLoaded = true;
-        console.log("🚀 ~ file: App.svelte ~ line 43 ~ handleLoad ~ meModelLoaded", meModelLoaded)
+		addEventListnersText();
 	} else if ( element.detail == "skills") {
 		skillsLoaded = true;
 	} 
@@ -48,7 +52,7 @@ function handleLoad(element) {
 
 </script>
 
-<!-- <LoadingScreen loaded={meModelLoaded}/> -->
+<LoadingScreen loaded={meModelLoaded}/>
 { #if loadElements }
 	<main>
 		<div class="position-relative vh-50">
@@ -90,7 +94,8 @@ function handleLoad(element) {
 			<div class="d-flex justify-content-center flex-column-reverse flex-md-row pb-5">
 				<div class="content">
 					<div class="introContainer">
-						<h1 class="{meModelLoaded ? ' animate__animated animate__fadeIn animate__delay-2s' : ''}" aria-label="Hi"><span aria-hidden="true">
+						<h1 class="{meModelLoaded ? ' animate__animated animate__fadeIn animate__delay-2s' : ''}" aria-label="Hi">
+							<span aria-hidden="true">
 							H</span><span aria-hidden="true">i</span>
 						</h1>
 						<div class="{meModelLoaded ? ' animate__animated animate__fadeIn animate__delay-3s nameContainer rounded' : 'nameContainer rounded'}">
@@ -146,7 +151,7 @@ function handleLoad(element) {
 					<h3 class="w-100">About me</h3>
 					<div>
 						<p data-aos="fade-up" data-aos-duration="800">
-							My name is Jonas Stjerne i’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! <br>
+							My name is Jonas Stjerne I’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! <br>
 							I strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.</p> <br>
 							<p>I’m currently working at Openomic as a full stack junior developer & doing freelance.</p><br>
 							<p>Feel free to <a class="text-white" href="#contactForm">contact me</a> if you have any questions or would like me to work on a project</p>
