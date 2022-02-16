@@ -168,9 +168,6 @@
 </div>
 
 <style>
-    .projectShowcaseWrapper {
-        
-    }
 
    .projectProgressBar {
        transition: width 1s ease-in-out;

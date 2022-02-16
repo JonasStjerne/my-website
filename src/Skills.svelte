@@ -81,8 +81,9 @@ function getNodeYCoordinate(y, r) {
     return Math.max(r, Math.min(h - r, y));
 }
 onMount(() => {
-  w = document.querySelector("#svgchart").clientWidth;
-  h = document.querySelector("#svgchart").clientHeight;
+  w = document.querySelector("#skillsWrapper").clientWidth;
+  console.log(w);
+  h = document.querySelector("#skillsWrapper").clientHeight;
 
   // initialize simulation
   simulation = d3.forceSimulation()
@@ -216,10 +217,7 @@ const ticked = () => {
 
 
 </script>
-<div id='mainContainer' class="col-12 col-md-6 gx-0">
-    <svg id="svgchart"></svg>
-</div>
-
+  <svg id="svgchart"></svg>
 <style>
 
   #svgchart {

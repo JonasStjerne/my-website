@@ -11,7 +11,7 @@
 
 </script>
 <div class="w-100 my-5" data-aos="fade-up" data-aos-duration="800">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center w-100">
         <form action="http://localhost/my_website_backend/sendForm.php" id="contactForm" method="POST" class="d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6 shadow p-5"
         style="border-radius: 10px; gap:20px; background-color: white;">
             <input type="hidden" id="g-token" name="g-token">
