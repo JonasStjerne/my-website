@@ -100,7 +100,7 @@
 <div style="margin: 10vh 0;" class="projectShowcaseWrapper" data-aos="fade-in" data-aos-duration="800">
     <h1 class="text-center my-5">See my work</h1>
     <div class="d-flex justify-content-center overflow-hidden">
-        <div class="position-relative container m-0 col-8" style="height:0;width:30%;padding-bottom:30%;">
+        <div class="position-relative m-0" style="height:0;" id="projectCardSizeContainer">
             <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative" >
                 <div class="p-4">
                     {#each projects as project, i}
@@ -200,6 +200,36 @@
 
     .outside {
         left: 100vw;
+    }
+
+
+    @media only screen and (min-width: 600px) {
+        #projectCardSizeContainer {
+            padding-bottom: 60%;
+            width: 60%;
+        }
+    }
+
+
+    @media only screen and (min-width: 768px) {
+        #projectCardSizeContainer {
+            padding-bottom: 50%;
+            width: 50%;
+        }
+    }
+
+    @media only screen and (min-width: 1024px) {
+        #projectCardSizeContainer {
+            padding-bottom: 40%;
+            width: 40%;
+        }
+    }
+    /* Medium devices (landscape tablets, 768px and up) */
+    @media only screen and (min-width: 1200px) {
+        #projectCardSizeContainer {
+            padding-bottom: 30%;
+            width: 30%;
+        }
     }
 
 
