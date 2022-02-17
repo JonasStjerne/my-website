@@ -1,12 +1,10 @@
 <script>
 import { onMount } from "svelte";
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as AOS from 'aos';
 import "../node_modules/aos/dist/aos.css";
 import 'animate.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import DeviceDetector from "svelte-device-detector";
 
 import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
@@ -47,11 +45,18 @@ function handleLoad(element) {
 	} 
 }
 
-</script>
+function mobileLoad() {
+	meModelLoaded = true;
+    console.log("🚀 ~ file: App.svelte ~ line 50 ~ mobileLoad ~ meModelLoaded", meModelLoaded)
+	
+}
 
-<LoadingScreen loaded={meModelLoaded}/>
+</script>
+<DeviceDetector showInDevice="desktop">
+	<LoadingScreen loaded={meModelLoaded}/>
+</DeviceDetector>
 { #if loadElements }
-	<main style="{meModelLoaded ? '' : 'overflow: hidden; width: 100vw; height: 100vh;'}">
+	<main>
 		<div class="position-relative vh-50">
 			<div id="header">
 				<!-- https://codepen.io/frebliklo/pen/YeqaNB -->
@@ -128,12 +133,16 @@ function handleLoad(element) {
 						</p>
 					</div>
 				</div>
-				<MeModel on:loaded={handleLoad}/>
+				<DeviceDetector showInDevice="desktop">
+					<MeModel on:loaded={handleLoad}/>
+				</DeviceDetector>
 			</div>
-			<div id="waveBackground" style="background-image: url('assets/wave.png');"></div>
+			<div id="waveBackground" style="background-image: url('assets/wave.png');" class="d-none d-md-block"></div>
+			<img class="d-block d-md-none img-fluid w-100" src="assets/mobileWave.png" alt="">
+			<!-- <div id="waveMobileBackground" style="background-image: url('assets/mobileWave.png');" class="d-block d-md-none"></div> -->
 		</div>
 		<div class="container-fluid p-0" style="background-color: var(--mainColor); margin-top: -2px; padding-top: 1px;">
-			<div class="row my-5 my-md-0">
+			<div class="row py-5 py-md-0 g-0 w-100">
 				<div class="col-10 col-md-6 m-auto d-flex  justify-content-center position-relative">
 					<h3 class="skillsText text-white text-center text-md-start" data-aos="fade-in" data-aos-duration="800">I work in alot of different technolgies and love learning new
 						{#if meModelLoaded}
@@ -141,13 +150,15 @@ function handleLoad(element) {
 						{/if}
 					</h3>
 				</div>
+				<div class="col-10 col-md-6 m-auto p-0" id="skillsWrapper">
 					<Skills/>
+				</div>
 			</div>
 			<div class="row my-5 text-white d-flex flex-column align-items-center w-100">
-				<div class="col-10 col-md-8 col-lg-6">
+				<div class="col-10 col-md-8 col-lg-6"  data-aos="fade-up" data-aos-duration="800">
 					<h3 class="w-100">About me</h3>
 					<div>
-						<p data-aos="fade-up" data-aos-duration="800">
+						<p>
 							My name is Jonas Stjerne I’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! <br>
 							I strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.</p> <br>
 							<p>I’m currently working at Openomic as a full stack junior developer & doing freelance.</p><br>
@@ -191,16 +202,21 @@ function handleLoad(element) {
 		padding-right: 20px;
 	}
 
-	#waveBackground {
-		position: absolute;
+	#waveBackground, #waveMobileBackground {
 		aspect-ratio: 1463.5/694.96;
-		height: 100%;
 		max-width: 100%;
 		background-repeat: no-repeat;
-		background-size: cover;
 		inset:0;
 		z-index: -1;
 	}
+
+	#waveBackground {
+		height: 100%;
+		position: absolute;
+		background-size: cover;
+	}
+
+
 
 	.skillsText {
 		max-width: 600px;

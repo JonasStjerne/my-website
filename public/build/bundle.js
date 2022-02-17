@@ -20,6 +20,12 @@ var app = (function () {
 
     function noop() { }
     const identity = x => x;
+    function assign(tar, src) {
+        // @ts-ignore
+        for (const k in src)
+            tar[k] = src[k];
+        return tar;
+    }
     function add_location(element, file, line, column, char) {
         element.__svelte_meta = {
             loc: { file, line, column, char }
@@ -50,6 +56,52 @@ var app = (function () {
     }
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
+    }
+    function create_slot(definition, ctx, $$scope, fn) {
+        if (definition) {
+            const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+            return definition[0](slot_ctx);
+        }
+    }
+    function get_slot_context(definition, ctx, $$scope, fn) {
+        return definition[1] && fn
+            ? assign($$scope.ctx.slice(), definition[1](fn(ctx)))
+            : $$scope.ctx;
+    }
+    function get_slot_changes(definition, $$scope, dirty, fn) {
+        if (definition[2] && fn) {
+            const lets = definition[2](fn(dirty));
+            if ($$scope.dirty === undefined) {
+                return lets;
+            }
+            if (typeof lets === 'object') {
+                const merged = [];
+                const len = Math.max($$scope.dirty.length, lets.length);
+                for (let i = 0; i < len; i += 1) {
+                    merged[i] = $$scope.dirty[i] | lets[i];
+                }
+                return merged;
+            }
+            return $$scope.dirty | lets;
+        }
+        return $$scope.dirty;
+    }
+    function update_slot_base(slot, slot_definition, ctx, $$scope, slot_changes, get_slot_context_fn) {
+        if (slot_changes) {
+            const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+            slot.p(slot_context, slot_changes);
+        }
+    }
+    function get_all_dirty_from_scope($$scope) {
+        if ($$scope.ctx.length > 32) {
+            const dirty = [];
+            const length = $$scope.ctx.length / 32;
+            for (let i = 0; i < length; i++) {
+                dirty[i] = -1;
+            }
+            return dirty;
+        }
+        return -1;
     }
     function null_to_empty(value) {
         return value == null ? '' : value;
@@ -656,6 +708,1593 @@ var app = (function () {
         }
         $capture_state() { }
         $inject_state() { }
+    }
+
+    var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+    function getDefaultExportFromCjs (x) {
+    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+    }
+
+    function createCommonjsModule(fn) {
+      var module = { exports: {} };
+    	return fn(module, module.exports), module.exports;
+    }
+
+    var aos = createCommonjsModule(function (module, exports) {
+    !function(e,t){module.exports=t();}(commonjsGlobal,function(){return function(e){function t(o){if(n[o])return n[o].exports;var i=n[o]={exports:{},id:o,loaded:!1};return e[o].call(i.exports,i,i.exports,t),i.loaded=!0,i.exports}var n={};return t.m=e,t.c=n,t.p="dist/",t(0)}([function(e,t,n){function o(e){return e&&e.__esModule?e:{default:e}}var i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var o in n)Object.prototype.hasOwnProperty.call(n,o)&&(e[o]=n[o]);}return e},r=n(1),a=(o(r),n(6)),u=o(a),c=n(7),s=o(c),f=n(8),d=o(f),l=n(9),p=o(l),m=n(10),b=o(m),v=n(11),y=o(v),g=n(14),h=o(g),w=[],k=!1,x={offset:120,delay:0,easing:"ease",duration:400,disable:!1,once:!1,startEvent:"DOMContentLoaded",throttleDelay:99,debounceDelay:50,disableMutationObserver:!1},j=function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];if(e&&(k=!0),k)return w=(0, y.default)(w,x),(0, b.default)(w,x.once),w},O=function(){w=(0, h.default)(),j();},M=function(){w.forEach(function(e,t){e.node.removeAttribute("data-aos"),e.node.removeAttribute("data-aos-easing"),e.node.removeAttribute("data-aos-duration"),e.node.removeAttribute("data-aos-delay");});},S=function(e){return e===!0||"mobile"===e&&p.default.mobile()||"phone"===e&&p.default.phone()||"tablet"===e&&p.default.tablet()||"function"==typeof e&&e()===!0},_=function(e){x=i(x,e),w=(0, h.default)();var t=document.all&&!window.atob;return S(x.disable)||t?M():(x.disableMutationObserver||d.default.isSupported()||(console.info('\n      aos: MutationObserver is not supported on this browser,\n      code mutations observing has been disabled.\n      You may have to call "refreshHard()" by yourself.\n    '),x.disableMutationObserver=!0),document.querySelector("body").setAttribute("data-aos-easing",x.easing),document.querySelector("body").setAttribute("data-aos-duration",x.duration),document.querySelector("body").setAttribute("data-aos-delay",x.delay),"DOMContentLoaded"===x.startEvent&&["complete","interactive"].indexOf(document.readyState)>-1?j(!0):"load"===x.startEvent?window.addEventListener(x.startEvent,function(){j(!0);}):document.addEventListener(x.startEvent,function(){j(!0);}),window.addEventListener("resize",(0, s.default)(j,x.debounceDelay,!0)),window.addEventListener("orientationchange",(0, s.default)(j,x.debounceDelay,!0)),window.addEventListener("scroll",(0, u.default)(function(){(0, b.default)(w,x.once);},x.throttleDelay)),x.disableMutationObserver||d.default.ready("[data-aos]",O),w)};e.exports={init:_,refresh:j,refreshHard:O};},function(e,t){},,,,,function(e,t){(function(t){function n(e,t,n){function o(t){var n=b,o=v;return b=v=void 0,k=t,g=e.apply(o,n)}function r(e){return k=e,h=setTimeout(f,t),M?o(e):g}function a(e){var n=e-w,o=e-k,i=t-n;return S?j(i,y-o):i}function c(e){var n=e-w,o=e-k;return void 0===w||n>=t||n<0||S&&o>=y}function f(){var e=O();return c(e)?d(e):void(h=setTimeout(f,a(e)))}function d(e){return h=void 0,_&&b?o(e):(b=v=void 0,g)}function l(){void 0!==h&&clearTimeout(h),k=0,b=w=v=h=void 0;}function p(){return void 0===h?g:d(O())}function m(){var e=O(),n=c(e);if(b=arguments,v=this,w=e,n){if(void 0===h)return r(w);if(S)return h=setTimeout(f,t),o(w)}return void 0===h&&(h=setTimeout(f,t)),g}var b,v,y,g,h,w,k=0,M=!1,S=!1,_=!0;if("function"!=typeof e)throw new TypeError(s);return t=u(t)||0,i(n)&&(M=!!n.leading,S="maxWait"in n,y=S?x(u(n.maxWait)||0,t):y,_="trailing"in n?!!n.trailing:_),m.cancel=l,m.flush=p,m}function o(e,t,o){var r=!0,a=!0;if("function"!=typeof e)throw new TypeError(s);return i(o)&&(r="leading"in o?!!o.leading:r,a="trailing"in o?!!o.trailing:a),n(e,t,{leading:r,maxWait:t,trailing:a})}function i(e){var t="undefined"==typeof e?"undefined":c(e);return !!e&&("object"==t||"function"==t)}function r(e){return !!e&&"object"==("undefined"==typeof e?"undefined":c(e))}function a(e){return "symbol"==("undefined"==typeof e?"undefined":c(e))||r(e)&&k.call(e)==d}function u(e){if("number"==typeof e)return e;if(a(e))return f;if(i(e)){var t="function"==typeof e.valueOf?e.valueOf():e;e=i(t)?t+"":t;}if("string"!=typeof e)return 0===e?e:+e;e=e.replace(l,"");var n=m.test(e);return n||b.test(e)?v(e.slice(2),n?2:8):p.test(e)?f:+e}var c="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},s="Expected a function",f=NaN,d="[object Symbol]",l=/^\s+|\s+$/g,p=/^[-+]0x[0-9a-f]+$/i,m=/^0b[01]+$/i,b=/^0o[0-7]+$/i,v=parseInt,y="object"==("undefined"==typeof t?"undefined":c(t))&&t&&t.Object===Object&&t,g="object"==("undefined"==typeof self?"undefined":c(self))&&self&&self.Object===Object&&self,h=y||g||Function("return this")(),w=Object.prototype,k=w.toString,x=Math.max,j=Math.min,O=function(){return h.Date.now()};e.exports=o;}).call(t,function(){return this}());},function(e,t){(function(t){function n(e,t,n){function i(t){var n=b,o=v;return b=v=void 0,O=t,g=e.apply(o,n)}function r(e){return O=e,h=setTimeout(f,t),M?i(e):g}function u(e){var n=e-w,o=e-O,i=t-n;return S?x(i,y-o):i}function s(e){var n=e-w,o=e-O;return void 0===w||n>=t||n<0||S&&o>=y}function f(){var e=j();return s(e)?d(e):void(h=setTimeout(f,u(e)))}function d(e){return h=void 0,_&&b?i(e):(b=v=void 0,g)}function l(){void 0!==h&&clearTimeout(h),O=0,b=w=v=h=void 0;}function p(){return void 0===h?g:d(j())}function m(){var e=j(),n=s(e);if(b=arguments,v=this,w=e,n){if(void 0===h)return r(w);if(S)return h=setTimeout(f,t),i(w)}return void 0===h&&(h=setTimeout(f,t)),g}var b,v,y,g,h,w,O=0,M=!1,S=!1,_=!0;if("function"!=typeof e)throw new TypeError(c);return t=a(t)||0,o(n)&&(M=!!n.leading,S="maxWait"in n,y=S?k(a(n.maxWait)||0,t):y,_="trailing"in n?!!n.trailing:_),m.cancel=l,m.flush=p,m}function o(e){var t="undefined"==typeof e?"undefined":u(e);return !!e&&("object"==t||"function"==t)}function i(e){return !!e&&"object"==("undefined"==typeof e?"undefined":u(e))}function r(e){return "symbol"==("undefined"==typeof e?"undefined":u(e))||i(e)&&w.call(e)==f}function a(e){if("number"==typeof e)return e;if(r(e))return s;if(o(e)){var t="function"==typeof e.valueOf?e.valueOf():e;e=o(t)?t+"":t;}if("string"!=typeof e)return 0===e?e:+e;e=e.replace(d,"");var n=p.test(e);return n||m.test(e)?b(e.slice(2),n?2:8):l.test(e)?s:+e}var u="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},c="Expected a function",s=NaN,f="[object Symbol]",d=/^\s+|\s+$/g,l=/^[-+]0x[0-9a-f]+$/i,p=/^0b[01]+$/i,m=/^0o[0-7]+$/i,b=parseInt,v="object"==("undefined"==typeof t?"undefined":u(t))&&t&&t.Object===Object&&t,y="object"==("undefined"==typeof self?"undefined":u(self))&&self&&self.Object===Object&&self,g=v||y||Function("return this")(),h=Object.prototype,w=h.toString,k=Math.max,x=Math.min,j=function(){return g.Date.now()};e.exports=n;}).call(t,function(){return this}());},function(e,t){function n(e){var t=void 0,o=void 0;for(t=0;t<e.length;t+=1){if(o=e[t],o.dataset&&o.dataset.aos)return !0;if(o.children&&n(o.children))return !0}return !1}function o(){return window.MutationObserver||window.WebKitMutationObserver||window.MozMutationObserver}function i(){return !!o()}function r(e,t){var n=window.document,i=o(),r=new i(a);u=t,r.observe(n.documentElement,{childList:!0,subtree:!0,removedNodes:!0});}function a(e){e&&e.forEach(function(e){var t=Array.prototype.slice.call(e.addedNodes),o=Array.prototype.slice.call(e.removedNodes),i=t.concat(o);if(n(i))return u()});}Object.defineProperty(t,"__esModule",{value:!0});var u=function(){};t.default={isSupported:i,ready:r};},function(e,t){function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(){return navigator.userAgent||navigator.vendor||window.opera||""}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o);}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),r=/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i,a=/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i,u=/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i,c=/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i,s=function(){function e(){n(this,e);}return i(e,[{key:"phone",value:function(){var e=o();return !(!r.test(e)&&!a.test(e.substr(0,4)))}},{key:"mobile",value:function(){var e=o();return !(!u.test(e)&&!c.test(e.substr(0,4)))}},{key:"tablet",value:function(){return this.mobile()&&!this.phone()}}]),e}();t.default=new s;},function(e,t){Object.defineProperty(t,"__esModule",{value:!0});var n=function(e,t,n){var o=e.node.getAttribute("data-aos-once");t>e.position?e.node.classList.add("aos-animate"):"undefined"!=typeof o&&("false"===o||!n&&"true"!==o)&&e.node.classList.remove("aos-animate");},o=function(e,t){var o=window.pageYOffset,i=window.innerHeight;e.forEach(function(e,r){n(e,i+o,t);});};t.default=o;},function(e,t,n){function o(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var i=n(12),r=o(i),a=function(e,t){return e.forEach(function(e,n){e.node.classList.add("aos-init"),e.position=(0, r.default)(e.node,t.offset);}),e};t.default=a;},function(e,t,n){function o(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var i=n(13),r=o(i),a=function(e,t){var n=0,o=0,i=window.innerHeight,a={offset:e.getAttribute("data-aos-offset"),anchor:e.getAttribute("data-aos-anchor"),anchorPlacement:e.getAttribute("data-aos-anchor-placement")};switch(a.offset&&!isNaN(a.offset)&&(o=parseInt(a.offset)),a.anchor&&document.querySelectorAll(a.anchor)&&(e=document.querySelectorAll(a.anchor)[0]),n=(0, r.default)(e).top,a.anchorPlacement){case"top-bottom":break;case"center-bottom":n+=e.offsetHeight/2;break;case"bottom-bottom":n+=e.offsetHeight;break;case"top-center":n+=i/2;break;case"bottom-center":n+=i/2+e.offsetHeight;break;case"center-center":n+=i/2+e.offsetHeight/2;break;case"top-top":n+=i;break;case"bottom-top":n+=e.offsetHeight+i;break;case"center-top":n+=e.offsetHeight/2+i;}return a.anchorPlacement||a.offset||isNaN(t)||(o=t),n+o};t.default=a;},function(e,t){Object.defineProperty(t,"__esModule",{value:!0});var n=function(e){for(var t=0,n=0;e&&!isNaN(e.offsetLeft)&&!isNaN(e.offsetTop);)t+=e.offsetLeft-("BODY"!=e.tagName?e.scrollLeft:0),n+=e.offsetTop-("BODY"!=e.tagName?e.scrollTop:0),e=e.offsetParent;return {top:n,left:t}};t.default=n;},function(e,t){Object.defineProperty(t,"__esModule",{value:!0});var n=function(e){return e=e||document.querySelectorAll("[data-aos]"),Array.prototype.map.call(e,function(e){return {node:e}})};t.default=n;}])});
+    });
+
+    var aos$1 = /*@__PURE__*/getDefaultExportFromCjs(aos);
+
+    var AOS = /*#__PURE__*/Object.freeze(/*#__PURE__*/_mergeNamespaces({
+        __proto__: null,
+        'default': aos$1
+    }, [aos]));
+
+    var uaParser = createCommonjsModule(function (module, exports) {
+    /////////////////////////////////////////////////////////////////////////////////
+    /* UAParser.js v0.7.31
+       Copyright © 2012-2021 Faisal Salman <f@faisalman.com>
+       MIT License *//*
+       Detect Browser, Engine, OS, CPU, and Device type/model from User-Agent data.
+       Supports browser & node.js environment. 
+       Demo   : https://faisalman.github.io/ua-parser-js
+       Source : https://github.com/faisalman/ua-parser-js */
+    /////////////////////////////////////////////////////////////////////////////////
+
+    (function (window, undefined$1) {
+
+        //////////////
+        // Constants
+        /////////////
+
+
+        var LIBVERSION  = '0.7.31',
+            EMPTY       = '',
+            UNKNOWN     = '?',
+            FUNC_TYPE   = 'function',
+            UNDEF_TYPE  = 'undefined',
+            OBJ_TYPE    = 'object',
+            STR_TYPE    = 'string',
+            MAJOR       = 'major',
+            MODEL       = 'model',
+            NAME        = 'name',
+            TYPE        = 'type',
+            VENDOR      = 'vendor',
+            VERSION     = 'version',
+            ARCHITECTURE= 'architecture',
+            CONSOLE     = 'console',
+            MOBILE      = 'mobile',
+            TABLET      = 'tablet',
+            SMARTTV     = 'smarttv',
+            WEARABLE    = 'wearable',
+            EMBEDDED    = 'embedded',
+            UA_MAX_LENGTH = 255;
+
+        var AMAZON  = 'Amazon',
+            APPLE   = 'Apple',
+            ASUS    = 'ASUS',
+            BLACKBERRY = 'BlackBerry',
+            BROWSER = 'Browser',
+            CHROME  = 'Chrome',
+            EDGE    = 'Edge',
+            FIREFOX = 'Firefox',
+            GOOGLE  = 'Google',
+            HUAWEI  = 'Huawei',
+            LG      = 'LG',
+            MICROSOFT = 'Microsoft',
+            MOTOROLA  = 'Motorola',
+            OPERA   = 'Opera',
+            SAMSUNG = 'Samsung',
+            SONY    = 'Sony',
+            XIAOMI  = 'Xiaomi',
+            ZEBRA   = 'Zebra',
+            FACEBOOK   = 'Facebook';
+
+        ///////////
+        // Helper
+        //////////
+
+        var extend = function (regexes, extensions) {
+                var mergedRegexes = {};
+                for (var i in regexes) {
+                    if (extensions[i] && extensions[i].length % 2 === 0) {
+                        mergedRegexes[i] = extensions[i].concat(regexes[i]);
+                    } else {
+                        mergedRegexes[i] = regexes[i];
+                    }
+                }
+                return mergedRegexes;
+            },
+            enumerize = function (arr) {
+                var enums = {};
+                for (var i=0; i<arr.length; i++) {
+                    enums[arr[i].toUpperCase()] = arr[i];
+                }
+                return enums;
+            },
+            has = function (str1, str2) {
+                return typeof str1 === STR_TYPE ? lowerize(str2).indexOf(lowerize(str1)) !== -1 : false;
+            },
+            lowerize = function (str) {
+                return str.toLowerCase();
+            },
+            majorize = function (version) {
+                return typeof(version) === STR_TYPE ? version.replace(/[^\d\.]/g, EMPTY).split('.')[0] : undefined$1;
+            },
+            trim = function (str, len) {
+                if (typeof(str) === STR_TYPE) {
+                    str = str.replace(/^\s\s*/, EMPTY).replace(/\s\s*$/, EMPTY);
+                    return typeof(len) === UNDEF_TYPE ? str : str.substring(0, UA_MAX_LENGTH);
+                }
+        };
+
+        ///////////////
+        // Map helper
+        //////////////
+
+        var rgxMapper = function (ua, arrays) {
+
+                var i = 0, j, k, p, q, matches, match;
+
+                // loop through all regexes maps
+                while (i < arrays.length && !matches) {
+
+                    var regex = arrays[i],       // even sequence (0,2,4,..)
+                        props = arrays[i + 1];   // odd sequence (1,3,5,..)
+                    j = k = 0;
+
+                    // try matching uastring with regexes
+                    while (j < regex.length && !matches) {
+
+                        matches = regex[j++].exec(ua);
+
+                        if (!!matches) {
+                            for (p = 0; p < props.length; p++) {
+                                match = matches[++k];
+                                q = props[p];
+                                // check if given property is actually array
+                                if (typeof q === OBJ_TYPE && q.length > 0) {
+                                    if (q.length === 2) {
+                                        if (typeof q[1] == FUNC_TYPE) {
+                                            // assign modified match
+                                            this[q[0]] = q[1].call(this, match);
+                                        } else {
+                                            // assign given value, ignore regex match
+                                            this[q[0]] = q[1];
+                                        }
+                                    } else if (q.length === 3) {
+                                        // check whether function or regex
+                                        if (typeof q[1] === FUNC_TYPE && !(q[1].exec && q[1].test)) {
+                                            // call function (usually string mapper)
+                                            this[q[0]] = match ? q[1].call(this, match, q[2]) : undefined$1;
+                                        } else {
+                                            // sanitize match using given regex
+                                            this[q[0]] = match ? match.replace(q[1], q[2]) : undefined$1;
+                                        }
+                                    } else if (q.length === 4) {
+                                            this[q[0]] = match ? q[3].call(this, match.replace(q[1], q[2])) : undefined$1;
+                                    }
+                                } else {
+                                    this[q] = match ? match : undefined$1;
+                                }
+                            }
+                        }
+                    }
+                    i += 2;
+                }
+            },
+
+            strMapper = function (str, map) {
+
+                for (var i in map) {
+                    // check if current value is array
+                    if (typeof map[i] === OBJ_TYPE && map[i].length > 0) {
+                        for (var j = 0; j < map[i].length; j++) {
+                            if (has(map[i][j], str)) {
+                                return (i === UNKNOWN) ? undefined$1 : i;
+                            }
+                        }
+                    } else if (has(map[i], str)) {
+                        return (i === UNKNOWN) ? undefined$1 : i;
+                    }
+                }
+                return str;
+        };
+
+        ///////////////
+        // String map
+        //////////////
+
+        // Safari < 3.0
+        var oldSafariMap = {
+                '1.0'   : '/8',
+                '1.2'   : '/1',
+                '1.3'   : '/3',
+                '2.0'   : '/412',
+                '2.0.2' : '/416',
+                '2.0.3' : '/417',
+                '2.0.4' : '/419',
+                '?'     : '/'
+            },
+            windowsVersionMap = {
+                'ME'        : '4.90',
+                'NT 3.11'   : 'NT3.51',
+                'NT 4.0'    : 'NT4.0',
+                '2000'      : 'NT 5.0',
+                'XP'        : ['NT 5.1', 'NT 5.2'],
+                'Vista'     : 'NT 6.0',
+                '7'         : 'NT 6.1',
+                '8'         : 'NT 6.2',
+                '8.1'       : 'NT 6.3',
+                '10'        : ['NT 6.4', 'NT 10.0'],
+                'RT'        : 'ARM'
+        };
+
+        //////////////
+        // Regex map
+        /////////////
+
+        var regexes = {
+
+            browser : [[
+
+                /\b(?:crmo|crios)\/([\w\.]+)/i                                      // Chrome for Android/iOS
+                ], [VERSION, [NAME, 'Chrome']], [
+                /edg(?:e|ios|a)?\/([\w\.]+)/i                                       // Microsoft Edge
+                ], [VERSION, [NAME, 'Edge']], [
+
+                // Presto based
+                /(opera mini)\/([-\w\.]+)/i,                                        // Opera Mini
+                /(opera [mobiletab]{3,6})\b.+version\/([-\w\.]+)/i,                 // Opera Mobi/Tablet
+                /(opera)(?:.+version\/|[\/ ]+)([\w\.]+)/i                           // Opera
+                ], [NAME, VERSION], [
+                /opios[\/ ]+([\w\.]+)/i                                             // Opera mini on iphone >= 8.0
+                ], [VERSION, [NAME, OPERA+' Mini']], [
+                /\bopr\/([\w\.]+)/i                                                 // Opera Webkit
+                ], [VERSION, [NAME, OPERA]], [
+
+                // Mixed
+                /(kindle)\/([\w\.]+)/i,                                             // Kindle
+                /(lunascape|maxthon|netfront|jasmine|blazer)[\/ ]?([\w\.]*)/i,      // Lunascape/Maxthon/Netfront/Jasmine/Blazer
+                // Trident based
+                /(avant |iemobile|slim)(?:browser)?[\/ ]?([\w\.]*)/i,               // Avant/IEMobile/SlimBrowser
+                /(ba?idubrowser)[\/ ]?([\w\.]+)/i,                                  // Baidu Browser
+                /(?:ms|\()(ie) ([\w\.]+)/i,                                         // Internet Explorer
+
+                // Webkit/KHTML based                                               // Flock/RockMelt/Midori/Epiphany/Silk/Skyfire/Bolt/Iron/Iridium/PhantomJS/Bowser/QupZilla/Falkon
+                /(flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi|iridium|phantomjs|bowser|quark|qupzilla|falkon|rekonq|puffin|brave|whale|qqbrowserlite|qq)\/([-\w\.]+)/i,
+                                                                                    // Rekonq/Puffin/Brave/Whale/QQBrowserLite/QQ, aka ShouQ
+                /(weibo)__([\d\.]+)/i                                               // Weibo
+                ], [NAME, VERSION], [
+                /(?:\buc? ?browser|(?:juc.+)ucweb)[\/ ]?([\w\.]+)/i                 // UCBrowser
+                ], [VERSION, [NAME, 'UC'+BROWSER]], [
+                /\bqbcore\/([\w\.]+)/i                                              // WeChat Desktop for Windows Built-in Browser
+                ], [VERSION, [NAME, 'WeChat(Win) Desktop']], [
+                /micromessenger\/([\w\.]+)/i                                        // WeChat
+                ], [VERSION, [NAME, 'WeChat']], [
+                /konqueror\/([\w\.]+)/i                                             // Konqueror
+                ], [VERSION, [NAME, 'Konqueror']], [
+                /trident.+rv[: ]([\w\.]{1,9})\b.+like gecko/i                       // IE11
+                ], [VERSION, [NAME, 'IE']], [
+                /yabrowser\/([\w\.]+)/i                                             // Yandex
+                ], [VERSION, [NAME, 'Yandex']], [
+                /(avast|avg)\/([\w\.]+)/i                                           // Avast/AVG Secure Browser
+                ], [[NAME, /(.+)/, '$1 Secure '+BROWSER], VERSION], [
+                /\bfocus\/([\w\.]+)/i                                               // Firefox Focus
+                ], [VERSION, [NAME, FIREFOX+' Focus']], [
+                /\bopt\/([\w\.]+)/i                                                 // Opera Touch
+                ], [VERSION, [NAME, OPERA+' Touch']], [
+                /coc_coc\w+\/([\w\.]+)/i                                            // Coc Coc Browser
+                ], [VERSION, [NAME, 'Coc Coc']], [
+                /dolfin\/([\w\.]+)/i                                                // Dolphin
+                ], [VERSION, [NAME, 'Dolphin']], [
+                /coast\/([\w\.]+)/i                                                 // Opera Coast
+                ], [VERSION, [NAME, OPERA+' Coast']], [
+                /miuibrowser\/([\w\.]+)/i                                           // MIUI Browser
+                ], [VERSION, [NAME, 'MIUI '+BROWSER]], [
+                /fxios\/([-\w\.]+)/i                                                // Firefox for iOS
+                ], [VERSION, [NAME, FIREFOX]], [
+                /\bqihu|(qi?ho?o?|360)browser/i                                     // 360
+                ], [[NAME, '360 '+BROWSER]], [
+                /(oculus|samsung|sailfish)browser\/([\w\.]+)/i
+                ], [[NAME, /(.+)/, '$1 '+BROWSER], VERSION], [                      // Oculus/Samsung/Sailfish Browser
+                /(comodo_dragon)\/([\w\.]+)/i                                       // Comodo Dragon
+                ], [[NAME, /_/g, ' '], VERSION], [
+                /(electron)\/([\w\.]+) safari/i,                                    // Electron-based App
+                /(tesla)(?: qtcarbrowser|\/(20\d\d\.[-\w\.]+))/i,                   // Tesla
+                /m?(qqbrowser|baiduboxapp|2345Explorer)[\/ ]?([\w\.]+)/i            // QQBrowser/Baidu App/2345 Browser
+                ], [NAME, VERSION], [
+                /(metasr)[\/ ]?([\w\.]+)/i,                                         // SouGouBrowser
+                /(lbbrowser)/i                                                      // LieBao Browser
+                ], [NAME], [
+
+                // WebView
+                /((?:fban\/fbios|fb_iab\/fb4a)(?!.+fbav)|;fbav\/([\w\.]+);)/i       // Facebook App for iOS & Android
+                ], [[NAME, FACEBOOK], VERSION], [
+                /safari (line)\/([\w\.]+)/i,                                        // Line App for iOS
+                /\b(line)\/([\w\.]+)\/iab/i,                                        // Line App for Android
+                /(chromium|instagram)[\/ ]([-\w\.]+)/i                              // Chromium/Instagram
+                ], [NAME, VERSION], [
+                /\bgsa\/([\w\.]+) .*safari\//i                                      // Google Search Appliance on iOS
+                ], [VERSION, [NAME, 'GSA']], [
+
+                /headlesschrome(?:\/([\w\.]+)| )/i                                  // Chrome Headless
+                ], [VERSION, [NAME, CHROME+' Headless']], [
+
+                / wv\).+(chrome)\/([\w\.]+)/i                                       // Chrome WebView
+                ], [[NAME, CHROME+' WebView'], VERSION], [
+
+                /droid.+ version\/([\w\.]+)\b.+(?:mobile safari|safari)/i           // Android Browser
+                ], [VERSION, [NAME, 'Android '+BROWSER]], [
+
+                /(chrome|omniweb|arora|[tizenoka]{5} ?browser)\/v?([\w\.]+)/i       // Chrome/OmniWeb/Arora/Tizen/Nokia
+                ], [NAME, VERSION], [
+
+                /version\/([\w\.]+) .*mobile\/\w+ (safari)/i                        // Mobile Safari
+                ], [VERSION, [NAME, 'Mobile Safari']], [
+                /version\/([\w\.]+) .*(mobile ?safari|safari)/i                     // Safari & Safari Mobile
+                ], [VERSION, NAME], [
+                /webkit.+?(mobile ?safari|safari)(\/[\w\.]+)/i                      // Safari < 3.0
+                ], [NAME, [VERSION, strMapper, oldSafariMap]], [
+
+                /(webkit|khtml)\/([\w\.]+)/i
+                ], [NAME, VERSION], [
+
+                // Gecko based
+                /(navigator|netscape\d?)\/([-\w\.]+)/i                              // Netscape
+                ], [[NAME, 'Netscape'], VERSION], [
+                /mobile vr; rv:([\w\.]+)\).+firefox/i                               // Firefox Reality
+                ], [VERSION, [NAME, FIREFOX+' Reality']], [
+                /ekiohf.+(flow)\/([\w\.]+)/i,                                       // Flow
+                /(swiftfox)/i,                                                      // Swiftfox
+                /(icedragon|iceweasel|camino|chimera|fennec|maemo browser|minimo|conkeror|klar)[\/ ]?([\w\.\+]+)/i,
+                                                                                    // IceDragon/Iceweasel/Camino/Chimera/Fennec/Maemo/Minimo/Conkeror/Klar
+                /(seamonkey|k-meleon|icecat|iceape|firebird|phoenix|palemoon|basilisk|waterfox)\/([-\w\.]+)$/i,
+                                                                                    // Firefox/SeaMonkey/K-Meleon/IceCat/IceApe/Firebird/Phoenix
+                /(firefox)\/([\w\.]+)/i,                                            // Other Firefox-based
+                /(mozilla)\/([\w\.]+) .+rv\:.+gecko\/\d+/i,                         // Mozilla
+
+                // Other
+                /(polaris|lynx|dillo|icab|doris|amaya|w3m|netsurf|sleipnir|obigo|mosaic|(?:go|ice|up)[\. ]?browser)[-\/ ]?v?([\w\.]+)/i,
+                                                                                    // Polaris/Lynx/Dillo/iCab/Doris/Amaya/w3m/NetSurf/Sleipnir/Obigo/Mosaic/Go/ICE/UP.Browser
+                /(links) \(([\w\.]+)/i                                              // Links
+                ], [NAME, VERSION]
+            ],
+
+            cpu : [[
+
+                /(?:(amd|x(?:(?:86|64)[-_])?|wow|win)64)[;\)]/i                     // AMD64 (x64)
+                ], [[ARCHITECTURE, 'amd64']], [
+
+                /(ia32(?=;))/i                                                      // IA32 (quicktime)
+                ], [[ARCHITECTURE, lowerize]], [
+
+                /((?:i[346]|x)86)[;\)]/i                                            // IA32 (x86)
+                ], [[ARCHITECTURE, 'ia32']], [
+
+                /\b(aarch64|arm(v?8e?l?|_?64))\b/i                                 // ARM64
+                ], [[ARCHITECTURE, 'arm64']], [
+
+                /\b(arm(?:v[67])?ht?n?[fl]p?)\b/i                                   // ARMHF
+                ], [[ARCHITECTURE, 'armhf']], [
+
+                // PocketPC mistakenly identified as PowerPC
+                /windows (ce|mobile); ppc;/i
+                ], [[ARCHITECTURE, 'arm']], [
+
+                /((?:ppc|powerpc)(?:64)?)(?: mac|;|\))/i                            // PowerPC
+                ], [[ARCHITECTURE, /ower/, EMPTY, lowerize]], [
+
+                /(sun4\w)[;\)]/i                                                    // SPARC
+                ], [[ARCHITECTURE, 'sparc']], [
+
+                /((?:avr32|ia64(?=;))|68k(?=\))|\barm(?=v(?:[1-7]|[5-7]1)l?|;|eabi)|(?=atmel )avr|(?:irix|mips|sparc)(?:64)?\b|pa-risc)/i
+                                                                                    // IA64, 68K, ARM/64, AVR/32, IRIX/64, MIPS/64, SPARC/64, PA-RISC
+                ], [[ARCHITECTURE, lowerize]]
+            ],
+
+            device : [[
+
+                //////////////////////////
+                // MOBILES & TABLETS
+                // Ordered by popularity
+                /////////////////////////
+
+                // Samsung
+                /\b(sch-i[89]0\d|shw-m380s|sm-[pt]\w{2,4}|gt-[pn]\d{2,4}|sgh-t8[56]9|nexus 10)/i
+                ], [MODEL, [VENDOR, SAMSUNG], [TYPE, TABLET]], [
+                /\b((?:s[cgp]h|gt|sm)-\w+|galaxy nexus)/i,
+                /samsung[- ]([-\w]+)/i,
+                /sec-(sgh\w+)/i
+                ], [MODEL, [VENDOR, SAMSUNG], [TYPE, MOBILE]], [
+
+                // Apple
+                /\((ip(?:hone|od)[\w ]*);/i                                         // iPod/iPhone
+                ], [MODEL, [VENDOR, APPLE], [TYPE, MOBILE]], [
+                /\((ipad);[-\w\),; ]+apple/i,                                       // iPad
+                /applecoremedia\/[\w\.]+ \((ipad)/i,
+                /\b(ipad)\d\d?,\d\d?[;\]].+ios/i
+                ], [MODEL, [VENDOR, APPLE], [TYPE, TABLET]], [
+
+                // Huawei
+                /\b((?:ag[rs][23]?|bah2?|sht?|btv)-a?[lw]\d{2})\b(?!.+d\/s)/i
+                ], [MODEL, [VENDOR, HUAWEI], [TYPE, TABLET]], [
+                /(?:huawei|honor)([-\w ]+)[;\)]/i,
+                /\b(nexus 6p|\w{2,4}-[atu]?[ln][01259x][012359][an]?)\b(?!.+d\/s)/i
+                ], [MODEL, [VENDOR, HUAWEI], [TYPE, MOBILE]], [
+
+                // Xiaomi
+                /\b(poco[\w ]+)(?: bui|\))/i,                                       // Xiaomi POCO
+                /\b; (\w+) build\/hm\1/i,                                           // Xiaomi Hongmi 'numeric' models
+                /\b(hm[-_ ]?note?[_ ]?(?:\d\w)?) bui/i,                             // Xiaomi Hongmi
+                /\b(redmi[\-_ ]?(?:note|k)?[\w_ ]+)(?: bui|\))/i,                   // Xiaomi Redmi
+                /\b(mi[-_ ]?(?:a\d|one|one[_ ]plus|note lte|max)?[_ ]?(?:\d?\w?)[_ ]?(?:plus|se|lite)?)(?: bui|\))/i // Xiaomi Mi
+                ], [[MODEL, /_/g, ' '], [VENDOR, XIAOMI], [TYPE, MOBILE]], [
+                /\b(mi[-_ ]?(?:pad)(?:[\w_ ]+))(?: bui|\))/i                        // Mi Pad tablets
+                ],[[MODEL, /_/g, ' '], [VENDOR, XIAOMI], [TYPE, TABLET]], [
+
+                // OPPO
+                /; (\w+) bui.+ oppo/i,
+                /\b(cph[12]\d{3}|p(?:af|c[al]|d\w|e[ar])[mt]\d0|x9007|a101op)\b/i
+                ], [MODEL, [VENDOR, 'OPPO'], [TYPE, MOBILE]], [
+
+                // Vivo
+                /vivo (\w+)(?: bui|\))/i,
+                /\b(v[12]\d{3}\w?[at])(?: bui|;)/i
+                ], [MODEL, [VENDOR, 'Vivo'], [TYPE, MOBILE]], [
+
+                // Realme
+                /\b(rmx[12]\d{3})(?: bui|;|\))/i
+                ], [MODEL, [VENDOR, 'Realme'], [TYPE, MOBILE]], [
+
+                // Motorola
+                /\b(milestone|droid(?:[2-4x]| (?:bionic|x2|pro|razr))?:?( 4g)?)\b[\w ]+build\//i,
+                /\bmot(?:orola)?[- ](\w*)/i,
+                /((?:moto[\w\(\) ]+|xt\d{3,4}|nexus 6)(?= bui|\)))/i
+                ], [MODEL, [VENDOR, MOTOROLA], [TYPE, MOBILE]], [
+                /\b(mz60\d|xoom[2 ]{0,2}) build\//i
+                ], [MODEL, [VENDOR, MOTOROLA], [TYPE, TABLET]], [
+
+                // LG
+                /((?=lg)?[vl]k\-?\d{3}) bui| 3\.[-\w; ]{10}lg?-([06cv9]{3,4})/i
+                ], [MODEL, [VENDOR, LG], [TYPE, TABLET]], [
+                /(lm(?:-?f100[nv]?|-[\w\.]+)(?= bui|\))|nexus [45])/i,
+                /\blg[-e;\/ ]+((?!browser|netcast|android tv)\w+)/i,
+                /\blg-?([\d\w]+) bui/i
+                ], [MODEL, [VENDOR, LG], [TYPE, MOBILE]], [
+
+                // Lenovo
+                /(ideatab[-\w ]+)/i,
+                /lenovo ?(s[56]000[-\w]+|tab(?:[\w ]+)|yt[-\d\w]{6}|tb[-\d\w]{6})/i
+                ], [MODEL, [VENDOR, 'Lenovo'], [TYPE, TABLET]], [
+
+                // Nokia
+                /(?:maemo|nokia).*(n900|lumia \d+)/i,
+                /nokia[-_ ]?([-\w\.]*)/i
+                ], [[MODEL, /_/g, ' '], [VENDOR, 'Nokia'], [TYPE, MOBILE]], [
+
+                // Google
+                /(pixel c)\b/i                                                      // Google Pixel C
+                ], [MODEL, [VENDOR, GOOGLE], [TYPE, TABLET]], [
+                /droid.+; (pixel[\daxl ]{0,6})(?: bui|\))/i                         // Google Pixel
+                ], [MODEL, [VENDOR, GOOGLE], [TYPE, MOBILE]], [
+
+                // Sony
+                /droid.+ ([c-g]\d{4}|so[-gl]\w+|xq-a\w[4-7][12])(?= bui|\).+chrome\/(?![1-6]{0,1}\d\.))/i
+                ], [MODEL, [VENDOR, SONY], [TYPE, MOBILE]], [
+                /sony tablet [ps]/i,
+                /\b(?:sony)?sgp\w+(?: bui|\))/i
+                ], [[MODEL, 'Xperia Tablet'], [VENDOR, SONY], [TYPE, TABLET]], [
+
+                // OnePlus
+                / (kb2005|in20[12]5|be20[12][59])\b/i,
+                /(?:one)?(?:plus)? (a\d0\d\d)(?: b|\))/i
+                ], [MODEL, [VENDOR, 'OnePlus'], [TYPE, MOBILE]], [
+
+                // Amazon
+                /(alexa)webm/i,
+                /(kf[a-z]{2}wi)( bui|\))/i,                                         // Kindle Fire without Silk
+                /(kf[a-z]+)( bui|\)).+silk\//i                                      // Kindle Fire HD
+                ], [MODEL, [VENDOR, AMAZON], [TYPE, TABLET]], [
+                /((?:sd|kf)[0349hijorstuw]+)( bui|\)).+silk\//i                     // Fire Phone
+                ], [[MODEL, /(.+)/g, 'Fire Phone $1'], [VENDOR, AMAZON], [TYPE, MOBILE]], [
+
+                // BlackBerry
+                /(playbook);[-\w\),; ]+(rim)/i                                      // BlackBerry PlayBook
+                ], [MODEL, VENDOR, [TYPE, TABLET]], [
+                /\b((?:bb[a-f]|st[hv])100-\d)/i,
+                /\(bb10; (\w+)/i                                                    // BlackBerry 10
+                ], [MODEL, [VENDOR, BLACKBERRY], [TYPE, MOBILE]], [
+
+                // Asus
+                /(?:\b|asus_)(transfo[prime ]{4,10} \w+|eeepc|slider \w+|nexus 7|padfone|p00[cj])/i
+                ], [MODEL, [VENDOR, ASUS], [TYPE, TABLET]], [
+                / (z[bes]6[027][012][km][ls]|zenfone \d\w?)\b/i
+                ], [MODEL, [VENDOR, ASUS], [TYPE, MOBILE]], [
+
+                // HTC
+                /(nexus 9)/i                                                        // HTC Nexus 9
+                ], [MODEL, [VENDOR, 'HTC'], [TYPE, TABLET]], [
+                /(htc)[-;_ ]{1,2}([\w ]+(?=\)| bui)|\w+)/i,                         // HTC
+
+                // ZTE
+                /(zte)[- ]([\w ]+?)(?: bui|\/|\))/i,
+                /(alcatel|geeksphone|nexian|panasonic|sony)[-_ ]?([-\w]*)/i         // Alcatel/GeeksPhone/Nexian/Panasonic/Sony
+                ], [VENDOR, [MODEL, /_/g, ' '], [TYPE, MOBILE]], [
+
+                // Acer
+                /droid.+; ([ab][1-7]-?[0178a]\d\d?)/i
+                ], [MODEL, [VENDOR, 'Acer'], [TYPE, TABLET]], [
+
+                // Meizu
+                /droid.+; (m[1-5] note) bui/i,
+                /\bmz-([-\w]{2,})/i
+                ], [MODEL, [VENDOR, 'Meizu'], [TYPE, MOBILE]], [
+
+                // Sharp
+                /\b(sh-?[altvz]?\d\d[a-ekm]?)/i
+                ], [MODEL, [VENDOR, 'Sharp'], [TYPE, MOBILE]], [
+
+                // MIXED
+                /(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|meizu|motorola|polytron)[-_ ]?([-\w]*)/i,
+                                                                                    // BlackBerry/BenQ/Palm/Sony-Ericsson/Acer/Asus/Dell/Meizu/Motorola/Polytron
+                /(hp) ([\w ]+\w)/i,                                                 // HP iPAQ
+                /(asus)-?(\w+)/i,                                                   // Asus
+                /(microsoft); (lumia[\w ]+)/i,                                      // Microsoft Lumia
+                /(lenovo)[-_ ]?([-\w]+)/i,                                          // Lenovo
+                /(jolla)/i,                                                         // Jolla
+                /(oppo) ?([\w ]+) bui/i                                             // OPPO
+                ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+
+                /(archos) (gamepad2?)/i,                                            // Archos
+                /(hp).+(touchpad(?!.+tablet)|tablet)/i,                             // HP TouchPad
+                /(kindle)\/([\w\.]+)/i,                                             // Kindle
+                /(nook)[\w ]+build\/(\w+)/i,                                        // Nook
+                /(dell) (strea[kpr\d ]*[\dko])/i,                                   // Dell Streak
+                /(le[- ]+pan)[- ]+(\w{1,9}) bui/i,                                  // Le Pan Tablets
+                /(trinity)[- ]*(t\d{3}) bui/i,                                      // Trinity Tablets
+                /(gigaset)[- ]+(q\w{1,9}) bui/i,                                    // Gigaset Tablets
+                /(vodafone) ([\w ]+)(?:\)| bui)/i                                   // Vodafone
+                ], [VENDOR, MODEL, [TYPE, TABLET]], [
+
+                /(surface duo)/i                                                    // Surface Duo
+                ], [MODEL, [VENDOR, MICROSOFT], [TYPE, TABLET]], [
+                /droid [\d\.]+; (fp\du?)(?: b|\))/i                                 // Fairphone
+                ], [MODEL, [VENDOR, 'Fairphone'], [TYPE, MOBILE]], [
+                /(u304aa)/i                                                         // AT&T
+                ], [MODEL, [VENDOR, 'AT&T'], [TYPE, MOBILE]], [
+                /\bsie-(\w*)/i                                                      // Siemens
+                ], [MODEL, [VENDOR, 'Siemens'], [TYPE, MOBILE]], [
+                /\b(rct\w+) b/i                                                     // RCA Tablets
+                ], [MODEL, [VENDOR, 'RCA'], [TYPE, TABLET]], [
+                /\b(venue[\d ]{2,7}) b/i                                            // Dell Venue Tablets
+                ], [MODEL, [VENDOR, 'Dell'], [TYPE, TABLET]], [
+                /\b(q(?:mv|ta)\w+) b/i                                              // Verizon Tablet
+                ], [MODEL, [VENDOR, 'Verizon'], [TYPE, TABLET]], [
+                /\b(?:barnes[& ]+noble |bn[rt])([\w\+ ]*) b/i                       // Barnes & Noble Tablet
+                ], [MODEL, [VENDOR, 'Barnes & Noble'], [TYPE, TABLET]], [
+                /\b(tm\d{3}\w+) b/i
+                ], [MODEL, [VENDOR, 'NuVision'], [TYPE, TABLET]], [
+                /\b(k88) b/i                                                        // ZTE K Series Tablet
+                ], [MODEL, [VENDOR, 'ZTE'], [TYPE, TABLET]], [
+                /\b(nx\d{3}j) b/i                                                   // ZTE Nubia
+                ], [MODEL, [VENDOR, 'ZTE'], [TYPE, MOBILE]], [
+                /\b(gen\d{3}) b.+49h/i                                              // Swiss GEN Mobile
+                ], [MODEL, [VENDOR, 'Swiss'], [TYPE, MOBILE]], [
+                /\b(zur\d{3}) b/i                                                   // Swiss ZUR Tablet
+                ], [MODEL, [VENDOR, 'Swiss'], [TYPE, TABLET]], [
+                /\b((zeki)?tb.*\b) b/i                                              // Zeki Tablets
+                ], [MODEL, [VENDOR, 'Zeki'], [TYPE, TABLET]], [
+                /\b([yr]\d{2}) b/i,
+                /\b(dragon[- ]+touch |dt)(\w{5}) b/i                                // Dragon Touch Tablet
+                ], [[VENDOR, 'Dragon Touch'], MODEL, [TYPE, TABLET]], [
+                /\b(ns-?\w{0,9}) b/i                                                // Insignia Tablets
+                ], [MODEL, [VENDOR, 'Insignia'], [TYPE, TABLET]], [
+                /\b((nxa|next)-?\w{0,9}) b/i                                        // NextBook Tablets
+                ], [MODEL, [VENDOR, 'NextBook'], [TYPE, TABLET]], [
+                /\b(xtreme\_)?(v(1[045]|2[015]|[3469]0|7[05])) b/i                  // Voice Xtreme Phones
+                ], [[VENDOR, 'Voice'], MODEL, [TYPE, MOBILE]], [
+                /\b(lvtel\-)?(v1[12]) b/i                                           // LvTel Phones
+                ], [[VENDOR, 'LvTel'], MODEL, [TYPE, MOBILE]], [
+                /\b(ph-1) /i                                                        // Essential PH-1
+                ], [MODEL, [VENDOR, 'Essential'], [TYPE, MOBILE]], [
+                /\b(v(100md|700na|7011|917g).*\b) b/i                               // Envizen Tablets
+                ], [MODEL, [VENDOR, 'Envizen'], [TYPE, TABLET]], [
+                /\b(trio[-\w\. ]+) b/i                                              // MachSpeed Tablets
+                ], [MODEL, [VENDOR, 'MachSpeed'], [TYPE, TABLET]], [
+                /\btu_(1491) b/i                                                    // Rotor Tablets
+                ], [MODEL, [VENDOR, 'Rotor'], [TYPE, TABLET]], [
+                /(shield[\w ]+) b/i                                                 // Nvidia Shield Tablets
+                ], [MODEL, [VENDOR, 'Nvidia'], [TYPE, TABLET]], [
+                /(sprint) (\w+)/i                                                   // Sprint Phones
+                ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+                /(kin\.[onetw]{3})/i                                                // Microsoft Kin
+                ], [[MODEL, /\./g, ' '], [VENDOR, MICROSOFT], [TYPE, MOBILE]], [
+                /droid.+; (cc6666?|et5[16]|mc[239][23]x?|vc8[03]x?)\)/i             // Zebra
+                ], [MODEL, [VENDOR, ZEBRA], [TYPE, TABLET]], [
+                /droid.+; (ec30|ps20|tc[2-8]\d[kx])\)/i
+                ], [MODEL, [VENDOR, ZEBRA], [TYPE, MOBILE]], [
+
+                ///////////////////
+                // CONSOLES
+                ///////////////////
+
+                /(ouya)/i,                                                          // Ouya
+                /(nintendo) ([wids3utch]+)/i                                        // Nintendo
+                ], [VENDOR, MODEL, [TYPE, CONSOLE]], [
+                /droid.+; (shield) bui/i                                            // Nvidia
+                ], [MODEL, [VENDOR, 'Nvidia'], [TYPE, CONSOLE]], [
+                /(playstation [345portablevi]+)/i                                   // Playstation
+                ], [MODEL, [VENDOR, SONY], [TYPE, CONSOLE]], [
+                /\b(xbox(?: one)?(?!; xbox))[\); ]/i                                // Microsoft Xbox
+                ], [MODEL, [VENDOR, MICROSOFT], [TYPE, CONSOLE]], [
+
+                ///////////////////
+                // SMARTTVS
+                ///////////////////
+
+                /smart-tv.+(samsung)/i                                              // Samsung
+                ], [VENDOR, [TYPE, SMARTTV]], [
+                /hbbtv.+maple;(\d+)/i
+                ], [[MODEL, /^/, 'SmartTV'], [VENDOR, SAMSUNG], [TYPE, SMARTTV]], [
+                /(nux; netcast.+smarttv|lg (netcast\.tv-201\d|android tv))/i        // LG SmartTV
+                ], [[VENDOR, LG], [TYPE, SMARTTV]], [
+                /(apple) ?tv/i                                                      // Apple TV
+                ], [VENDOR, [MODEL, APPLE+' TV'], [TYPE, SMARTTV]], [
+                /crkey/i                                                            // Google Chromecast
+                ], [[MODEL, CHROME+'cast'], [VENDOR, GOOGLE], [TYPE, SMARTTV]], [
+                /droid.+aft(\w)( bui|\))/i                                          // Fire TV
+                ], [MODEL, [VENDOR, AMAZON], [TYPE, SMARTTV]], [
+                /\(dtv[\);].+(aquos)/i                                              // Sharp
+                ], [MODEL, [VENDOR, 'Sharp'], [TYPE, SMARTTV]], [
+                /\b(roku)[\dx]*[\)\/]((?:dvp-)?[\d\.]*)/i,                          // Roku
+                /hbbtv\/\d+\.\d+\.\d+ +\([\w ]*; *(\w[^;]*);([^;]*)/i               // HbbTV devices
+                ], [[VENDOR, trim], [MODEL, trim], [TYPE, SMARTTV]], [
+                /\b(android tv|smart[- ]?tv|opera tv|tv; rv:)\b/i                   // SmartTV from Unidentified Vendors
+                ], [[TYPE, SMARTTV]], [
+
+                ///////////////////
+                // WEARABLES
+                ///////////////////
+
+                /((pebble))app/i                                                    // Pebble
+                ], [VENDOR, MODEL, [TYPE, WEARABLE]], [
+                /droid.+; (glass) \d/i                                              // Google Glass
+                ], [MODEL, [VENDOR, GOOGLE], [TYPE, WEARABLE]], [
+                /droid.+; (wt63?0{2,3})\)/i
+                ], [MODEL, [VENDOR, ZEBRA], [TYPE, WEARABLE]], [
+                /(quest( 2)?)/i                                                     // Oculus Quest
+                ], [MODEL, [VENDOR, FACEBOOK], [TYPE, WEARABLE]], [
+
+                ///////////////////
+                // EMBEDDED
+                ///////////////////
+
+                /(tesla)(?: qtcarbrowser|\/[-\w\.]+)/i                              // Tesla
+                ], [VENDOR, [TYPE, EMBEDDED]], [
+
+                ////////////////////
+                // MIXED (GENERIC)
+                ///////////////////
+
+                /droid .+?; ([^;]+?)(?: bui|\) applew).+? mobile safari/i           // Android Phones from Unidentified Vendors
+                ], [MODEL, [TYPE, MOBILE]], [
+                /droid .+?; ([^;]+?)(?: bui|\) applew).+?(?! mobile) safari/i       // Android Tablets from Unidentified Vendors
+                ], [MODEL, [TYPE, TABLET]], [
+                /\b((tablet|tab)[;\/]|focus\/\d(?!.+mobile))/i                      // Unidentifiable Tablet
+                ], [[TYPE, TABLET]], [
+                /(phone|mobile(?:[;\/]| safari)|pda(?=.+windows ce))/i              // Unidentifiable Mobile
+                ], [[TYPE, MOBILE]], [
+                /(android[-\w\. ]{0,9});.+buil/i                                    // Generic Android Device
+                ], [MODEL, [VENDOR, 'Generic']]
+            ],
+
+            engine : [[
+
+                /windows.+ edge\/([\w\.]+)/i                                       // EdgeHTML
+                ], [VERSION, [NAME, EDGE+'HTML']], [
+
+                /webkit\/537\.36.+chrome\/(?!27)([\w\.]+)/i                         // Blink
+                ], [VERSION, [NAME, 'Blink']], [
+
+                /(presto)\/([\w\.]+)/i,                                             // Presto
+                /(webkit|trident|netfront|netsurf|amaya|lynx|w3m|goanna)\/([\w\.]+)/i, // WebKit/Trident/NetFront/NetSurf/Amaya/Lynx/w3m/Goanna
+                /ekioh(flow)\/([\w\.]+)/i,                                          // Flow
+                /(khtml|tasman|links)[\/ ]\(?([\w\.]+)/i,                           // KHTML/Tasman/Links
+                /(icab)[\/ ]([23]\.[\d\.]+)/i                                       // iCab
+                ], [NAME, VERSION], [
+
+                /rv\:([\w\.]{1,9})\b.+(gecko)/i                                     // Gecko
+                ], [VERSION, NAME]
+            ],
+
+            os : [[
+
+                // Windows
+                /microsoft (windows) (vista|xp)/i                                   // Windows (iTunes)
+                ], [NAME, VERSION], [
+                /(windows) nt 6\.2; (arm)/i,                                        // Windows RT
+                /(windows (?:phone(?: os)?|mobile))[\/ ]?([\d\.\w ]*)/i,            // Windows Phone
+                /(windows)[\/ ]?([ntce\d\. ]+\w)(?!.+xbox)/i
+                ], [NAME, [VERSION, strMapper, windowsVersionMap]], [
+                /(win(?=3|9|n)|win 9x )([nt\d\.]+)/i
+                ], [[NAME, 'Windows'], [VERSION, strMapper, windowsVersionMap]], [
+
+                // iOS/macOS
+                /ip[honead]{2,4}\b(?:.*os ([\w]+) like mac|; opera)/i,              // iOS
+                /cfnetwork\/.+darwin/i
+                ], [[VERSION, /_/g, '.'], [NAME, 'iOS']], [
+                /(mac os x) ?([\w\. ]*)/i,
+                /(macintosh|mac_powerpc\b)(?!.+haiku)/i                             // Mac OS
+                ], [[NAME, 'Mac OS'], [VERSION, /_/g, '.']], [
+
+                // Mobile OSes
+                /droid ([\w\.]+)\b.+(android[- ]x86)/i                              // Android-x86
+                ], [VERSION, NAME], [                                               // Android/WebOS/QNX/Bada/RIM/Maemo/MeeGo/Sailfish OS
+                /(android|webos|qnx|bada|rim tablet os|maemo|meego|sailfish)[-\/ ]?([\w\.]*)/i,
+                /(blackberry)\w*\/([\w\.]*)/i,                                      // Blackberry
+                /(tizen|kaios)[\/ ]([\w\.]+)/i,                                     // Tizen/KaiOS
+                /\((series40);/i                                                    // Series 40
+                ], [NAME, VERSION], [
+                /\(bb(10);/i                                                        // BlackBerry 10
+                ], [VERSION, [NAME, BLACKBERRY]], [
+                /(?:symbian ?os|symbos|s60(?=;)|series60)[-\/ ]?([\w\.]*)/i         // Symbian
+                ], [VERSION, [NAME, 'Symbian']], [
+                /mozilla\/[\d\.]+ \((?:mobile|tablet|tv|mobile; [\w ]+); rv:.+ gecko\/([\w\.]+)/i // Firefox OS
+                ], [VERSION, [NAME, FIREFOX+' OS']], [
+                /web0s;.+rt(tv)/i,
+                /\b(?:hp)?wos(?:browser)?\/([\w\.]+)/i                              // WebOS
+                ], [VERSION, [NAME, 'webOS']], [
+
+                // Google Chromecast
+                /crkey\/([\d\.]+)/i                                                 // Google Chromecast
+                ], [VERSION, [NAME, CHROME+'cast']], [
+                /(cros) [\w]+ ([\w\.]+\w)/i                                         // Chromium OS
+                ], [[NAME, 'Chromium OS'], VERSION],[
+
+                // Console
+                /(nintendo|playstation) ([wids345portablevuch]+)/i,                 // Nintendo/Playstation
+                /(xbox); +xbox ([^\);]+)/i,                                         // Microsoft Xbox (360, One, X, S, Series X, Series S)
+
+                // Other
+                /\b(joli|palm)\b ?(?:os)?\/?([\w\.]*)/i,                            // Joli/Palm
+                /(mint)[\/\(\) ]?(\w*)/i,                                           // Mint
+                /(mageia|vectorlinux)[; ]/i,                                        // Mageia/VectorLinux
+                /([kxln]?ubuntu|debian|suse|opensuse|gentoo|arch(?= linux)|slackware|fedora|mandriva|centos|pclinuxos|red ?hat|zenwalk|linpus|raspbian|plan 9|minix|risc os|contiki|deepin|manjaro|elementary os|sabayon|linspire)(?: gnu\/linux)?(?: enterprise)?(?:[- ]linux)?(?:-gnu)?[-\/ ]?(?!chrom|package)([-\w\.]*)/i,
+                                                                                    // Ubuntu/Debian/SUSE/Gentoo/Arch/Slackware/Fedora/Mandriva/CentOS/PCLinuxOS/RedHat/Zenwalk/Linpus/Raspbian/Plan9/Minix/RISCOS/Contiki/Deepin/Manjaro/elementary/Sabayon/Linspire
+                /(hurd|linux) ?([\w\.]*)/i,                                         // Hurd/Linux
+                /(gnu) ?([\w\.]*)/i,                                                // GNU
+                /\b([-frentopcghs]{0,5}bsd|dragonfly)[\/ ]?(?!amd|[ix346]{1,2}86)([\w\.]*)/i, // FreeBSD/NetBSD/OpenBSD/PC-BSD/GhostBSD/DragonFly
+                /(haiku) (\w+)/i                                                    // Haiku
+                ], [NAME, VERSION], [
+                /(sunos) ?([\w\.\d]*)/i                                             // Solaris
+                ], [[NAME, 'Solaris'], VERSION], [
+                /((?:open)?solaris)[-\/ ]?([\w\.]*)/i,                              // Solaris
+                /(aix) ((\d)(?=\.|\)| )[\w\.])*/i,                                  // AIX
+                /\b(beos|os\/2|amigaos|morphos|openvms|fuchsia|hp-ux)/i,            // BeOS/OS2/AmigaOS/MorphOS/OpenVMS/Fuchsia/HP-UX
+                /(unix) ?([\w\.]*)/i                                                // UNIX
+                ], [NAME, VERSION]
+            ]
+        };
+
+        /////////////////
+        // Constructor
+        ////////////////
+
+        var UAParser = function (ua, extensions) {
+
+            if (typeof ua === OBJ_TYPE) {
+                extensions = ua;
+                ua = undefined$1;
+            }
+
+            if (!(this instanceof UAParser)) {
+                return new UAParser(ua, extensions).getResult();
+            }
+
+            var _ua = ua || ((typeof window !== UNDEF_TYPE && window.navigator && window.navigator.userAgent) ? window.navigator.userAgent : EMPTY);
+            var _rgxmap = extensions ? extend(regexes, extensions) : regexes;
+
+            this.getBrowser = function () {
+                var _browser = {};
+                _browser[NAME] = undefined$1;
+                _browser[VERSION] = undefined$1;
+                rgxMapper.call(_browser, _ua, _rgxmap.browser);
+                _browser.major = majorize(_browser.version);
+                return _browser;
+            };
+            this.getCPU = function () {
+                var _cpu = {};
+                _cpu[ARCHITECTURE] = undefined$1;
+                rgxMapper.call(_cpu, _ua, _rgxmap.cpu);
+                return _cpu;
+            };
+            this.getDevice = function () {
+                var _device = {};
+                _device[VENDOR] = undefined$1;
+                _device[MODEL] = undefined$1;
+                _device[TYPE] = undefined$1;
+                rgxMapper.call(_device, _ua, _rgxmap.device);
+                return _device;
+            };
+            this.getEngine = function () {
+                var _engine = {};
+                _engine[NAME] = undefined$1;
+                _engine[VERSION] = undefined$1;
+                rgxMapper.call(_engine, _ua, _rgxmap.engine);
+                return _engine;
+            };
+            this.getOS = function () {
+                var _os = {};
+                _os[NAME] = undefined$1;
+                _os[VERSION] = undefined$1;
+                rgxMapper.call(_os, _ua, _rgxmap.os);
+                return _os;
+            };
+            this.getResult = function () {
+                return {
+                    ua      : this.getUA(),
+                    browser : this.getBrowser(),
+                    engine  : this.getEngine(),
+                    os      : this.getOS(),
+                    device  : this.getDevice(),
+                    cpu     : this.getCPU()
+                };
+            };
+            this.getUA = function () {
+                return _ua;
+            };
+            this.setUA = function (ua) {
+                _ua = (typeof ua === STR_TYPE && ua.length > UA_MAX_LENGTH) ? trim(ua, UA_MAX_LENGTH) : ua;
+                return this;
+            };
+            this.setUA(_ua);
+            return this;
+        };
+
+        UAParser.VERSION = LIBVERSION;
+        UAParser.BROWSER =  enumerize([NAME, VERSION, MAJOR]);
+        UAParser.CPU = enumerize([ARCHITECTURE]);
+        UAParser.DEVICE = enumerize([MODEL, VENDOR, TYPE, CONSOLE, MOBILE, SMARTTV, TABLET, WEARABLE, EMBEDDED]);
+        UAParser.ENGINE = UAParser.OS = enumerize([NAME, VERSION]);
+
+        ///////////
+        // Export
+        //////////
+
+        // check js environment
+        {
+            // nodejs env
+            if (module.exports) {
+                exports = module.exports = UAParser;
+            }
+            exports.UAParser = UAParser;
+        }
+
+        // jQuery/Zepto specific (optional)
+        // Note:
+        //   In AMD env the global scope should be kept clean, but jQuery is an exception.
+        //   jQuery always exports to global scope, unless jQuery.noConflict(true) is used,
+        //   and we should catch that.
+        var $ = typeof window !== UNDEF_TYPE && (window.jQuery || window.Zepto);
+        if ($ && !$.ua) {
+            var parser = new UAParser();
+            $.ua = parser.getResult();
+            $.ua.get = function () {
+                return parser.getUA();
+            };
+            $.ua.set = function (ua) {
+                parser.setUA(ua);
+                var result = parser.getResult();
+                for (var prop in result) {
+                    $.ua[prop] = result[prop];
+                }
+            };
+        }
+
+    })(typeof window === 'object' ? window : commonjsGlobal);
+    });
+
+    /* node_modules\svelte-device-detector\src\lib\DeviceDetector.svelte generated by Svelte v3.44.3 */
+
+    // (61:0) {#if showSlot}
+    function create_if_block$2(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[5].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[4], null);
+
+    	const block = {
+    		c: function create() {
+    			if (default_slot) default_slot.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (default_slot) {
+    				default_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 16)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[4],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[4])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[4], dirty, null),
+    						null
+    					);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$2.name,
+    		type: "if",
+    		source: "(61:0) {#if showSlot}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$6(ctx) {
+    	let if_block_anchor;
+    	let current;
+    	let if_block = /*showSlot*/ ctx[0] && create_if_block$2(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*showSlot*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*showSlot*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$2(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$6($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('DeviceDetector', slots, ['default']);
+    	let { showInDevice = undefined } = $$props;
+    	let { showInBrowser = undefined } = $$props;
+    	let { showInOs = undefined } = $$props;
+    	let showSlot = false;
+
+    	onMount(() => {
+    		const uaParser$1 = new uaParser();
+    		let detectedBrowser = uaParser$1.getBrowser();
+    		let detectedDevice = uaParser$1.getDevice();
+    		let detectedOs = uaParser$1.getOS();
+    		let show = true;
+
+    		if (showInDevice && !equals(getDevice(detectedDevice), showInDevice)) {
+    			show = false;
+    		}
+
+    		if (showInBrowser && !equals(formatter(detectedBrowser.name), showInBrowser)) {
+    			show = false;
+    		}
+
+    		if (showInOs && !equals(formatter(detectedOs.name), showInOs)) {
+    			show = false;
+    		}
+
+    		$$invalidate(0, showSlot = show);
+    	});
+
+    	const getDevice = device => {
+    		if (!device.type) {
+    			return "desktop";
+    		}
+
+    		return formatter(device.type);
+    	};
+
+    	const formatter = string => string.toLowerCase().normalize("NFD").replace(/ /g, "").replace(/[^\w\s]/gi, "").replace(/[\u0300-\u036f]/g, "");
+
+    	const equals = (value, option) => {
+    		if (Array.isArray(option)) {
+    			return option.some(item => value === formatter(item));
+    		}
+
+    		return value === formatter(option);
+    	};
+
+    	const writable_props = ['showInDevice', 'showInBrowser', 'showInOs'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<DeviceDetector> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('showInDevice' in $$props) $$invalidate(1, showInDevice = $$props.showInDevice);
+    		if ('showInBrowser' in $$props) $$invalidate(2, showInBrowser = $$props.showInBrowser);
+    		if ('showInOs' in $$props) $$invalidate(3, showInOs = $$props.showInOs);
+    		if ('$$scope' in $$props) $$invalidate(4, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		UAParser: uaParser,
+    		onMount,
+    		showInDevice,
+    		showInBrowser,
+    		showInOs,
+    		showSlot,
+    		getDevice,
+    		formatter,
+    		equals
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('showInDevice' in $$props) $$invalidate(1, showInDevice = $$props.showInDevice);
+    		if ('showInBrowser' in $$props) $$invalidate(2, showInBrowser = $$props.showInBrowser);
+    		if ('showInOs' in $$props) $$invalidate(3, showInOs = $$props.showInOs);
+    		if ('showSlot' in $$props) $$invalidate(0, showSlot = $$props.showSlot);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [showSlot, showInDevice, showInBrowser, showInOs, $$scope, slots];
+    }
+
+    class DeviceDetector extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {
+    			showInDevice: 1,
+    			showInBrowser: 2,
+    			showInOs: 3
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "DeviceDetector",
+    			options,
+    			id: create_fragment$6.name
+    		});
+    	}
+
+    	get showInDevice() {
+    		throw new Error("<DeviceDetector>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set showInDevice(value) {
+    		throw new Error("<DeviceDetector>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get showInBrowser() {
+    		throw new Error("<DeviceDetector>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set showInBrowser(value) {
+    		throw new Error("<DeviceDetector>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get showInOs() {
+    		throw new Error("<DeviceDetector>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set showInOs(value) {
+    		throw new Error("<DeviceDetector>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    class Gradient {
+        constructor(gradients = '', maxNum = 10, colors = ['', ''], intervals = []) {
+
+            const setColors = props => {
+                if (props.length < 2) {
+                    throw new Error(`setGradient should have more than ${props.length} color`);
+                } else {
+                    let increment = maxNum / (props.length - 1);
+                    let firstGradient = new GradientColor();
+                    let lower = 0;
+                    let upper = 0 + increment;
+                    firstGradient.setGradient(props[0], props[1]);
+                    firstGradient.setMidpoint(lower, upper);
+                    gradients = [firstGradient];
+                    intervals = [{
+                        lower,
+                        upper
+                    }];
+
+                    for (let i = 1; i < props.length - 1; i++) {
+                        let gradientColor = new GradientColor();
+                        let lower = 0 + increment * i;
+                        let upper = 0 + increment * (i + 1);
+                        gradientColor.setGradient(props[i], props[i + 1]);
+                        gradientColor.setMidpoint(lower, upper);
+                        gradients[i] = gradientColor;
+                        intervals[i] = {
+                            lower,
+                            upper
+                        };
+                    }
+                    colors = props;
+                }
+            };
+
+            this.setGradient = (...props) => {
+                setColors(props);
+                return this;
+            };
+
+            this.getArray = () => {
+                let gradientArray = [];
+                for (let j = 0; j < intervals.length; j++) {
+                    const interval = intervals[j];
+                    const start = interval.lower === 0 ? 1 : Math.ceil(interval.lower);
+                    const end = interval.upper === maxNum ? interval.upper + 1 : Math.ceil(interval.upper);
+                    for (let i = start; i < end; i++) {
+                        gradientArray.push(gradients[j].getColor(i));
+                    }
+                }
+                return gradientArray;
+            };
+
+            this.getColor = props => {
+                if (isNaN(props)) {
+                    throw new TypeError(`getColor should be a number`);
+                } else if (props <= 0) {
+                    throw new TypeError(`getColor should be greater than ${props}`);
+                } else {
+                    let segment = (maxNum - 0) / (gradients.length);
+                    let index = Math.min(Math.floor((Math.max(props, 0) - 0) / segment), gradients.length - 1);
+                    return gradients[index].getColor(props);
+                }
+            };
+
+            this.setMidpoint = (maxNumber) => {
+                if (!isNaN(maxNumber) && maxNumber >= 0) {
+                    maxNum = maxNumber;
+                    setColors(colors);
+                } else if (maxNumber <= 0) {
+                    throw new RangeError(`midPoint should be greater than ${maxNumber}`);
+                } else {
+                    throw new RangeError('midPoint should be a number');
+                }
+                return this;
+            };
+        }
+    }
+
+    class GradientColor {
+        constructor(startColor = '', endColor = '', minNum = 0, maxNum = 10) {
+            this.setGradient = (colorStart, colorEnd) => {
+                startColor = getHexColor(colorStart);
+                endColor = getHexColor(colorEnd);
+            };
+
+            this.setMidpoint = (minNumber, maxNumber) => {
+                minNum = minNumber;
+                maxNum = maxNumber;
+            };
+
+            this.getColor = props => {
+                if (props) {
+                    return '#' + generateHex(props, startColor.substring(0, 2), endColor.substring(0, 2)) +
+                        generateHex(props, startColor.substring(2, 4), endColor.substring(2, 4)) +
+                        generateHex(props, startColor.substring(4, 6), endColor.substring(4, 6));
+                }
+            };
+
+            const generateHex = (number, start, end) => {
+                if (number < minNum) {
+                    number = minNum;
+                } else if (number > maxNum) {
+                    number = maxNum;
+                }
+
+                let midPoint = maxNum - minNum;
+                let startBase = parseInt(start, 16);
+                let endBase = parseInt(end, 16);
+                let average = (endBase - startBase) / midPoint;
+                let finalBase = Math.round(average * (number - minNum) + startBase);
+                let balancedFinalBase = finalBase < 16 ? "0" + finalBase.toString(16) : finalBase.toString(16);
+                return balancedFinalBase;
+            };
+
+            const getHexColor = props => {
+                return props.substring(props.length - 6, props.length);
+            };
+        }
+    }
+
+    var src = Gradient;
+
+    /* src\Skills.svelte generated by Svelte v3.44.3 */
+
+    const { console: console_1$2 } = globals;
+    const file$5 = "src\\Skills.svelte";
+
+    function create_fragment$5(ctx) {
+    	let svg;
+
+    	const block = {
+    		c: function create() {
+    			svg = svg_element("svg");
+    			attr_dev(svg, "id", "svgchart");
+    			attr_dev(svg, "class", "svelte-qvu6yc");
+    			add_location(svg, file$5, 219, 2, 7098);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, svg, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(svg);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$5.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Skills', slots, []);
+    	const colorGradient = new src();
+    	let link, node, text, h, w, simulation, grade;
+
+    	const data = {
+    		"nodes": [
+    			{
+    				"id": 0,
+    				"text": "Angular",
+    				"r": "55",
+    				"types": "Framework",
+    				"initialX": "345.31596164743587",
+    				"initialY": "189.15349152740902"
+    			},
+    			{
+    				"id": 1,
+    				"text": "Vue",
+    				"r": "55",
+    				"types": "Framework",
+    				"initialX": "355.45314764282796",
+    				"initialY": "268.4997049720481"
+    			},
+    			{
+    				"id": 3,
+    				"text": "JavaScript",
+    				"r": "50",
+    				"types": "Language",
+    				"initialX": "270.43616060491706",
+    				"initialY": "239.08718406127946"
+    			},
+    			{
+    				"id": 4,
+    				"text": "C#",
+    				"r": "40",
+    				"types": "Language",
+    				"initialX": "298.3934782289567",
+    				"initialY": "324.5876401317703"
+    			},
+    			{
+    				"id": 5,
+    				"text": "PHP",
+    				"r": "40",
+    				"types": "Language",
+    				"initialX": "219.26882601831906",
+    				"initialY": "313.0955897542832"
+    			},
+    			{
+    				"id": 6,
+    				"text": "MySQL",
+    				"r": "30",
+    				"types": "Database",
+    				"initialX": "407.35532205082353",
+    				"initialY": "221.56284590239827"
+    			},
+    			{
+    				"id": 7,
+    				"text": "Git",
+    				"r": "25",
+    				"types": "Source Control",
+    				"initialX": "307.8295090235146",
+    				"initialY": "388.89348650755284"
+    			},
+    			{
+    				"id": 8,
+    				"text": "Figma",
+    				"r": "35",
+    				"types": "Design",
+    				"initialX": "212.45022640388",
+    				"initialY": "176.95100030647427"
+    			},
+    			{
+    				"id": 9,
+    				"text": ".Net Core",
+    				"r": "40",
+    				"types": ".Net",
+    				"initialX": "375.42842288639594",
+    				"initialY": "1345.9764636192515"
+    			},
+    			{
+    				"id": 10,
+    				"text": "Blazor",
+    				"r": "35",
+    				"types": ".Net",
+    				"initialX": "426.8418927251777",
+    				"initialY": "291.401994824919"
+    			},
+    			{
+    				"id": 11,
+    				"text": "Node.js",
+    				"r": "35",
+    				"types": "RPA",
+    				"initialX": "278.7683508949712",
+    				"initialY": "154.55739227994252"
+    			}
+    		], // {"id" : 12, "text": "React","r": "55", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 13, "text": "React","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 14, "text": "Svelte","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 15, "text": "TypeScript","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		// {"id" : 16, "text": "CSS & HTML","r": "45", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
+    		"links": [
+    			{ "target": 1, "source": 0 },
+    			{ "target": 2, "source": 1 },
+    			{ "target": 2, "source": 0 },
+    			{ "target": 4, "source": 3 },
+    			{ "target": 3, "source": 2 },
+    			{ "target": 4, "source": 2 },
+    			{ "target": 3, "source": 8 },
+    			{ "target": 8, "source": 9 },
+    			{ "target": 2, "source": 10 }
+    		]
+    	};
+
+    	const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+
+    	const types = [
+    		"Framework",
+    		"Language",
+    		"Markup",
+    		"Source Control",
+    		"RPA",
+    		"Database",
+    		"Design",
+    		".Net"
+    	];
+
+    	// define constants
+    	const { nodes, links } = data;
+
+    	const dragstarted = d => {
+    		if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    		d.fx = d.x;
+    		d.fy = d.y;
+    	};
+
+    	const dragged = d => {
+    		d.fx = clamp(d3.event.x, 0, w);
+    		d.fy = clamp(d3.event.y, 0, h);
+    	};
+
+    	const dragended = d => {
+    		if (!d3.event.active) simulation.alphaTarget(0);
+    		d.fx = null;
+    		d.fy = null;
+    	};
+
+    	function getNodeXCoordinate(x, r) {
+    		return Math.max(r, Math.min(w - r, x));
+    	}
+
+    	function getNodeYCoordinate(y, r) {
+    		return Math.max(r, Math.min(h - r, y));
+    	}
+
+    	onMount(() => {
+    		w = document.querySelector("#skillsWrapper").clientWidth;
+    		console.log(w);
+    		h = document.querySelector("#skillsWrapper").clientHeight;
+
+    		// initialize simulation
+    		simulation = d3.forceSimulation().// keep entire simulation balanced around screen center
+    		//   .force('center', d3.forceCenter(w/2, h/2))
+    		// pull toward center
+    		force('attract', d3.forceAttract().target([w / 2, h / 2]).strength(0.11)).// cluster by region
+    		force('cluster', d3.forceCluster().centers(d => types.indexOf(d.types)).strength(1).centerInertia(0.1)).force("link", d3.forceLink()).force('charge', d3.forceManyBody().strength(-10)).// apply collision with padding
+    		force("collide", d3.forceCollide().radius(d => d.r).strength(0));
+
+    		//ramp up collision strength to provide smooth transition
+    		const transitionTime = 2500;
+
+    		const t = d3.timer(elapsed => {
+    			const dt = elapsed / transitionTime;
+    			simulation.force('collide').strength(Math.pow(dt, 2) * 0.7);
+    			if (dt >= 1.0) t.stop();
+    		});
+
+    		//initialize svg
+    		const svg = d3.select("#svgchart");
+
+    		// initialize node circles
+    		node = svg.append("g").attr("class", "node").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.r).attr("fill", d => "url(#gradient" + d.id + ")").each(function (d) {
+    			d.x = w / 2;
+    			d.y = h / 2;
+    		}).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+    		//Initialize text
+    		text = svg.append("g").attr("class", "textBoxes noselect").selectAll("text").data(nodes).enter().append("text").attr('text-anchor', "middle").text(d => d.text).attr('color', 'black').attr('font-size', 15).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+    		//Set gradient colors
+    		const color1 = "#FF9900";
+
+    		const color2 = '#FF8713';
+    		const color3 = '#FF198D';
+    		const color4 = "#FF00A8";
+    		colorGradient.setGradient(color1, color2, color3, color4);
+
+    		// colorGradient.setGradient(color1, color4);
+    		//Make a linearGradient for each node
+    		grade = svg.append("defs").selectAll("linearGradient").data(nodes).enter();
+
+    		grade.append("linearGradient").attr("id", d => "gradient" + d.id).append("stop").attr("stop-color", "rgba(255, 153, 0, 1)").attr("offset", "0%").attr("class", "startGrade");
+    		svg.selectAll("linearGradient").append("stop").attr("stop-color", "rgba(255, 0, 168, 1)").attr("offset", "100%").attr("class", "endGrade");
+    		simulation.nodes(nodes).on("tick", ticked);
+    		simulation.force("link").links(links);
+    	});
+
+    	// define tick function
+    	const ticked = () => {
+    		node.attr("cx", d => getNodeXCoordinate(d.x, d.r) + "px").attr("cy", d => getNodeYCoordinate(d.y, d.r) + "px");
+    		text.attr("x", d => getNodeXCoordinate(d.x, d.r) + "px").attr("y", d => getNodeYCoordinate(d.y, d.r) + 4 + "px");
+
+    		//Update node color according to pos
+    		grade.selectAll(".startGrade").attr("stop-color", d => colorGradient.getColor(Math.max(0.1, (d.x - d.r) / w * 10)));
+
+    		grade.selectAll(".endGrade").attr("stop-color", d => colorGradient.getColor(Math.max(0.1, (d.x + d.r) / w * 10)));
+    	};
+
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$2.warn(`<Skills> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		Gradient: src,
+    		colorGradient,
+    		link,
+    		node,
+    		text,
+    		h,
+    		w,
+    		simulation,
+    		grade,
+    		data,
+    		clamp,
+    		types,
+    		nodes,
+    		links,
+    		dragstarted,
+    		dragged,
+    		dragended,
+    		getNodeXCoordinate,
+    		getNodeYCoordinate,
+    		ticked
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('link' in $$props) link = $$props.link;
+    		if ('node' in $$props) node = $$props.node;
+    		if ('text' in $$props) text = $$props.text;
+    		if ('h' in $$props) h = $$props.h;
+    		if ('w' in $$props) w = $$props.w;
+    		if ('simulation' in $$props) simulation = $$props.simulation;
+    		if ('grade' in $$props) grade = $$props.grade;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [];
+    }
+
+    class Skills extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Skills",
+    			options,
+    			id: create_fragment$5.name
+    		});
+    	}
     }
 
     /**
@@ -56921,476 +58560,9 @@ var app = (function () {
 
     }
 
-    var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-    function getDefaultExportFromCjs (x) {
-    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-    }
-
-    function createCommonjsModule(fn) {
-      var module = { exports: {} };
-    	return fn(module, module.exports), module.exports;
-    }
-
-    var aos = createCommonjsModule(function (module, exports) {
-    !function(e,t){module.exports=t();}(commonjsGlobal,function(){return function(e){function t(o){if(n[o])return n[o].exports;var i=n[o]={exports:{},id:o,loaded:!1};return e[o].call(i.exports,i,i.exports,t),i.loaded=!0,i.exports}var n={};return t.m=e,t.c=n,t.p="dist/",t(0)}([function(e,t,n){function o(e){return e&&e.__esModule?e:{default:e}}var i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var o in n)Object.prototype.hasOwnProperty.call(n,o)&&(e[o]=n[o]);}return e},r=n(1),a=(o(r),n(6)),u=o(a),c=n(7),s=o(c),f=n(8),d=o(f),l=n(9),p=o(l),m=n(10),b=o(m),v=n(11),y=o(v),g=n(14),h=o(g),w=[],k=!1,x={offset:120,delay:0,easing:"ease",duration:400,disable:!1,once:!1,startEvent:"DOMContentLoaded",throttleDelay:99,debounceDelay:50,disableMutationObserver:!1},j=function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];if(e&&(k=!0),k)return w=(0, y.default)(w,x),(0, b.default)(w,x.once),w},O=function(){w=(0, h.default)(),j();},M=function(){w.forEach(function(e,t){e.node.removeAttribute("data-aos"),e.node.removeAttribute("data-aos-easing"),e.node.removeAttribute("data-aos-duration"),e.node.removeAttribute("data-aos-delay");});},S=function(e){return e===!0||"mobile"===e&&p.default.mobile()||"phone"===e&&p.default.phone()||"tablet"===e&&p.default.tablet()||"function"==typeof e&&e()===!0},_=function(e){x=i(x,e),w=(0, h.default)();var t=document.all&&!window.atob;return S(x.disable)||t?M():(x.disableMutationObserver||d.default.isSupported()||(console.info('\n      aos: MutationObserver is not supported on this browser,\n      code mutations observing has been disabled.\n      You may have to call "refreshHard()" by yourself.\n    '),x.disableMutationObserver=!0),document.querySelector("body").setAttribute("data-aos-easing",x.easing),document.querySelector("body").setAttribute("data-aos-duration",x.duration),document.querySelector("body").setAttribute("data-aos-delay",x.delay),"DOMContentLoaded"===x.startEvent&&["complete","interactive"].indexOf(document.readyState)>-1?j(!0):"load"===x.startEvent?window.addEventListener(x.startEvent,function(){j(!0);}):document.addEventListener(x.startEvent,function(){j(!0);}),window.addEventListener("resize",(0, s.default)(j,x.debounceDelay,!0)),window.addEventListener("orientationchange",(0, s.default)(j,x.debounceDelay,!0)),window.addEventListener("scroll",(0, u.default)(function(){(0, b.default)(w,x.once);},x.throttleDelay)),x.disableMutationObserver||d.default.ready("[data-aos]",O),w)};e.exports={init:_,refresh:j,refreshHard:O};},function(e,t){},,,,,function(e,t){(function(t){function n(e,t,n){function o(t){var n=b,o=v;return b=v=void 0,k=t,g=e.apply(o,n)}function r(e){return k=e,h=setTimeout(f,t),M?o(e):g}function a(e){var n=e-w,o=e-k,i=t-n;return S?j(i,y-o):i}function c(e){var n=e-w,o=e-k;return void 0===w||n>=t||n<0||S&&o>=y}function f(){var e=O();return c(e)?d(e):void(h=setTimeout(f,a(e)))}function d(e){return h=void 0,_&&b?o(e):(b=v=void 0,g)}function l(){void 0!==h&&clearTimeout(h),k=0,b=w=v=h=void 0;}function p(){return void 0===h?g:d(O())}function m(){var e=O(),n=c(e);if(b=arguments,v=this,w=e,n){if(void 0===h)return r(w);if(S)return h=setTimeout(f,t),o(w)}return void 0===h&&(h=setTimeout(f,t)),g}var b,v,y,g,h,w,k=0,M=!1,S=!1,_=!0;if("function"!=typeof e)throw new TypeError(s);return t=u(t)||0,i(n)&&(M=!!n.leading,S="maxWait"in n,y=S?x(u(n.maxWait)||0,t):y,_="trailing"in n?!!n.trailing:_),m.cancel=l,m.flush=p,m}function o(e,t,o){var r=!0,a=!0;if("function"!=typeof e)throw new TypeError(s);return i(o)&&(r="leading"in o?!!o.leading:r,a="trailing"in o?!!o.trailing:a),n(e,t,{leading:r,maxWait:t,trailing:a})}function i(e){var t="undefined"==typeof e?"undefined":c(e);return !!e&&("object"==t||"function"==t)}function r(e){return !!e&&"object"==("undefined"==typeof e?"undefined":c(e))}function a(e){return "symbol"==("undefined"==typeof e?"undefined":c(e))||r(e)&&k.call(e)==d}function u(e){if("number"==typeof e)return e;if(a(e))return f;if(i(e)){var t="function"==typeof e.valueOf?e.valueOf():e;e=i(t)?t+"":t;}if("string"!=typeof e)return 0===e?e:+e;e=e.replace(l,"");var n=m.test(e);return n||b.test(e)?v(e.slice(2),n?2:8):p.test(e)?f:+e}var c="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},s="Expected a function",f=NaN,d="[object Symbol]",l=/^\s+|\s+$/g,p=/^[-+]0x[0-9a-f]+$/i,m=/^0b[01]+$/i,b=/^0o[0-7]+$/i,v=parseInt,y="object"==("undefined"==typeof t?"undefined":c(t))&&t&&t.Object===Object&&t,g="object"==("undefined"==typeof self?"undefined":c(self))&&self&&self.Object===Object&&self,h=y||g||Function("return this")(),w=Object.prototype,k=w.toString,x=Math.max,j=Math.min,O=function(){return h.Date.now()};e.exports=o;}).call(t,function(){return this}());},function(e,t){(function(t){function n(e,t,n){function i(t){var n=b,o=v;return b=v=void 0,O=t,g=e.apply(o,n)}function r(e){return O=e,h=setTimeout(f,t),M?i(e):g}function u(e){var n=e-w,o=e-O,i=t-n;return S?x(i,y-o):i}function s(e){var n=e-w,o=e-O;return void 0===w||n>=t||n<0||S&&o>=y}function f(){var e=j();return s(e)?d(e):void(h=setTimeout(f,u(e)))}function d(e){return h=void 0,_&&b?i(e):(b=v=void 0,g)}function l(){void 0!==h&&clearTimeout(h),O=0,b=w=v=h=void 0;}function p(){return void 0===h?g:d(j())}function m(){var e=j(),n=s(e);if(b=arguments,v=this,w=e,n){if(void 0===h)return r(w);if(S)return h=setTimeout(f,t),i(w)}return void 0===h&&(h=setTimeout(f,t)),g}var b,v,y,g,h,w,O=0,M=!1,S=!1,_=!0;if("function"!=typeof e)throw new TypeError(c);return t=a(t)||0,o(n)&&(M=!!n.leading,S="maxWait"in n,y=S?k(a(n.maxWait)||0,t):y,_="trailing"in n?!!n.trailing:_),m.cancel=l,m.flush=p,m}function o(e){var t="undefined"==typeof e?"undefined":u(e);return !!e&&("object"==t||"function"==t)}function i(e){return !!e&&"object"==("undefined"==typeof e?"undefined":u(e))}function r(e){return "symbol"==("undefined"==typeof e?"undefined":u(e))||i(e)&&w.call(e)==f}function a(e){if("number"==typeof e)return e;if(r(e))return s;if(o(e)){var t="function"==typeof e.valueOf?e.valueOf():e;e=o(t)?t+"":t;}if("string"!=typeof e)return 0===e?e:+e;e=e.replace(d,"");var n=p.test(e);return n||m.test(e)?b(e.slice(2),n?2:8):l.test(e)?s:+e}var u="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},c="Expected a function",s=NaN,f="[object Symbol]",d=/^\s+|\s+$/g,l=/^[-+]0x[0-9a-f]+$/i,p=/^0b[01]+$/i,m=/^0o[0-7]+$/i,b=parseInt,v="object"==("undefined"==typeof t?"undefined":u(t))&&t&&t.Object===Object&&t,y="object"==("undefined"==typeof self?"undefined":u(self))&&self&&self.Object===Object&&self,g=v||y||Function("return this")(),h=Object.prototype,w=h.toString,k=Math.max,x=Math.min,j=function(){return g.Date.now()};e.exports=n;}).call(t,function(){return this}());},function(e,t){function n(e){var t=void 0,o=void 0;for(t=0;t<e.length;t+=1){if(o=e[t],o.dataset&&o.dataset.aos)return !0;if(o.children&&n(o.children))return !0}return !1}function o(){return window.MutationObserver||window.WebKitMutationObserver||window.MozMutationObserver}function i(){return !!o()}function r(e,t){var n=window.document,i=o(),r=new i(a);u=t,r.observe(n.documentElement,{childList:!0,subtree:!0,removedNodes:!0});}function a(e){e&&e.forEach(function(e){var t=Array.prototype.slice.call(e.addedNodes),o=Array.prototype.slice.call(e.removedNodes),i=t.concat(o);if(n(i))return u()});}Object.defineProperty(t,"__esModule",{value:!0});var u=function(){};t.default={isSupported:i,ready:r};},function(e,t){function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(){return navigator.userAgent||navigator.vendor||window.opera||""}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o);}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),r=/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i,a=/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i,u=/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i,c=/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i,s=function(){function e(){n(this,e);}return i(e,[{key:"phone",value:function(){var e=o();return !(!r.test(e)&&!a.test(e.substr(0,4)))}},{key:"mobile",value:function(){var e=o();return !(!u.test(e)&&!c.test(e.substr(0,4)))}},{key:"tablet",value:function(){return this.mobile()&&!this.phone()}}]),e}();t.default=new s;},function(e,t){Object.defineProperty(t,"__esModule",{value:!0});var n=function(e,t,n){var o=e.node.getAttribute("data-aos-once");t>e.position?e.node.classList.add("aos-animate"):"undefined"!=typeof o&&("false"===o||!n&&"true"!==o)&&e.node.classList.remove("aos-animate");},o=function(e,t){var o=window.pageYOffset,i=window.innerHeight;e.forEach(function(e,r){n(e,i+o,t);});};t.default=o;},function(e,t,n){function o(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var i=n(12),r=o(i),a=function(e,t){return e.forEach(function(e,n){e.node.classList.add("aos-init"),e.position=(0, r.default)(e.node,t.offset);}),e};t.default=a;},function(e,t,n){function o(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var i=n(13),r=o(i),a=function(e,t){var n=0,o=0,i=window.innerHeight,a={offset:e.getAttribute("data-aos-offset"),anchor:e.getAttribute("data-aos-anchor"),anchorPlacement:e.getAttribute("data-aos-anchor-placement")};switch(a.offset&&!isNaN(a.offset)&&(o=parseInt(a.offset)),a.anchor&&document.querySelectorAll(a.anchor)&&(e=document.querySelectorAll(a.anchor)[0]),n=(0, r.default)(e).top,a.anchorPlacement){case"top-bottom":break;case"center-bottom":n+=e.offsetHeight/2;break;case"bottom-bottom":n+=e.offsetHeight;break;case"top-center":n+=i/2;break;case"bottom-center":n+=i/2+e.offsetHeight;break;case"center-center":n+=i/2+e.offsetHeight/2;break;case"top-top":n+=i;break;case"bottom-top":n+=e.offsetHeight+i;break;case"center-top":n+=e.offsetHeight/2+i;}return a.anchorPlacement||a.offset||isNaN(t)||(o=t),n+o};t.default=a;},function(e,t){Object.defineProperty(t,"__esModule",{value:!0});var n=function(e){for(var t=0,n=0;e&&!isNaN(e.offsetLeft)&&!isNaN(e.offsetTop);)t+=e.offsetLeft-("BODY"!=e.tagName?e.scrollLeft:0),n+=e.offsetTop-("BODY"!=e.tagName?e.scrollTop:0),e=e.offsetParent;return {top:n,left:t}};t.default=n;},function(e,t){Object.defineProperty(t,"__esModule",{value:!0});var n=function(e){return e=e||document.querySelectorAll("[data-aos]"),Array.prototype.map.call(e,function(e){return {node:e}})};t.default=n;}])});
-    });
-
-    var aos$1 = /*@__PURE__*/getDefaultExportFromCjs(aos);
-
-    var AOS = /*#__PURE__*/Object.freeze(/*#__PURE__*/_mergeNamespaces({
-        __proto__: null,
-        'default': aos$1
-    }, [aos]));
-
-    class Gradient {
-        constructor(gradients = '', maxNum = 10, colors = ['', ''], intervals = []) {
-
-            const setColors = props => {
-                if (props.length < 2) {
-                    throw new Error(`setGradient should have more than ${props.length} color`);
-                } else {
-                    let increment = maxNum / (props.length - 1);
-                    let firstGradient = new GradientColor();
-                    let lower = 0;
-                    let upper = 0 + increment;
-                    firstGradient.setGradient(props[0], props[1]);
-                    firstGradient.setMidpoint(lower, upper);
-                    gradients = [firstGradient];
-                    intervals = [{
-                        lower,
-                        upper
-                    }];
-
-                    for (let i = 1; i < props.length - 1; i++) {
-                        let gradientColor = new GradientColor();
-                        let lower = 0 + increment * i;
-                        let upper = 0 + increment * (i + 1);
-                        gradientColor.setGradient(props[i], props[i + 1]);
-                        gradientColor.setMidpoint(lower, upper);
-                        gradients[i] = gradientColor;
-                        intervals[i] = {
-                            lower,
-                            upper
-                        };
-                    }
-                    colors = props;
-                }
-            };
-
-            this.setGradient = (...props) => {
-                setColors(props);
-                return this;
-            };
-
-            this.getArray = () => {
-                let gradientArray = [];
-                for (let j = 0; j < intervals.length; j++) {
-                    const interval = intervals[j];
-                    const start = interval.lower === 0 ? 1 : Math.ceil(interval.lower);
-                    const end = interval.upper === maxNum ? interval.upper + 1 : Math.ceil(interval.upper);
-                    for (let i = start; i < end; i++) {
-                        gradientArray.push(gradients[j].getColor(i));
-                    }
-                }
-                return gradientArray;
-            };
-
-            this.getColor = props => {
-                if (isNaN(props)) {
-                    throw new TypeError(`getColor should be a number`);
-                } else if (props <= 0) {
-                    throw new TypeError(`getColor should be greater than ${props}`);
-                } else {
-                    let segment = (maxNum - 0) / (gradients.length);
-                    let index = Math.min(Math.floor((Math.max(props, 0) - 0) / segment), gradients.length - 1);
-                    return gradients[index].getColor(props);
-                }
-            };
-
-            this.setMidpoint = (maxNumber) => {
-                if (!isNaN(maxNumber) && maxNumber >= 0) {
-                    maxNum = maxNumber;
-                    setColors(colors);
-                } else if (maxNumber <= 0) {
-                    throw new RangeError(`midPoint should be greater than ${maxNumber}`);
-                } else {
-                    throw new RangeError('midPoint should be a number');
-                }
-                return this;
-            };
-        }
-    }
-
-    class GradientColor {
-        constructor(startColor = '', endColor = '', minNum = 0, maxNum = 10) {
-            this.setGradient = (colorStart, colorEnd) => {
-                startColor = getHexColor(colorStart);
-                endColor = getHexColor(colorEnd);
-            };
-
-            this.setMidpoint = (minNumber, maxNumber) => {
-                minNum = minNumber;
-                maxNum = maxNumber;
-            };
-
-            this.getColor = props => {
-                if (props) {
-                    return '#' + generateHex(props, startColor.substring(0, 2), endColor.substring(0, 2)) +
-                        generateHex(props, startColor.substring(2, 4), endColor.substring(2, 4)) +
-                        generateHex(props, startColor.substring(4, 6), endColor.substring(4, 6));
-                }
-            };
-
-            const generateHex = (number, start, end) => {
-                if (number < minNum) {
-                    number = minNum;
-                } else if (number > maxNum) {
-                    number = maxNum;
-                }
-
-                let midPoint = maxNum - minNum;
-                let startBase = parseInt(start, 16);
-                let endBase = parseInt(end, 16);
-                let average = (endBase - startBase) / midPoint;
-                let finalBase = Math.round(average * (number - minNum) + startBase);
-                let balancedFinalBase = finalBase < 16 ? "0" + finalBase.toString(16) : finalBase.toString(16);
-                return balancedFinalBase;
-            };
-
-            const getHexColor = props => {
-                return props.substring(props.length - 6, props.length);
-            };
-        }
-    }
-
-    var src = Gradient;
-
-    /* src\Skills.svelte generated by Svelte v3.44.3 */
-    const file$5 = "src\\Skills.svelte";
-
-    function create_fragment$5(ctx) {
-    	let div;
-    	let svg;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			svg = svg_element("svg");
-    			attr_dev(svg, "id", "svgchart");
-    			attr_dev(svg, "class", "svelte-qvu6yc");
-    			add_location(svg, file$5, 219, 4, 7126);
-    			attr_dev(div, "id", "mainContainer");
-    			attr_dev(div, "class", "col-12 col-md-6 gx-0");
-    			add_location(div, file$5, 218, 0, 7067);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, svg);
-    		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$5.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$5($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots('Skills', slots, []);
-    	const colorGradient = new src();
-    	let link, node, text, h, w, simulation, grade;
-
-    	const data = {
-    		"nodes": [
-    			{
-    				"id": 0,
-    				"text": "Angular",
-    				"r": "55",
-    				"types": "Framework",
-    				"initialX": "345.31596164743587",
-    				"initialY": "189.15349152740902"
-    			},
-    			{
-    				"id": 1,
-    				"text": "Vue",
-    				"r": "55",
-    				"types": "Framework",
-    				"initialX": "355.45314764282796",
-    				"initialY": "268.4997049720481"
-    			},
-    			{
-    				"id": 3,
-    				"text": "JavaScript",
-    				"r": "50",
-    				"types": "Language",
-    				"initialX": "270.43616060491706",
-    				"initialY": "239.08718406127946"
-    			},
-    			{
-    				"id": 4,
-    				"text": "C#",
-    				"r": "40",
-    				"types": "Language",
-    				"initialX": "298.3934782289567",
-    				"initialY": "324.5876401317703"
-    			},
-    			{
-    				"id": 5,
-    				"text": "PHP",
-    				"r": "40",
-    				"types": "Language",
-    				"initialX": "219.26882601831906",
-    				"initialY": "313.0955897542832"
-    			},
-    			{
-    				"id": 6,
-    				"text": "MySQL",
-    				"r": "30",
-    				"types": "Database",
-    				"initialX": "407.35532205082353",
-    				"initialY": "221.56284590239827"
-    			},
-    			{
-    				"id": 7,
-    				"text": "Git",
-    				"r": "25",
-    				"types": "Source Control",
-    				"initialX": "307.8295090235146",
-    				"initialY": "388.89348650755284"
-    			},
-    			{
-    				"id": 8,
-    				"text": "Figma",
-    				"r": "35",
-    				"types": "Design",
-    				"initialX": "212.45022640388",
-    				"initialY": "176.95100030647427"
-    			},
-    			{
-    				"id": 9,
-    				"text": ".Net Core",
-    				"r": "40",
-    				"types": ".Net",
-    				"initialX": "375.42842288639594",
-    				"initialY": "1345.9764636192515"
-    			},
-    			{
-    				"id": 10,
-    				"text": "Blazor",
-    				"r": "35",
-    				"types": ".Net",
-    				"initialX": "426.8418927251777",
-    				"initialY": "291.401994824919"
-    			},
-    			{
-    				"id": 11,
-    				"text": "Node.js",
-    				"r": "35",
-    				"types": "RPA",
-    				"initialX": "278.7683508949712",
-    				"initialY": "154.55739227994252"
-    			}
-    		], // {"id" : 12, "text": "React","r": "55", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
-    		// {"id" : 13, "text": "React","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
-    		// {"id" : 14, "text": "Svelte","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
-    		// {"id" : 15, "text": "TypeScript","r": "40", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
-    		// {"id" : 16, "text": "CSS & HTML","r": "45", "types": "Framework", "initialX" : "355.45314764282796", "initialY" : "268.4997049720481"},
-    		"links": [
-    			{ "target": 1, "source": 0 },
-    			{ "target": 2, "source": 1 },
-    			{ "target": 2, "source": 0 },
-    			{ "target": 4, "source": 3 },
-    			{ "target": 3, "source": 2 },
-    			{ "target": 4, "source": 2 },
-    			{ "target": 3, "source": 8 },
-    			{ "target": 8, "source": 9 },
-    			{ "target": 2, "source": 10 }
-    		]
-    	};
-
-    	const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
-
-    	const types = [
-    		"Framework",
-    		"Language",
-    		"Markup",
-    		"Source Control",
-    		"RPA",
-    		"Database",
-    		"Design",
-    		".Net"
-    	];
-
-    	// define constants
-    	const { nodes, links } = data;
-
-    	const dragstarted = d => {
-    		if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    		d.fx = d.x;
-    		d.fy = d.y;
-    	};
-
-    	const dragged = d => {
-    		d.fx = clamp(d3.event.x, 0, w);
-    		d.fy = clamp(d3.event.y, 0, h);
-    	};
-
-    	const dragended = d => {
-    		if (!d3.event.active) simulation.alphaTarget(0);
-    		d.fx = null;
-    		d.fy = null;
-    	};
-
-    	function getNodeXCoordinate(x, r) {
-    		return Math.max(r, Math.min(w - r, x));
-    	}
-
-    	function getNodeYCoordinate(y, r) {
-    		return Math.max(r, Math.min(h - r, y));
-    	}
-
-    	onMount(() => {
-    		w = document.querySelector("#svgchart").clientWidth;
-    		h = document.querySelector("#svgchart").clientHeight;
-
-    		// initialize simulation
-    		simulation = d3.forceSimulation().// keep entire simulation balanced around screen center
-    		//   .force('center', d3.forceCenter(w/2, h/2))
-    		// pull toward center
-    		force('attract', d3.forceAttract().target([w / 2, h / 2]).strength(0.11)).// cluster by region
-    		force('cluster', d3.forceCluster().centers(d => types.indexOf(d.types)).strength(1).centerInertia(0.1)).force("link", d3.forceLink()).force('charge', d3.forceManyBody().strength(-10)).// apply collision with padding
-    		force("collide", d3.forceCollide().radius(d => d.r).strength(0));
-
-    		//ramp up collision strength to provide smooth transition
-    		const transitionTime = 2500;
-
-    		const t = d3.timer(elapsed => {
-    			const dt = elapsed / transitionTime;
-    			simulation.force('collide').strength(Math.pow(dt, 2) * 0.7);
-    			if (dt >= 1.0) t.stop();
-    		});
-
-    		//initialize svg
-    		const svg = d3.select("#svgchart");
-
-    		// initialize node circles
-    		node = svg.append("g").attr("class", "node").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.r).attr("fill", d => "url(#gradient" + d.id + ")").each(function (d) {
-    			d.x = w / 2;
-    			d.y = h / 2;
-    		}).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
-
-    		//Initialize text
-    		text = svg.append("g").attr("class", "textBoxes noselect").selectAll("text").data(nodes).enter().append("text").attr('text-anchor', "middle").text(d => d.text).attr('color', 'black').attr('font-size', 15).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
-
-    		//Set gradient colors
-    		const color1 = "#FF9900";
-
-    		const color2 = '#FF8713';
-    		const color3 = '#FF198D';
-    		const color4 = "#FF00A8";
-    		colorGradient.setGradient(color1, color2, color3, color4);
-
-    		// colorGradient.setGradient(color1, color4);
-    		//Make a linearGradient for each node
-    		grade = svg.append("defs").selectAll("linearGradient").data(nodes).enter();
-
-    		grade.append("linearGradient").attr("id", d => "gradient" + d.id).append("stop").attr("stop-color", "rgba(255, 153, 0, 1)").attr("offset", "0%").attr("class", "startGrade");
-    		svg.selectAll("linearGradient").append("stop").attr("stop-color", "rgba(255, 0, 168, 1)").attr("offset", "100%").attr("class", "endGrade");
-    		simulation.nodes(nodes).on("tick", ticked);
-    		simulation.force("link").links(links);
-    	});
-
-    	// define tick function
-    	const ticked = () => {
-    		node.attr("cx", d => getNodeXCoordinate(d.x, d.r) + "px").attr("cy", d => getNodeYCoordinate(d.y, d.r) + "px");
-    		text.attr("x", d => getNodeXCoordinate(d.x, d.r) + "px").attr("y", d => getNodeYCoordinate(d.y, d.r) + 4 + "px");
-
-    		//Update node color according to pos
-    		grade.selectAll(".startGrade").attr("stop-color", d => colorGradient.getColor(Math.max(0.1, (d.x - d.r) / w * 10)));
-
-    		grade.selectAll(".endGrade").attr("stop-color", d => colorGradient.getColor(Math.max(0.1, (d.x + d.r) / w * 10)));
-    	};
-
-    	const writable_props = [];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Skills> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$capture_state = () => ({
-    		onMount,
-    		Gradient: src,
-    		colorGradient,
-    		link,
-    		node,
-    		text,
-    		h,
-    		w,
-    		simulation,
-    		grade,
-    		data,
-    		clamp,
-    		types,
-    		nodes,
-    		links,
-    		dragstarted,
-    		dragged,
-    		dragended,
-    		getNodeXCoordinate,
-    		getNodeYCoordinate,
-    		ticked
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ('link' in $$props) link = $$props.link;
-    		if ('node' in $$props) node = $$props.node;
-    		if ('text' in $$props) text = $$props.text;
-    		if ('h' in $$props) h = $$props.h;
-    		if ('w' in $$props) w = $$props.w;
-    		if ('simulation' in $$props) simulation = $$props.simulation;
-    		if ('grade' in $$props) grade = $$props.grade;
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [];
-    }
-
-    class Skills extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Skills",
-    			options,
-    			id: create_fragment$5.name
-    		});
-    	}
-    }
-
     /* src\MeModel.svelte generated by Svelte v3.44.3 */
 
-    const { console: console_1 } = globals;
+    const { console: console_1$1 } = globals;
     const file$4 = "src\\MeModel.svelte";
 
     function create_fragment$4(ctx) {
@@ -57630,7 +58802,7 @@ var app = (function () {
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<MeModel> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<MeModel> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$capture_state = () => ({
@@ -57737,7 +58909,7 @@ var app = (function () {
     			h3 = element("h3");
     			t = text(t_value);
     			attr_dev(h3, "class", "row pb-2 text-white");
-    			add_location(h3, file$3, 107, 28, 3489);
+    			add_location(h3, file$3, 107, 28, 3474);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h3, anchor);
@@ -57835,7 +59007,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			attr_dev(p, "class", "col-7 p-0 text-white");
-    			add_location(p, file$3, 113, 32, 3814);
+    			add_location(p, file$3, 113, 32, 3799);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -57936,12 +59108,12 @@ var app = (function () {
     			div = element("div");
     			img = element("img");
     			t = space();
-    			attr_dev(img, "class", "h-100 projectImage shadowDarker svelte-qvbhck");
+    			attr_dev(img, "class", "h-100 projectImage shadowDarker svelte-7nb2e3");
     			attr_dev(img, "id", "projectImageId" + /*i*/ ctx[13]);
     			set_style(img, "border-radius", "8px");
     			if (!src_url_equal(img.src, img_src_value = /*projectImage*/ ctx[14].src)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "");
-    			add_location(img, file$3, 125, 32, 4817);
+    			add_location(img, file$3, 125, 32, 4802);
 
     			attr_dev(div, "class", div_class_value = "h-50 position-absolute p-0 fitter " + (/*selectedProject*/ ctx[0] == /*i*/ ctx[13] && /*animationDirection*/ ctx[1] == "Left"
     			? 'c_slideInLeft'
@@ -57953,11 +59125,11 @@ var app = (function () {
     			? 'c_slideOutLeft'
     			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[13] && /*animationDirection*/ ctx[1] == null
     			? 'outside'
-    			: '') + " svelte-qvbhck");
+    			: '') + " svelte-7nb2e3");
 
     			set_style(div, "width", "fit-content");
     			set_style(div, "perspective", "1000px");
-    			add_location(div, file$3, 118, 28, 4109);
+    			add_location(div, file$3, 118, 28, 4094);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -57985,7 +59157,7 @@ var app = (function () {
     			? 'c_slideOutLeft'
     			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[13] && /*animationDirection*/ ctx[1] == null
     			? 'outside'
-    			: '') + " svelte-qvbhck")) {
+    			: '') + " svelte-7nb2e3")) {
     				attr_dev(div, "class", div_class_value);
     			}
     		},
@@ -58032,16 +59204,16 @@ var app = (function () {
     			img = element("img");
     			t3 = space();
     			attr_dev(p, "class", "m-0");
-    			add_location(p, file$3, 137, 28, 6715);
+    			add_location(p, file$3, 137, 28, 6700);
     			if (!src_url_equal(img.src, img_src_value = "assets/github.svg")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "github");
     			attr_dev(img, "height", "30px");
     			attr_dev(img, "width", "30px");
-    			add_location(img, file$3, 139, 32, 6852);
+    			add_location(img, file$3, 139, 32, 6837);
     			attr_dev(a, "href", /*project*/ ctx[11].srcGithub);
-    			add_location(a, file$3, 138, 28, 6788);
+    			add_location(a, file$3, 138, 28, 6773);
     			attr_dev(div, "class", "d-flex justify-content-between align-items-center ");
-    			add_location(div, file$3, 136, 24, 6593);
+    			add_location(div, file$3, 136, 24, 6578);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -58301,71 +59473,71 @@ var app = (function () {
     			attr_dev(h1, "class", "text-center my-5");
     			add_location(h1, file$3, 100, 4, 2966);
     			attr_dev(div0, "class", "col-5");
-    			add_location(div0, file$3, 116, 24, 3993);
+    			add_location(div0, file$3, 116, 24, 3978);
     			attr_dev(div1, "class", "row");
-    			add_location(div1, file$3, 110, 20, 3651);
+    			add_location(div1, file$3, 110, 20, 3636);
     			attr_dev(feFlood, "flood-opacity", "0");
     			attr_dev(feFlood, "result", "BackgroundImageFix");
-    			add_location(feFlood, file$3, 130, 311, 5471);
+    			add_location(feFlood, file$3, 130, 311, 5456);
     			attr_dev(feBlend, "mode", "normal");
     			attr_dev(feBlend, "in", "SourceGraphic");
     			attr_dev(feBlend, "in2", "BackgroundImageFix");
     			attr_dev(feBlend, "result", "shape");
-    			add_location(feBlend, file$3, 130, 376, 5536);
+    			add_location(feBlend, file$3, 130, 376, 5521);
     			attr_dev(feGaussianBlur, "stdDeviation", "161");
     			attr_dev(feGaussianBlur, "result", "effect1_foregroundBlur");
-    			add_location(feGaussianBlur, file$3, 130, 468, 5628);
+    			add_location(feGaussianBlur, file$3, 130, 468, 5613);
     			attr_dev(filter, "id", "blur1");
     			attr_dev(filter, "x", "-10%");
     			attr_dev(filter, "y", "-10%");
     			attr_dev(filter, "width", "120%");
     			attr_dev(filter, "height", "120%");
-    			add_location(filter, file$3, 130, 247, 5407);
-    			add_location(defs, file$3, 130, 241, 5401);
+    			add_location(filter, file$3, 130, 247, 5392);
+    			add_location(defs, file$3, 130, 241, 5386);
     			attr_dev(rect, "width", "900");
     			attr_dev(rect, "height", "600");
     			attr_dev(rect, "fill", rect_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
-    			attr_dev(rect, "class", "svelte-qvbhck");
-    			add_location(rect, file$3, 130, 568, 5728);
+    			attr_dev(rect, "class", "svelte-7nb2e3");
+    			add_location(rect, file$3, 130, 568, 5713);
     			attr_dev(circle0, "cx", "877");
     			attr_dev(circle0, "cy", "11");
     			attr_dev(circle0, "fill", circle0_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle0, "r", "357");
-    			attr_dev(circle0, "class", "svelte-qvbhck");
-    			add_location(circle0, file$3, 131, 24, 5865);
+    			attr_dev(circle0, "class", "svelte-7nb2e3");
+    			add_location(circle0, file$3, 131, 24, 5850);
     			attr_dev(circle1, "cx", "259");
     			attr_dev(circle1, "cy", "45");
     			attr_dev(circle1, "fill", circle1_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle1, "r", "357");
-    			attr_dev(circle1, "class", "svelte-qvbhck");
-    			add_location(circle1, file$3, 131, 115, 5956);
+    			attr_dev(circle1, "class", "svelte-7nb2e3");
+    			add_location(circle1, file$3, 131, 115, 5941);
     			attr_dev(circle2, "cx", "866");
     			attr_dev(circle2, "cy", "592");
     			attr_dev(circle2, "fill", circle2_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle2, "r", "357");
-    			attr_dev(circle2, "class", "svelte-qvbhck");
-    			add_location(circle2, file$3, 131, 206, 6047);
+    			attr_dev(circle2, "class", "svelte-7nb2e3");
+    			add_location(circle2, file$3, 131, 206, 6032);
     			attr_dev(circle3, "cx", "743");
     			attr_dev(circle3, "cy", "302");
     			attr_dev(circle3, "fill", circle3_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle3, "r", "357");
-    			attr_dev(circle3, "class", "svelte-qvbhck");
-    			add_location(circle3, file$3, 131, 298, 6139);
+    			attr_dev(circle3, "class", "svelte-7nb2e3");
+    			add_location(circle3, file$3, 131, 298, 6124);
     			attr_dev(circle4, "cx", "288");
     			attr_dev(circle4, "cy", "498");
     			attr_dev(circle4, "fill", circle4_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle4, "r", "357");
-    			attr_dev(circle4, "class", "svelte-qvbhck");
-    			add_location(circle4, file$3, 131, 390, 6231);
+    			attr_dev(circle4, "class", "svelte-7nb2e3");
+    			add_location(circle4, file$3, 131, 390, 6216);
     			attr_dev(circle5, "cx", "192");
     			attr_dev(circle5, "cy", "260");
     			attr_dev(circle5, "fill", circle5_fill_value = "#" + /*projects*/ ctx[3][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle5, "r", "357");
-    			attr_dev(circle5, "class", "svelte-qvbhck");
-    			add_location(circle5, file$3, 131, 482, 6323);
+    			attr_dev(circle5, "class", "svelte-7nb2e3");
+    			add_location(circle5, file$3, 131, 482, 6308);
     			attr_dev(g, "filter", "url(#blur1)");
-    			add_location(g, file$3, 130, 655, 5815);
-    			attr_dev(svg, "class", "position-absolute w-100 h-100 backgroundSquare svelte-qvbhck");
+    			add_location(g, file$3, 130, 655, 5800);
+    			attr_dev(svg, "class", "position-absolute w-100 h-100 backgroundSquare svelte-7nb2e3");
     			set_style(svg, "top", "0");
     			set_style(svg, "left", "0");
     			set_style(svg, "z-index", "-1");
@@ -58374,57 +59546,56 @@ var app = (function () {
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
     			attr_dev(svg, "version", "1.1");
-    			add_location(svg, file$3, 130, 20, 5180);
+    			add_location(svg, file$3, 130, 20, 5165);
     			attr_dev(div2, "class", "p-4");
-    			add_location(div2, file$3, 104, 16, 3338);
+    			add_location(div2, file$3, 104, 16, 3323);
     			attr_dev(div3, "class", "position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative");
-    			add_location(div3, file$3, 103, 12, 3198);
-    			attr_dev(div4, "class", "position-relative container m-0 col-8");
+    			add_location(div3, file$3, 103, 12, 3183);
+    			attr_dev(div4, "class", "position-relative m-0 svelte-7nb2e3");
     			set_style(div4, "height", "0");
-    			set_style(div4, "width", "30%");
-    			set_style(div4, "padding-bottom", "30%");
+    			attr_dev(div4, "id", "projectCardSizeContainer");
     			add_location(div4, file$3, 102, 8, 3086);
-    			add_location(small0, file$3, 149, 24, 7312);
+    			add_location(small0, file$3, 149, 24, 7297);
     			attr_dev(div5, "class", "w-100 rounded-3");
     			set_style(div5, "height", "5px");
     			set_style(div5, "background-color", "var(--secondaryColor)");
-    			add_location(div5, file$3, 151, 28, 7447);
-    			attr_dev(div6, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-qvbhck");
+    			add_location(div5, file$3, 151, 28, 7432);
+    			attr_dev(div6, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-7nb2e3");
     			set_style(div6, "background-image", "var(--gradient)");
     			set_style(div6, "width", /*percentProjectBar*/ ctx[2] + "%");
     			set_style(div6, "height", "8px");
     			set_style(div6, "transform", "translateY(-50%)");
-    			add_location(div6, file$3, 152, 28, 7574);
+    			add_location(div6, file$3, 152, 28, 7559);
     			set_style(div7, "width", "80%");
     			set_style(div7, "position", "relative");
-    			add_location(div7, file$3, 150, 24, 7372);
-    			add_location(small1, file$3, 154, 24, 7821);
+    			add_location(div7, file$3, 150, 24, 7357);
+    			add_location(small1, file$3, 154, 24, 7806);
     			attr_dev(div8, "class", "d-flex justify-content-center align-items-center w-100");
     			set_style(div8, "gap", "10px");
-    			add_location(div8, file$3, 148, 16, 7199);
+    			add_location(div8, file$3, 148, 16, 7184);
     			if (!src_url_equal(img0.src, img0_src_value = "assets/arrow.png")) attr_dev(img0, "src", img0_src_value);
     			attr_dev(img0, "alt", "left arrow(see previous project)");
-    			add_location(img0, file$3, 158, 24, 8075);
+    			add_location(img0, file$3, 158, 24, 8060);
     			attr_dev(button0, "type", "button");
-    			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-qvbhck");
-    			add_location(button0, file$3, 157, 20, 7965);
+    			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-7nb2e3");
+    			add_location(button0, file$3, 157, 20, 7950);
     			set_style(img1, "transform", "rotate(180deg)");
     			if (!src_url_equal(img1.src, img1_src_value = "assets/arrow.png")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "alt", "right arrow(see next project)");
-    			add_location(img1, file$3, 161, 24, 8305);
+    			add_location(img1, file$3, 161, 24, 8290);
     			attr_dev(button1, "type", "button");
-    			attr_dev(button1, "class", "btn bg-transparent noHighLight svelte-qvbhck");
-    			add_location(button1, file$3, 160, 20, 8195);
+    			attr_dev(button1, "class", "btn bg-transparent noHighLight svelte-7nb2e3");
+    			add_location(button1, file$3, 160, 20, 8180);
     			attr_dev(div9, "class", "d-flex justify-content-center mb-2");
-    			add_location(div9, file$3, 156, 16, 7895);
+    			add_location(div9, file$3, 156, 16, 7880);
     			attr_dev(div10, "class", "d-flex flex-column justify-content-end h-100");
-    			add_location(div10, file$3, 147, 12, 7123);
+    			add_location(div10, file$3, 147, 12, 7108);
     			attr_dev(div11, "class", "col-2 ms-4");
-    			add_location(div11, file$3, 146, 8, 7085);
+    			add_location(div11, file$3, 146, 8, 7070);
     			attr_dev(div12, "class", "d-flex justify-content-center overflow-hidden");
     			add_location(div12, file$3, 101, 4, 3017);
     			set_style(div13, "margin", "10vh 0");
-    			attr_dev(div13, "class", "projectShowcaseWrapper svelte-qvbhck");
+    			attr_dev(div13, "class", "projectShowcaseWrapper");
     			attr_dev(div13, "data-aos", "fade-in");
     			attr_dev(div13, "data-aos-duration", "800");
     			add_location(div13, file$3, 99, 0, 2857);
@@ -58886,21 +60057,21 @@ var app = (function () {
     			attr_dev(input0, "type", "hidden");
     			attr_dev(input0, "id", "g-token");
     			attr_dev(input0, "name", "g-token");
-    			add_location(input0, file$2, 16, 12, 805);
+    			add_location(input0, file$2, 16, 12, 811);
     			attr_dev(h2, "class", "text-center");
-    			add_location(h2, file$2, 17, 12, 868);
+    			add_location(h2, file$2, 17, 12, 874);
     			input1.required = true;
     			attr_dev(input1, "type", "text");
     			set_style(input1, "border-radius", "5px");
     			attr_dev(input1, "name", "name");
     			attr_dev(input1, "placeholder", "Name");
-    			add_location(input1, file$2, 18, 12, 923);
+    			add_location(input1, file$2, 18, 12, 929);
     			input2.required = true;
     			attr_dev(input2, "type", "email");
     			set_style(input2, "border-radius", "5px");
     			attr_dev(input2, "name", "email");
     			attr_dev(input2, "placeholder", "Email");
-    			add_location(input2, file$2, 19, 12, 1024);
+    			add_location(input2, file$2, 19, 12, 1030);
     			attr_dev(textarea, "name", "message");
     			attr_dev(textarea, "id", "");
     			attr_dev(textarea, "cols", "30");
@@ -58909,12 +60080,12 @@ var app = (function () {
     			set_style(textarea, "resize", "none");
     			set_style(textarea, "border-radius", "5px");
     			attr_dev(textarea, "placeholder", "Message");
-    			add_location(textarea, file$2, 20, 12, 1128);
+    			add_location(textarea, file$2, 20, 12, 1134);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "w-80 round text-white");
     			set_style(button, "background-image", "var(--gradient)");
     			set_style(button, "border-radius", "5px");
-    			add_location(button, file$2, 21, 12, 1276);
+    			add_location(button, file$2, 21, 12, 1282);
     			attr_dev(form, "action", "http://localhost/my_website_backend/sendForm.php");
     			attr_dev(form, "id", "contactForm");
     			attr_dev(form, "method", "POST");
@@ -58922,8 +60093,8 @@ var app = (function () {
     			set_style(form, "border-radius", "10px");
     			set_style(form, "gap", "20px");
     			set_style(form, "background-color", "white");
-    			add_location(form, file$2, 14, 8, 537);
-    			attr_dev(div0, "class", "row justify-content-center");
+    			add_location(form, file$2, 14, 8, 543);
+    			attr_dev(div0, "class", "row justify-content-center w-100");
     			add_location(div0, file$2, 13, 4, 487);
     			attr_dev(div1, "class", "w-100 my-5");
     			attr_dev(div1, "data-aos", "fade-up");
@@ -59012,7 +60183,6 @@ var app = (function () {
     }
 
     /* src\LoadingScreen.svelte generated by Svelte v3.44.3 */
-
     const file$1 = "src\\LoadingScreen.svelte";
 
     function create_fragment$1(ctx) {
@@ -59041,11 +60211,11 @@ var app = (function () {
     			? 'animate__bounceOut'
     			: 'animate__animated animate__bounce') + "" + " svelte-170m0kf"));
 
-    			add_location(img, file$1, 6, 8, 353);
+    			add_location(img, file$1, 13, 8, 518);
     			attr_dev(div0, "class", "w-100 h-100 d-flex justify-content-center align-items-center");
     			set_style(div0, "background-color", /*loaded*/ ctx[0] === true ? 'transparent' : 'white');
     			set_style(div0, "z-index", "10");
-    			add_location(div0, file$1, 5, 4, 185);
+    			add_location(div0, file$1, 12, 4, 350);
     			set_style(div1, "background-color", "#171717");
     			set_style(div1, "position", "absolute");
     			set_style(div1, "width", "100%");
@@ -59055,14 +60225,14 @@ var app = (function () {
     			? 'loadDone'
     			: 'fadeUpBaground') + " svelte-170m0kf"));
 
-    			add_location(div1, file$1, 9, 4, 622);
+    			add_location(div1, file$1, 16, 4, 787);
     			attr_dev(div2, "class", div2_class_value = "position-fixed " + (/*loaded*/ ctx[0] === true ? 'dissapear' : '') + " svelte-170m0kf");
     			set_style(div2, "width", "100vw");
     			set_style(div2, "height", "100vh");
     			set_style(div2, "top", "0");
     			set_style(div2, "left", "0");
     			set_style(div2, "z-index", "20");
-    			add_location(div2, file$1, 4, 0, 47);
+    			add_location(div2, file$1, 11, 0, 212);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -59117,6 +60287,11 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('LoadingScreen', slots, []);
     	let { loaded } = $$props;
+
+    	onMount(() => {
+    		document.querySelector('main').style = "overflow: hidden; width: 100vw; height: 100vh;";
+    	});
+
     	const writable_props = ['loaded'];
 
     	Object.keys($$props).forEach(key => {
@@ -59127,7 +60302,7 @@ var app = (function () {
     		if ('loaded' in $$props) $$invalidate(0, loaded = $$props.loaded);
     	};
 
-    	$$self.$capture_state = () => ({ loaded });
+    	$$self.$capture_state = () => ({ onMount, loaded });
 
     	$$self.$inject_state = $$props => {
     		if ('loaded' in $$props) $$invalidate(0, loaded = $$props.loaded);
@@ -59170,15 +60345,65 @@ var app = (function () {
     }
 
     /* src\App.svelte generated by Svelte v3.44.3 */
+
+    const { console: console_1 } = globals;
     const file = "src\\App.svelte";
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[4] = list[i];
+    	child_ctx[5] = list[i];
     	return child_ctx;
     }
 
-    // (53:0) { #if loadElements }
+    // (55:0) <DeviceDetector showInDevice="desktop">
+    function create_default_slot_1(ctx) {
+    	let loadingscreen;
+    	let current;
+
+    	loadingscreen = new LoadingScreen({
+    			props: { loaded: /*meModelLoaded*/ ctx[0] },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(loadingscreen.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(loadingscreen, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const loadingscreen_changes = {};
+    			if (dirty & /*meModelLoaded*/ 1) loadingscreen_changes.loaded = /*meModelLoaded*/ ctx[0];
+    			loadingscreen.$set(loadingscreen_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(loadingscreen.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(loadingscreen.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(loadingscreen, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(55:0) <DeviceDetector showInDevice=\\\"desktop\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (58:0) { #if loadElements }
     function create_if_block(ctx) {
     	let main;
     	let div6;
@@ -59215,46 +60440,49 @@ var app = (function () {
     	let t7;
     	let p0;
     	let t9;
-    	let memodel;
+    	let devicedetector;
     	let t10;
     	let div5;
     	let t11;
-    	let div12;
-    	let div8;
+    	let img0;
+    	let img0_src_value;
+    	let t12;
+    	let div13;
+    	let div9;
     	let div7;
     	let h30;
-    	let t12;
     	let t13;
-    	let skills;
     	let t14;
+    	let div8;
+    	let skills;
+    	let t15;
+    	let div12;
     	let div11;
-    	let div10;
     	let h31;
-    	let t16;
-    	let div9;
-    	let p1;
     	let t17;
-    	let br0;
+    	let div10;
+    	let p1;
     	let t18;
+    	let br0;
     	let t19;
-    	let br1;
     	let t20;
+    	let br1;
+    	let t21;
     	let p2;
     	let br2;
-    	let t22;
-    	let p3;
     	let t23;
+    	let p3;
+    	let t24;
     	let a2;
-    	let t25;
     	let t26;
-    	let img;
-    	let img_src_value;
     	let t27;
-    	let projectcard;
+    	let img1;
+    	let img1_src_value;
     	let t28;
-    	let div13;
+    	let projectcard;
+    	let t29;
+    	let div14;
     	let contactform;
-    	let main_style_value;
     	let current;
     	let each_value = "I'm Jonas";
     	validate_each_argument(each_value);
@@ -59264,8 +60492,15 @@ var app = (function () {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
-    	memodel = new MeModel({ $$inline: true });
-    	memodel.$on("loaded", /*handleLoad*/ ctx[2]);
+    	devicedetector = new DeviceDetector({
+    			props: {
+    				showInDevice: "desktop",
+    				$$slots: { default: [create_default_slot] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
     	let if_block = /*meModelLoaded*/ ctx[0] && create_if_block_1(ctx);
     	skills = new Skills({ $$inline: true });
     	projectcard = new ProjectCard({ $$inline: true });
@@ -59314,201 +60549,206 @@ var app = (function () {
     			p0 = element("p");
     			p0.textContent = "An IT student passionate about building awesome full stack software solutions";
     			t9 = space();
-    			create_component(memodel.$$.fragment);
+    			create_component(devicedetector.$$.fragment);
     			t10 = space();
     			div5 = element("div");
     			t11 = space();
-    			div12 = element("div");
-    			div8 = element("div");
+    			img0 = element("img");
+    			t12 = space();
+    			div13 = element("div");
+    			div9 = element("div");
     			div7 = element("div");
     			h30 = element("h3");
-    			t12 = text("I work in alot of different technolgies and love learning new\r\n\t\t\t\t\t\t");
+    			t13 = text("I work in alot of different technolgies and love learning new\r\n\t\t\t\t\t\t");
     			if (if_block) if_block.c();
-    			t13 = space();
-    			create_component(skills.$$.fragment);
     			t14 = space();
+    			div8 = element("div");
+    			create_component(skills.$$.fragment);
+    			t15 = space();
+    			div12 = element("div");
     			div11 = element("div");
-    			div10 = element("div");
     			h31 = element("h3");
     			h31.textContent = "About me";
-    			t16 = space();
-    			div9 = element("div");
+    			t17 = space();
+    			div10 = element("div");
     			p1 = element("p");
-    			t17 = text("My name is Jonas Stjerne I’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
+    			t18 = text("My name is Jonas Stjerne I’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
     			br0 = element("br");
-    			t18 = text("\r\n\t\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
-    			t19 = space();
-    			br1 = element("br");
+    			t19 = text("\r\n\t\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
     			t20 = space();
+    			br1 = element("br");
+    			t21 = space();
     			p2 = element("p");
     			p2.textContent = "I’m currently working at Openomic as a full stack junior developer & doing freelance.";
     			br2 = element("br");
-    			t22 = space();
+    			t23 = space();
     			p3 = element("p");
-    			t23 = text("Feel free to ");
+    			t24 = text("Feel free to ");
     			a2 = element("a");
     			a2.textContent = "contact me";
-    			t25 = text(" if you have any questions or would like me to work on a project");
-    			t26 = space();
-    			img = element("img");
+    			t26 = text(" if you have any questions or would like me to work on a project");
     			t27 = space();
-    			create_component(projectcard.$$.fragment);
+    			img1 = element("img");
     			t28 = space();
-    			div13 = element("div");
+    			create_component(projectcard.$$.fragment);
+    			t29 = space();
+    			div14 = element("div");
     			create_component(contactform.$$.fragment);
-    			add_location(title0, file, 59, 5, 1875);
-    			attr_dev(circle0, "class", "social-group__outline svelte-1ar6gaa");
+    			add_location(title0, file, 64, 5, 1880);
+    			attr_dev(circle0, "class", "social-group__outline svelte-17mujvc");
     			attr_dev(circle0, "stroke", "#000");
     			attr_dev(circle0, "stroke-width", "20");
     			attr_dev(circle0, "cx", "300");
     			attr_dev(circle0, "cy", "300");
     			attr_dev(circle0, "r", "262.5");
-    			add_location(circle0, file, 63, 6, 1982);
-    			attr_dev(circle1, "class", "social-group__inner-circle svelte-1ar6gaa");
+    			add_location(circle0, file, 68, 6, 1987);
+    			attr_dev(circle1, "class", "social-group__inner-circle svelte-17mujvc");
     			attr_dev(circle1, "fill", "#000");
     			attr_dev(circle1, "cx", "300");
     			attr_dev(circle1, "cy", "300");
     			attr_dev(circle1, "r", "252.5");
-    			add_location(circle1, file, 64, 6, 2090);
-    			attr_dev(path0, "class", "social-group__icon svelte-1ar6gaa");
+    			add_location(circle1, file, 69, 6, 2095);
+    			attr_dev(path0, "class", "social-group__icon svelte-17mujvc");
     			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
     			attr_dev(path0, "fill", "#FFF");
     			attr_dev(path0, "fill-rule", "nonzero");
-    			add_location(path0, file, 65, 6, 2183);
+    			add_location(path0, file, 70, 6, 2188);
     			attr_dev(g0, "class", "social-group");
     			attr_dev(g0, "fill", "none");
     			attr_dev(g0, "fill-rule", "evenodd");
-    			add_location(g0, file, 62, 5, 1918);
-    			attr_dev(svg0, "class", "social-svg svelte-1ar6gaa");
+    			add_location(g0, file, 67, 5, 1923);
+    			attr_dev(svg0, "class", "social-svg svelte-17mujvc");
     			attr_dev(svg0, "viewBox", "0 0 600 600");
     			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg0, file, 58, 5, 1787);
-    			attr_dev(a0, "class", "social-link social-link--github svelte-1ar6gaa");
+    			add_location(svg0, file, 63, 5, 1792);
+    			attr_dev(a0, "class", "social-link social-link--github svelte-17mujvc");
     			attr_dev(a0, "id", "github");
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
-    			add_location(a0, file, 57, 4, 1686);
-    			add_location(title1, file, 72, 5, 3551);
-    			attr_dev(circle2, "class", "social-group__outline svelte-1ar6gaa");
+    			add_location(a0, file, 62, 4, 1691);
+    			add_location(title1, file, 77, 5, 3556);
+    			attr_dev(circle2, "class", "social-group__outline svelte-17mujvc");
     			attr_dev(circle2, "stroke", "#000");
     			attr_dev(circle2, "stroke-width", "20");
     			attr_dev(circle2, "cx", "300");
     			attr_dev(circle2, "cy", "300");
     			attr_dev(circle2, "r", "262.5");
-    			add_location(circle2, file, 76, 6, 3660);
-    			attr_dev(circle3, "class", "social-group__inner-circle svelte-1ar6gaa");
+    			add_location(circle2, file, 81, 6, 3665);
+    			attr_dev(circle3, "class", "social-group__inner-circle svelte-17mujvc");
     			attr_dev(circle3, "fill", "#2D76B0");
     			attr_dev(circle3, "cx", "300");
     			attr_dev(circle3, "cy", "300");
     			attr_dev(circle3, "r", "252.5");
-    			add_location(circle3, file, 77, 6, 3768);
-    			attr_dev(path1, "class", "social-group__icon svelte-1ar6gaa");
+    			add_location(circle3, file, 82, 6, 3773);
+    			attr_dev(path1, "class", "social-group__icon svelte-17mujvc");
     			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
     			attr_dev(path1, "fill", "#000");
     			attr_dev(path1, "fill-rule", "nonzero");
-    			add_location(path1, file, 78, 6, 3864);
+    			add_location(path1, file, 83, 6, 3869);
     			attr_dev(g1, "class", "social-group");
     			attr_dev(g1, "fill", "none");
     			attr_dev(g1, "fill-rule", "evenodd");
-    			add_location(g1, file, 75, 5, 3596);
-    			attr_dev(svg1, "class", "social-svg svelte-1ar6gaa");
+    			add_location(g1, file, 80, 5, 3601);
+    			attr_dev(svg1, "class", "social-svg svelte-17mujvc");
     			attr_dev(svg1, "viewBox", "0 0 600 600");
     			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
-    			add_location(svg1, file, 71, 5, 3463);
-    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-1ar6gaa");
+    			add_location(svg1, file, 76, 5, 3468);
+    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-17mujvc");
     			attr_dev(a1, "id", "linkedin");
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
-    			add_location(a1, file, 70, 4, 3337);
+    			add_location(a1, file, 75, 4, 3342);
     			attr_dev(div0, "id", "header");
-    			attr_dev(div0, "class", "svelte-1ar6gaa");
-    			add_location(div0, file, 55, 3, 1609);
+    			attr_dev(div0, "class", "svelte-17mujvc");
+    			add_location(div0, file, 60, 3, 1614);
     			attr_dev(span0, "aria-hidden", "true");
-    			attr_dev(span0, "class", "svelte-1ar6gaa");
-    			add_location(span0, file, 94, 7, 4996);
+    			attr_dev(span0, "class", "svelte-17mujvc");
+    			add_location(span0, file, 99, 7, 5001);
     			attr_dev(span1, "aria-hidden", "true");
-    			attr_dev(span1, "class", "svelte-1ar6gaa");
-    			add_location(span1, file, 95, 15, 5038);
+    			attr_dev(span1, "class", "svelte-17mujvc");
+    			add_location(span1, file, 100, 15, 5043);
 
     			attr_dev(h1, "class", h1_class_value = /*meModelLoaded*/ ctx[0]
     			? ' animate__animated animate__fadeIn animate__delay-2s'
     			: '');
 
     			attr_dev(h1, "aria-label", "Hi");
-    			add_location(h1, file, 93, 6, 4881);
-    			attr_dev(h2, "class", "nameEl font-weight-bold svelte-1ar6gaa");
+    			add_location(h1, file, 98, 6, 4886);
+    			attr_dev(h2, "class", "nameEl font-weight-bold svelte-17mujvc");
     			attr_dev(h2, "aria-label", "I'm Jonas");
-    			add_location(h2, file, 98, 7, 5235);
+    			add_location(h2, file, 103, 7, 5240);
 
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(/*meModelLoaded*/ ctx[0]
     			? ' animate__animated animate__fadeIn animate__delay-3s nameContainer rounded'
-    			: 'nameContainer rounded') + " svelte-1ar6gaa"));
+    			: 'nameContainer rounded') + " svelte-17mujvc"));
 
-    			add_location(div1, file, 97, 6, 5092);
-    			attr_dev(p0, "class", "underText svelte-1ar6gaa");
+    			add_location(div1, file, 102, 6, 5097);
+    			attr_dev(p0, "class", "underText svelte-17mujvc");
     			toggle_class(p0, "animate__animated", /*meModelLoaded*/ ctx[0]);
     			toggle_class(p0, "animate__fadeIn", /*meModelLoaded*/ ctx[0]);
     			toggle_class(p0, "animate__delay-4s", /*meModelLoaded*/ ctx[0]);
-    			add_location(p0, file, 108, 6, 5513);
-    			attr_dev(div2, "class", "introContainer svelte-1ar6gaa");
-    			add_location(div2, file, 92, 5, 4845);
-    			attr_dev(div3, "class", "content svelte-1ar6gaa");
-    			add_location(div3, file, 91, 4, 4817);
+    			add_location(p0, file, 113, 6, 5518);
+    			attr_dev(div2, "class", "introContainer svelte-17mujvc");
+    			add_location(div2, file, 97, 5, 4850);
+    			attr_dev(div3, "class", "content svelte-17mujvc");
+    			add_location(div3, file, 96, 4, 4822);
     			attr_dev(div4, "class", "d-flex justify-content-center flex-column-reverse flex-md-row pb-5");
-    			add_location(div4, file, 90, 3, 4731);
+    			add_location(div4, file, 95, 3, 4736);
     			attr_dev(div5, "id", "waveBackground");
     			set_style(div5, "background-image", "url('assets/wave.png')");
-    			attr_dev(div5, "class", "svelte-1ar6gaa");
-    			add_location(div5, file, 132, 3, 6296);
+    			attr_dev(div5, "class", "d-none d-md-block svelte-17mujvc");
+    			add_location(div5, file, 139, 3, 6370);
+    			attr_dev(img0, "class", "d-block d-md-none img-fluid w-100");
+    			if (!src_url_equal(img0.src, img0_src_value = "assets/mobileWave.png")) attr_dev(img0, "src", img0_src_value);
+    			attr_dev(img0, "alt", "");
+    			add_location(img0, file, 140, 3, 6482);
     			attr_dev(div6, "class", "position-relative vh-50");
-    			add_location(div6, file, 54, 2, 1567);
-    			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-1ar6gaa");
+    			add_location(div6, file, 59, 2, 1572);
+    			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-17mujvc");
     			attr_dev(h30, "data-aos", "fade-in");
     			attr_dev(h30, "data-aos-duration", "800");
-    			add_location(h30, file, 137, 5, 6637);
+    			add_location(h30, file, 146, 5, 6967);
     			attr_dev(div7, "class", "col-10 col-md-6 m-auto d-flex justify-content-center position-relative");
-    			add_location(div7, file, 136, 4, 6545);
-    			attr_dev(div8, "class", "row my-5 my-md-0");
-    			add_location(div8, file, 135, 3, 6509);
+    			add_location(div7, file, 145, 4, 6875);
+    			attr_dev(div8, "class", "col-10 col-md-6 m-auto p-0");
+    			attr_dev(div8, "id", "skillsWrapper");
+    			add_location(div8, file, 152, 4, 7289);
+    			attr_dev(div9, "class", "row py-5 py-md-0 g-0 w-100");
+    			add_location(div9, file, 144, 3, 6829);
     			attr_dev(h31, "class", "w-100");
-    			add_location(h31, file, 147, 5, 7113);
-    			add_location(br0, file, 150, 380, 7592);
-    			attr_dev(p1, "data-aos", "fade-up");
-    			attr_dev(p1, "data-aos-duration", "800");
-    			add_location(p1, file, 149, 6, 7164);
-    			add_location(br1, file, 151, 168, 7766);
-    			add_location(p2, file, 152, 7, 7779);
-    			add_location(br2, file, 152, 99, 7871);
+    			add_location(h31, file, 158, 5, 7564);
+    			add_location(br0, file, 161, 380, 8000);
+    			add_location(p1, file, 160, 6, 7615);
+    			add_location(br1, file, 162, 168, 8174);
+    			add_location(p2, file, 163, 7, 8187);
+    			add_location(br2, file, 163, 99, 8279);
     			attr_dev(a2, "class", "text-white");
     			attr_dev(a2, "href", "#contactForm");
-    			add_location(a2, file, 153, 23, 7900);
-    			add_location(p3, file, 153, 7, 7884);
-    			add_location(div9, file, 148, 5, 7151);
-    			attr_dev(div10, "class", "col-10 col-md-8 col-lg-6");
-    			add_location(div10, file, 146, 4, 7068);
-    			attr_dev(div11, "class", "row my-5 text-white d-flex flex-column align-items-center w-100");
-    			add_location(div11, file, 145, 3, 6985);
-    			attr_dev(img, "class", "w-100");
-    			set_style(img, "margin-bottom", "-2px");
-    			if (!src_url_equal(img.src, img_src_value = "assets/multiWaveDivider.png")) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", "background wave");
-    			attr_dev(img, "aria-hidden", "true");
-    			add_location(img, file, 157, 3, 8065);
-    			attr_dev(div12, "class", "container-fluid p-0");
-    			set_style(div12, "background-color", "var(--mainColor)");
-    			set_style(div12, "margin-top", "-2px");
-    			set_style(div12, "padding-top", "1px");
-    			add_location(div12, file, 134, 2, 6391);
-    			attr_dev(div13, "class", "postion-relative py-5");
-    			set_style(div13, "background-image", "url('assets/bottomWave.png')");
-    			set_style(div13, "background-repeat", "no-repeat");
-    			set_style(div13, "background-size", "contain");
-    			set_style(div13, "background-position", "bottom");
-    			add_location(div13, file, 160, 2, 8221);
-
-    			attr_dev(main, "style", main_style_value = /*meModelLoaded*/ ctx[0]
-    			? ''
-    			: 'overflow: hidden; width: 100vw; height: 100vh;');
-
-    			add_location(main, file, 53, 1, 1477);
+    			add_location(a2, file, 164, 23, 8308);
+    			add_location(p3, file, 164, 7, 8292);
+    			add_location(div10, file, 159, 5, 7602);
+    			attr_dev(div11, "class", "col-10 col-md-8 col-lg-6");
+    			attr_dev(div11, "data-aos", "fade-up");
+    			attr_dev(div11, "data-aos-duration", "800");
+    			add_location(div11, file, 157, 4, 7475);
+    			attr_dev(div12, "class", "row my-5 text-white d-flex flex-column align-items-center w-100");
+    			add_location(div12, file, 156, 3, 7392);
+    			attr_dev(img1, "class", "w-100");
+    			set_style(img1, "margin-bottom", "-2px");
+    			if (!src_url_equal(img1.src, img1_src_value = "assets/multiWaveDivider.png")) attr_dev(img1, "src", img1_src_value);
+    			attr_dev(img1, "alt", "background wave");
+    			attr_dev(img1, "aria-hidden", "true");
+    			add_location(img1, file, 168, 3, 8473);
+    			attr_dev(div13, "class", "container-fluid p-0");
+    			set_style(div13, "background-color", "var(--mainColor)");
+    			set_style(div13, "margin-top", "-2px");
+    			set_style(div13, "padding-top", "1px");
+    			add_location(div13, file, 143, 2, 6711);
+    			attr_dev(div14, "class", "postion-relative py-5");
+    			set_style(div14, "background-image", "url('assets/bottomWave.png')");
+    			set_style(div14, "background-repeat", "no-repeat");
+    			set_style(div14, "background-size", "contain");
+    			set_style(div14, "background-position", "bottom");
+    			add_location(div14, file, 171, 2, 8629);
+    			add_location(main, file, 58, 1, 1562);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
@@ -59549,45 +60789,48 @@ var app = (function () {
     			append_dev(div2, t7);
     			append_dev(div2, p0);
     			append_dev(div4, t9);
-    			mount_component(memodel, div4, null);
+    			mount_component(devicedetector, div4, null);
     			append_dev(div6, t10);
     			append_dev(div6, div5);
-    			append_dev(main, t11);
-    			append_dev(main, div12);
-    			append_dev(div12, div8);
-    			append_dev(div8, div7);
-    			append_dev(div7, h30);
-    			append_dev(h30, t12);
-    			if (if_block) if_block.m(h30, null);
-    			append_dev(div8, t13);
-    			mount_component(skills, div8, null);
-    			append_dev(div12, t14);
-    			append_dev(div12, div11);
-    			append_dev(div11, div10);
-    			append_dev(div10, h31);
-    			append_dev(div10, t16);
-    			append_dev(div10, div9);
-    			append_dev(div9, p1);
-    			append_dev(p1, t17);
-    			append_dev(p1, br0);
-    			append_dev(p1, t18);
-    			append_dev(div9, t19);
-    			append_dev(div9, br1);
-    			append_dev(div9, t20);
-    			append_dev(div9, p2);
-    			append_dev(div9, br2);
-    			append_dev(div9, t22);
-    			append_dev(div9, p3);
-    			append_dev(p3, t23);
-    			append_dev(p3, a2);
-    			append_dev(p3, t25);
-    			append_dev(div12, t26);
-    			append_dev(div12, img);
-    			append_dev(main, t27);
-    			mount_component(projectcard, main, null);
-    			append_dev(main, t28);
+    			append_dev(div6, t11);
+    			append_dev(div6, img0);
+    			append_dev(main, t12);
     			append_dev(main, div13);
-    			mount_component(contactform, div13, null);
+    			append_dev(div13, div9);
+    			append_dev(div9, div7);
+    			append_dev(div7, h30);
+    			append_dev(h30, t13);
+    			if (if_block) if_block.m(h30, null);
+    			append_dev(div9, t14);
+    			append_dev(div9, div8);
+    			mount_component(skills, div8, null);
+    			append_dev(div13, t15);
+    			append_dev(div13, div12);
+    			append_dev(div12, div11);
+    			append_dev(div11, h31);
+    			append_dev(div11, t17);
+    			append_dev(div11, div10);
+    			append_dev(div10, p1);
+    			append_dev(p1, t18);
+    			append_dev(p1, br0);
+    			append_dev(p1, t19);
+    			append_dev(div10, t20);
+    			append_dev(div10, br1);
+    			append_dev(div10, t21);
+    			append_dev(div10, p2);
+    			append_dev(div10, br2);
+    			append_dev(div10, t23);
+    			append_dev(div10, p3);
+    			append_dev(p3, t24);
+    			append_dev(p3, a2);
+    			append_dev(p3, t26);
+    			append_dev(div13, t27);
+    			append_dev(div13, img1);
+    			append_dev(main, t28);
+    			mount_component(projectcard, main, null);
+    			append_dev(main, t29);
+    			append_dev(main, div14);
+    			mount_component(contactform, div14, null);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -59599,7 +60842,7 @@ var app = (function () {
 
     			if (!current || dirty & /*meModelLoaded*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(/*meModelLoaded*/ ctx[0]
     			? ' animate__animated animate__fadeIn animate__delay-3s nameContainer rounded'
-    			: 'nameContainer rounded') + " svelte-1ar6gaa"))) {
+    			: 'nameContainer rounded') + " svelte-17mujvc"))) {
     				attr_dev(div1, "class", div1_class_value);
     			}
 
@@ -59615,6 +60858,14 @@ var app = (function () {
     				toggle_class(p0, "animate__delay-4s", /*meModelLoaded*/ ctx[0]);
     			}
 
+    			const devicedetector_changes = {};
+
+    			if (dirty & /*$$scope*/ 256) {
+    				devicedetector_changes.$$scope = { dirty, ctx };
+    			}
+
+    			devicedetector.$set(devicedetector_changes);
+
     			if (/*meModelLoaded*/ ctx[0]) {
     				if (if_block) ; else {
     					if_block = create_if_block_1(ctx);
@@ -59625,23 +60876,17 @@ var app = (function () {
     				if_block.d(1);
     				if_block = null;
     			}
-
-    			if (!current || dirty & /*meModelLoaded*/ 1 && main_style_value !== (main_style_value = /*meModelLoaded*/ ctx[0]
-    			? ''
-    			: 'overflow: hidden; width: 100vw; height: 100vh;')) {
-    				attr_dev(main, "style", main_style_value);
-    			}
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(memodel.$$.fragment, local);
+    			transition_in(devicedetector.$$.fragment, local);
     			transition_in(skills.$$.fragment, local);
     			transition_in(projectcard.$$.fragment, local);
     			transition_in(contactform.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(memodel.$$.fragment, local);
+    			transition_out(devicedetector.$$.fragment, local);
     			transition_out(skills.$$.fragment, local);
     			transition_out(projectcard.$$.fragment, local);
     			transition_out(contactform.$$.fragment, local);
@@ -59650,7 +60895,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
     			destroy_each(each_blocks, detaching);
-    			destroy_component(memodel);
+    			destroy_component(devicedetector);
     			if (if_block) if_block.d();
     			destroy_component(skills);
     			destroy_component(projectcard);
@@ -59662,14 +60907,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(53:0) { #if loadElements }",
+    		source: "(58:0) { #if loadElements }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (103:9) {:else}
+    // (108:9) {:else}
     function create_else_block(ctx) {
     	let span;
     	let t;
@@ -59677,10 +60922,10 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			span = element("span");
-    			t = text(/*char*/ ctx[4]);
+    			t = text(/*char*/ ctx[5]);
     			attr_dev(span, "aria-hidden", "true");
-    			attr_dev(span, "class", "svelte-1ar6gaa");
-    			add_location(span, file, 103, 10, 5406);
+    			attr_dev(span, "class", "svelte-17mujvc");
+    			add_location(span, file, 108, 10, 5411);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -59695,14 +60940,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(103:9) {:else}",
+    		source: "(108:9) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (101:9) {#if char == " "}
+    // (106:9) {#if char == " "}
     function create_if_block_2(ctx) {
     	let t;
 
@@ -59722,19 +60967,19 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(101:9) {#if char == \\\" \\\"}",
+    		source: "(106:9) {#if char == \\\" \\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (100:8) {#each "I'm Jonas" as char}
+    // (105:8) {#each "I'm Jonas" as char}
     function create_each_block(ctx) {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*char*/ ctx[4] == " ") return create_if_block_2;
+    		if (/*char*/ ctx[5] == " ") return create_if_block_2;
     		return create_else_block;
     	}
 
@@ -59761,22 +61006,63 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(100:8) {#each \\\"I'm Jonas\\\" as char}",
+    		source: "(105:8) {#each \\\"I'm Jonas\\\" as char}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (139:6) {#if meModelLoaded}
+    // (136:4) <DeviceDetector showInDevice="desktop">
+    function create_default_slot(ctx) {
+    	let memodel;
+    	let current;
+    	memodel = new MeModel({ $$inline: true });
+    	memodel.$on("loaded", /*handleLoad*/ ctx[2]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(memodel.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(memodel, target, anchor);
+    			current = true;
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(memodel.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(memodel.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(memodel, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(136:4) <DeviceDetector showInDevice=\\\"desktop\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (148:6) {#if meModelLoaded}
     function create_if_block_1(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "position-absolute w-100 h-100 start-0 top-0 underlineTarget svelte-1ar6gaa");
-    			add_location(div, file, 139, 7, 6837);
+    			attr_dev(div, "class", "position-absolute w-100 h-100 start-0 top-0 underlineTarget svelte-17mujvc");
+    			add_location(div, file, 148, 7, 7167);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -59790,7 +61076,7 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(139:6) {#if meModelLoaded}",
+    		source: "(148:6) {#if meModelLoaded}",
     		ctx
     	});
 
@@ -59798,13 +61084,17 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
-    	let loadingscreen;
+    	let devicedetector;
     	let t;
     	let if_block_anchor;
     	let current;
 
-    	loadingscreen = new LoadingScreen({
-    			props: { loaded: /*meModelLoaded*/ ctx[0] },
+    	devicedetector = new DeviceDetector({
+    			props: {
+    				showInDevice: "desktop",
+    				$$slots: { default: [create_default_slot_1] },
+    				$$scope: { ctx }
+    			},
     			$$inline: true
     		});
 
@@ -59812,7 +61102,7 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			create_component(loadingscreen.$$.fragment);
+    			create_component(devicedetector.$$.fragment);
     			t = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
@@ -59821,16 +61111,20 @@ var app = (function () {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			mount_component(loadingscreen, target, anchor);
+    			mount_component(devicedetector, target, anchor);
     			insert_dev(target, t, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert_dev(target, if_block_anchor, anchor);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			const loadingscreen_changes = {};
-    			if (dirty & /*meModelLoaded*/ 1) loadingscreen_changes.loaded = /*meModelLoaded*/ ctx[0];
-    			loadingscreen.$set(loadingscreen_changes);
+    			const devicedetector_changes = {};
+
+    			if (dirty & /*$$scope, meModelLoaded*/ 257) {
+    				devicedetector_changes.$$scope = { dirty, ctx };
+    			}
+
+    			devicedetector.$set(devicedetector_changes);
 
     			if (/*loadElements*/ ctx[1]) {
     				if (if_block) {
@@ -59857,17 +61151,17 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(loadingscreen.$$.fragment, local);
+    			transition_in(devicedetector.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(loadingscreen.$$.fragment, local);
+    			transition_out(devicedetector.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_component(loadingscreen, detaching);
+    			destroy_component(devicedetector, detaching);
     			if (detaching) detach_dev(t);
     			if (if_block) if_block.d(detaching);
     			if (detaching) detach_dev(if_block_anchor);
@@ -59925,18 +61219,21 @@ var app = (function () {
     		}
     	}
 
+    	function mobileLoad() {
+    		$$invalidate(0, meModelLoaded = true);
+    		console.log("🚀 ~ file: App.svelte ~ line 50 ~ mobileLoad ~ meModelLoaded", meModelLoaded);
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$capture_state = () => ({
     		onMount,
-    		THREE,
-    		GLTFLoader,
-    		OrbitControls,
     		AOS,
+    		DeviceDetector,
     		Skills,
     		MeModel,
     		ProjectCard,
@@ -59946,7 +61243,8 @@ var app = (function () {
     		skillsLoaded,
     		loadElements,
     		addEventListnersText,
-    		handleLoad
+    		handleLoad,
+    		mobileLoad
     	});
 
     	$$self.$inject_state = $$props => {

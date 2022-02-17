@@ -25,6 +25,7 @@
     "d3-force": "^3.0.0",
     "javascript-color-gradient": "^1.3.2",
     "sirv-cli": "^1.0.0",
+    "svelte-device-detector": "^0.2.2",
     "three": "^0.136.0"
   }
 }

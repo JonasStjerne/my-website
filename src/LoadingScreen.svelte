@@ -1,5 +1,12 @@
 <script>
+import { onMount } from "svelte";
+
+
     export let loaded;
+
+    onMount(() => {
+        document.querySelector('main').style="overflow: hidden; width: 100vw; height: 100vh;"
+    })
 </script>
 
 <div class="position-fixed {loaded === true ? 'dissapear' : ''}" style="width: 100vw; height: 100vh; top: 0; left: 0; z-index: 20;">
