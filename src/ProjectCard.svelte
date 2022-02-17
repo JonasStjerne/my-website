@@ -203,7 +203,7 @@
     }
 
 
-    @media only screen and (min-width: 600px) {
+    @media only screen and (max-width: 768px) {
         #projectCardSizeContainer {
             padding-bottom: 60%;
             width: 60%;
