@@ -148,6 +148,9 @@ function mobileLoad() {
 						{#if meModelLoaded}
 							<div class="position-absolute w-100 h-100 start-0 top-0 underlineTarget"></div>
 						{/if}
+						<DeviceDetector showInDevice="mobile">
+							<div class="position-absolute w-100 h-100 start-0 top-0 underlineTarget"></div>
+						</DeviceDetector>
 					</h3>
 				</div>
 				<div class="col-10 col-md-6 m-auto p-0" id="skillsWrapper">
@@ -202,21 +205,16 @@ function mobileLoad() {
 		padding-right: 20px;
 	}
 
-	#waveBackground, #waveMobileBackground {
+	#waveBackground {
 		aspect-ratio: 1463.5/694.96;
 		max-width: 100%;
 		background-repeat: no-repeat;
 		inset:0;
 		z-index: -1;
-	}
-
-	#waveBackground {
 		height: 100%;
 		position: absolute;
 		background-size: cover;
 	}
-
-
 
 	.skillsText {
 		max-width: 600px;
@@ -235,8 +233,9 @@ function mobileLoad() {
 		animation: underlineAnimation 1s cubic-bezier(0, 0, 0, 1.04) forwards 2s;
 	}
 
+
 	@media only screen and (max-width: 768px) {
-		.skillsText::after {
+		.underlineTarget::after {
 			transform: translateX(-50%);
 			left: 50%;
 		}

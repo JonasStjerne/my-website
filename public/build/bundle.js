@@ -60356,7 +60356,7 @@ var app = (function () {
     }
 
     // (55:0) <DeviceDetector showInDevice="desktop">
-    function create_default_slot_1(ctx) {
+    function create_default_slot_2(ctx) {
     	let loadingscreen;
     	let current;
 
@@ -60394,7 +60394,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1.name,
+    		id: create_default_slot_2.name,
     		type: "slot",
     		source: "(55:0) <DeviceDetector showInDevice=\\\"desktop\\\">",
     		ctx
@@ -60440,7 +60440,7 @@ var app = (function () {
     	let t7;
     	let p0;
     	let t9;
-    	let devicedetector;
+    	let devicedetector0;
     	let t10;
     	let div5;
     	let t11;
@@ -60453,34 +60453,36 @@ var app = (function () {
     	let h30;
     	let t13;
     	let t14;
+    	let devicedetector1;
+    	let t15;
     	let div8;
     	let skills;
-    	let t15;
+    	let t16;
     	let div12;
     	let div11;
     	let h31;
-    	let t17;
+    	let t18;
     	let div10;
     	let p1;
-    	let t18;
-    	let br0;
     	let t19;
+    	let br0;
     	let t20;
-    	let br1;
     	let t21;
+    	let br1;
+    	let t22;
     	let p2;
     	let br2;
-    	let t23;
-    	let p3;
     	let t24;
+    	let p3;
+    	let t25;
     	let a2;
-    	let t26;
     	let t27;
+    	let t28;
     	let img1;
     	let img1_src_value;
-    	let t28;
-    	let projectcard;
     	let t29;
+    	let projectcard;
+    	let t30;
     	let div14;
     	let contactform;
     	let current;
@@ -60492,16 +60494,26 @@ var app = (function () {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
-    	devicedetector = new DeviceDetector({
+    	devicedetector0 = new DeviceDetector({
     			props: {
     				showInDevice: "desktop",
-    				$$slots: { default: [create_default_slot] },
+    				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
     	let if_block = /*meModelLoaded*/ ctx[0] && create_if_block_1(ctx);
+
+    	devicedetector1 = new DeviceDetector({
+    			props: {
+    				showInDevice: "mobile",
+    				$$slots: { default: [create_default_slot] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
     	skills = new Skills({ $$inline: true });
     	projectcard = new ProjectCard({ $$inline: true });
     	contactform = new ContactForm({ $$inline: true });
@@ -60549,7 +60561,7 @@ var app = (function () {
     			p0 = element("p");
     			p0.textContent = "An IT student passionate about building awesome full stack software solutions";
     			t9 = space();
-    			create_component(devicedetector.$$.fragment);
+    			create_component(devicedetector0.$$.fragment);
     			t10 = space();
     			div5 = element("div");
     			t11 = space();
@@ -60562,53 +60574,55 @@ var app = (function () {
     			t13 = text("I work in alot of different technolgies and love learning new\r\n\t\t\t\t\t\t");
     			if (if_block) if_block.c();
     			t14 = space();
+    			create_component(devicedetector1.$$.fragment);
+    			t15 = space();
     			div8 = element("div");
     			create_component(skills.$$.fragment);
-    			t15 = space();
+    			t16 = space();
     			div12 = element("div");
     			div11 = element("div");
     			h31 = element("h3");
     			h31.textContent = "About me";
-    			t17 = space();
+    			t18 = space();
     			div10 = element("div");
     			p1 = element("p");
-    			t18 = text("My name is Jonas Stjerne I’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
+    			t19 = text("My name is Jonas Stjerne I’m 22 and on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to business and IT including project management, business development, UI design, front & backend development and many more! ");
     			br0 = element("br");
-    			t19 = text("\r\n\t\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
-    			t20 = space();
-    			br1 = element("br");
+    			t20 = text("\r\n\t\t\t\t\t\t\tI strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.");
     			t21 = space();
+    			br1 = element("br");
+    			t22 = space();
     			p2 = element("p");
     			p2.textContent = "I’m currently working at Openomic as a full stack junior developer & doing freelance.";
     			br2 = element("br");
-    			t23 = space();
+    			t24 = space();
     			p3 = element("p");
-    			t24 = text("Feel free to ");
+    			t25 = text("Feel free to ");
     			a2 = element("a");
     			a2.textContent = "contact me";
-    			t26 = text(" if you have any questions or would like me to work on a project");
-    			t27 = space();
-    			img1 = element("img");
+    			t27 = text(" if you have any questions or would like me to work on a project");
     			t28 = space();
-    			create_component(projectcard.$$.fragment);
+    			img1 = element("img");
     			t29 = space();
+    			create_component(projectcard.$$.fragment);
+    			t30 = space();
     			div14 = element("div");
     			create_component(contactform.$$.fragment);
     			add_location(title0, file, 64, 5, 1880);
-    			attr_dev(circle0, "class", "social-group__outline svelte-17mujvc");
+    			attr_dev(circle0, "class", "social-group__outline svelte-g9gco0");
     			attr_dev(circle0, "stroke", "#000");
     			attr_dev(circle0, "stroke-width", "20");
     			attr_dev(circle0, "cx", "300");
     			attr_dev(circle0, "cy", "300");
     			attr_dev(circle0, "r", "262.5");
     			add_location(circle0, file, 68, 6, 1987);
-    			attr_dev(circle1, "class", "social-group__inner-circle svelte-17mujvc");
+    			attr_dev(circle1, "class", "social-group__inner-circle svelte-g9gco0");
     			attr_dev(circle1, "fill", "#000");
     			attr_dev(circle1, "cx", "300");
     			attr_dev(circle1, "cy", "300");
     			attr_dev(circle1, "r", "252.5");
     			add_location(circle1, file, 69, 6, 2095);
-    			attr_dev(path0, "class", "social-group__icon svelte-17mujvc");
+    			attr_dev(path0, "class", "social-group__icon svelte-g9gco0");
     			attr_dev(path0, "d", "M300 150c-82.8348 0-150 68.8393-150 153.817 0 67.9687 42.991 125.558 102.5893 145.9151 7.5 1.4063 10.2455-3.3482 10.2455-7.433 0-3.683-.134-13.3259-.2009-26.183-41.7187 9.308-50.558-20.625-50.558-20.625-6.8304-17.7456-16.6741-22.5-16.6741-22.5-13.5938-9.576 1.0044-9.375 1.0044-9.375 15.067 1.0714 22.9688 15.8705 22.9688 15.8705 13.3929 23.5045 35.0893 16.741 43.6607 12.7902 1.3393-9.9107 5.2232-16.741 9.509-20.558-33.2813-3.884-68.3036-17.076-68.3036-76.0045 0-16.808 5.8259-30.5357 15.4018-41.25-1.5402-3.884-6.6965-19.5536 1.4732-40.7143 0 0 12.5893-4.1518 41.25 15.7366 11.9866-3.4152 24.7768-5.0893 37.567-5.1562 12.7231.067 25.5803 1.741 37.5669 5.1562 28.6607-19.8884 41.183-15.7366 41.183-15.7366 8.1697 21.1607 3.0134 36.8304 1.4733 40.7143 9.5758 10.7812 15.4017 24.509 15.4017 41.25 0 59.0625-35.0892 72.0536-68.5044 75.8705 5.3571 4.7545 10.1785 14.1295 10.1785 28.4598 0 20.558-.2009 37.1652-.2009 42.1875 0 4.0849 2.6786 8.9063 10.3125 7.3661C407.076 429.308 450 371.7187 450 303.817 450 218.8393 382.8348 150 300 150z");
     			attr_dev(path0, "fill", "#FFF");
     			attr_dev(path0, "fill-rule", "nonzero");
@@ -60617,29 +60631,29 @@ var app = (function () {
     			attr_dev(g0, "fill", "none");
     			attr_dev(g0, "fill-rule", "evenodd");
     			add_location(g0, file, 67, 5, 1923);
-    			attr_dev(svg0, "class", "social-svg svelte-17mujvc");
+    			attr_dev(svg0, "class", "social-svg svelte-g9gco0");
     			attr_dev(svg0, "viewBox", "0 0 600 600");
     			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
     			add_location(svg0, file, 63, 5, 1792);
-    			attr_dev(a0, "class", "social-link social-link--github svelte-17mujvc");
+    			attr_dev(a0, "class", "social-link social-link--github svelte-g9gco0");
     			attr_dev(a0, "id", "github");
     			attr_dev(a0, "href", "https://github.com/JonasStjerne");
     			add_location(a0, file, 62, 4, 1691);
     			add_location(title1, file, 77, 5, 3556);
-    			attr_dev(circle2, "class", "social-group__outline svelte-17mujvc");
+    			attr_dev(circle2, "class", "social-group__outline svelte-g9gco0");
     			attr_dev(circle2, "stroke", "#000");
     			attr_dev(circle2, "stroke-width", "20");
     			attr_dev(circle2, "cx", "300");
     			attr_dev(circle2, "cy", "300");
     			attr_dev(circle2, "r", "262.5");
     			add_location(circle2, file, 81, 6, 3665);
-    			attr_dev(circle3, "class", "social-group__inner-circle svelte-17mujvc");
+    			attr_dev(circle3, "class", "social-group__inner-circle svelte-g9gco0");
     			attr_dev(circle3, "fill", "#2D76B0");
     			attr_dev(circle3, "cx", "300");
     			attr_dev(circle3, "cy", "300");
     			attr_dev(circle3, "r", "252.5");
     			add_location(circle3, file, 82, 6, 3773);
-    			attr_dev(path1, "class", "social-group__icon svelte-17mujvc");
+    			attr_dev(path1, "class", "social-group__icon svelte-g9gco0");
     			attr_dev(path1, "d", "M278.9308 253.1923h43.5769v20.0539h.5923c6.0923-11.5077 20.9-23.6077 43.0692-23.6077 46.0308 0 54.577 30.2923 54.577 69.723v80.2154h-45.4385v-71.1615c0-17.0077-.2539-38.8385-23.6077-38.8385-23.6923 0-27.2462 18.5308-27.2462 37.5693v72.4307h-45.4384l-.0846-146.3846zm-74.1231 0h45.523V399.577h-45.523V253.1923zm22.8461-72.7692c14.5539 0 26.4 11.8461 26.4 26.4 0 14.5538-11.8461 26.4-26.4 26.4-14.6384 0-26.4-11.8462-26.4-26.4 0-14.5539 11.7616-26.4 26.4-26.4z");
     			attr_dev(path1, "fill", "#000");
     			attr_dev(path1, "fill-rule", "nonzero");
@@ -60648,22 +60662,22 @@ var app = (function () {
     			attr_dev(g1, "fill", "none");
     			attr_dev(g1, "fill-rule", "evenodd");
     			add_location(g1, file, 80, 5, 3601);
-    			attr_dev(svg1, "class", "social-svg svelte-17mujvc");
+    			attr_dev(svg1, "class", "social-svg svelte-g9gco0");
     			attr_dev(svg1, "viewBox", "0 0 600 600");
     			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
     			add_location(svg1, file, 76, 5, 3468);
-    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-17mujvc");
+    			attr_dev(a1, "class", "social-link social-link--linkedin svelte-g9gco0");
     			attr_dev(a1, "id", "linkedin");
     			attr_dev(a1, "href", "https://www.linkedin.com/in/jonas-stjerne-974860150/");
     			add_location(a1, file, 75, 4, 3342);
     			attr_dev(div0, "id", "header");
-    			attr_dev(div0, "class", "svelte-17mujvc");
+    			attr_dev(div0, "class", "svelte-g9gco0");
     			add_location(div0, file, 60, 3, 1614);
     			attr_dev(span0, "aria-hidden", "true");
-    			attr_dev(span0, "class", "svelte-17mujvc");
+    			attr_dev(span0, "class", "svelte-g9gco0");
     			add_location(span0, file, 99, 7, 5001);
     			attr_dev(span1, "aria-hidden", "true");
-    			attr_dev(span1, "class", "svelte-17mujvc");
+    			attr_dev(span1, "class", "svelte-g9gco0");
     			add_location(span1, file, 100, 15, 5043);
 
     			attr_dev(h1, "class", h1_class_value = /*meModelLoaded*/ ctx[0]
@@ -60672,29 +60686,29 @@ var app = (function () {
 
     			attr_dev(h1, "aria-label", "Hi");
     			add_location(h1, file, 98, 6, 4886);
-    			attr_dev(h2, "class", "nameEl font-weight-bold svelte-17mujvc");
+    			attr_dev(h2, "class", "nameEl font-weight-bold svelte-g9gco0");
     			attr_dev(h2, "aria-label", "I'm Jonas");
     			add_location(h2, file, 103, 7, 5240);
 
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(/*meModelLoaded*/ ctx[0]
     			? ' animate__animated animate__fadeIn animate__delay-3s nameContainer rounded'
-    			: 'nameContainer rounded') + " svelte-17mujvc"));
+    			: 'nameContainer rounded') + " svelte-g9gco0"));
 
     			add_location(div1, file, 102, 6, 5097);
-    			attr_dev(p0, "class", "underText svelte-17mujvc");
+    			attr_dev(p0, "class", "underText svelte-g9gco0");
     			toggle_class(p0, "animate__animated", /*meModelLoaded*/ ctx[0]);
     			toggle_class(p0, "animate__fadeIn", /*meModelLoaded*/ ctx[0]);
     			toggle_class(p0, "animate__delay-4s", /*meModelLoaded*/ ctx[0]);
     			add_location(p0, file, 113, 6, 5518);
-    			attr_dev(div2, "class", "introContainer svelte-17mujvc");
+    			attr_dev(div2, "class", "introContainer svelte-g9gco0");
     			add_location(div2, file, 97, 5, 4850);
-    			attr_dev(div3, "class", "content svelte-17mujvc");
+    			attr_dev(div3, "class", "content svelte-g9gco0");
     			add_location(div3, file, 96, 4, 4822);
     			attr_dev(div4, "class", "d-flex justify-content-center flex-column-reverse flex-md-row pb-5");
     			add_location(div4, file, 95, 3, 4736);
     			attr_dev(div5, "id", "waveBackground");
     			set_style(div5, "background-image", "url('assets/wave.png')");
-    			attr_dev(div5, "class", "d-none d-md-block svelte-17mujvc");
+    			attr_dev(div5, "class", "d-none d-md-block svelte-g9gco0");
     			add_location(div5, file, 139, 3, 6370);
     			attr_dev(img0, "class", "d-block d-md-none img-fluid w-100");
     			if (!src_url_equal(img0.src, img0_src_value = "assets/mobileWave.png")) attr_dev(img0, "src", img0_src_value);
@@ -60702,7 +60716,7 @@ var app = (function () {
     			add_location(img0, file, 140, 3, 6482);
     			attr_dev(div6, "class", "position-relative vh-50");
     			add_location(div6, file, 59, 2, 1572);
-    			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-17mujvc");
+    			attr_dev(h30, "class", "skillsText text-white text-center text-md-start svelte-g9gco0");
     			attr_dev(h30, "data-aos", "fade-in");
     			attr_dev(h30, "data-aos-duration", "800");
     			add_location(h30, file, 146, 5, 6967);
@@ -60710,33 +60724,33 @@ var app = (function () {
     			add_location(div7, file, 145, 4, 6875);
     			attr_dev(div8, "class", "col-10 col-md-6 m-auto p-0");
     			attr_dev(div8, "id", "skillsWrapper");
-    			add_location(div8, file, 152, 4, 7289);
+    			add_location(div8, file, 155, 4, 7448);
     			attr_dev(div9, "class", "row py-5 py-md-0 g-0 w-100");
     			add_location(div9, file, 144, 3, 6829);
     			attr_dev(h31, "class", "w-100");
-    			add_location(h31, file, 158, 5, 7564);
-    			add_location(br0, file, 161, 380, 8000);
-    			add_location(p1, file, 160, 6, 7615);
-    			add_location(br1, file, 162, 168, 8174);
-    			add_location(p2, file, 163, 7, 8187);
-    			add_location(br2, file, 163, 99, 8279);
+    			add_location(h31, file, 161, 5, 7723);
+    			add_location(br0, file, 164, 380, 8159);
+    			add_location(p1, file, 163, 6, 7774);
+    			add_location(br1, file, 165, 168, 8333);
+    			add_location(p2, file, 166, 7, 8346);
+    			add_location(br2, file, 166, 99, 8438);
     			attr_dev(a2, "class", "text-white");
     			attr_dev(a2, "href", "#contactForm");
-    			add_location(a2, file, 164, 23, 8308);
-    			add_location(p3, file, 164, 7, 8292);
-    			add_location(div10, file, 159, 5, 7602);
+    			add_location(a2, file, 167, 23, 8467);
+    			add_location(p3, file, 167, 7, 8451);
+    			add_location(div10, file, 162, 5, 7761);
     			attr_dev(div11, "class", "col-10 col-md-8 col-lg-6");
     			attr_dev(div11, "data-aos", "fade-up");
     			attr_dev(div11, "data-aos-duration", "800");
-    			add_location(div11, file, 157, 4, 7475);
+    			add_location(div11, file, 160, 4, 7634);
     			attr_dev(div12, "class", "row my-5 text-white d-flex flex-column align-items-center w-100");
-    			add_location(div12, file, 156, 3, 7392);
+    			add_location(div12, file, 159, 3, 7551);
     			attr_dev(img1, "class", "w-100");
     			set_style(img1, "margin-bottom", "-2px");
     			if (!src_url_equal(img1.src, img1_src_value = "assets/multiWaveDivider.png")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "alt", "background wave");
     			attr_dev(img1, "aria-hidden", "true");
-    			add_location(img1, file, 168, 3, 8473);
+    			add_location(img1, file, 171, 3, 8632);
     			attr_dev(div13, "class", "container-fluid p-0");
     			set_style(div13, "background-color", "var(--mainColor)");
     			set_style(div13, "margin-top", "-2px");
@@ -60747,7 +60761,7 @@ var app = (function () {
     			set_style(div14, "background-repeat", "no-repeat");
     			set_style(div14, "background-size", "contain");
     			set_style(div14, "background-position", "bottom");
-    			add_location(div14, file, 171, 2, 8629);
+    			add_location(div14, file, 174, 2, 8788);
     			add_location(main, file, 58, 1, 1562);
     		},
     		m: function mount(target, anchor) {
@@ -60789,7 +60803,7 @@ var app = (function () {
     			append_dev(div2, t7);
     			append_dev(div2, p0);
     			append_dev(div4, t9);
-    			mount_component(devicedetector, div4, null);
+    			mount_component(devicedetector0, div4, null);
     			append_dev(div6, t10);
     			append_dev(div6, div5);
     			append_dev(div6, t11);
@@ -60801,34 +60815,36 @@ var app = (function () {
     			append_dev(div7, h30);
     			append_dev(h30, t13);
     			if (if_block) if_block.m(h30, null);
-    			append_dev(div9, t14);
+    			append_dev(h30, t14);
+    			mount_component(devicedetector1, h30, null);
+    			append_dev(div9, t15);
     			append_dev(div9, div8);
     			mount_component(skills, div8, null);
-    			append_dev(div13, t15);
+    			append_dev(div13, t16);
     			append_dev(div13, div12);
     			append_dev(div12, div11);
     			append_dev(div11, h31);
-    			append_dev(div11, t17);
+    			append_dev(div11, t18);
     			append_dev(div11, div10);
     			append_dev(div10, p1);
-    			append_dev(p1, t18);
-    			append_dev(p1, br0);
     			append_dev(p1, t19);
-    			append_dev(div10, t20);
-    			append_dev(div10, br1);
+    			append_dev(p1, br0);
+    			append_dev(p1, t20);
     			append_dev(div10, t21);
+    			append_dev(div10, br1);
+    			append_dev(div10, t22);
     			append_dev(div10, p2);
     			append_dev(div10, br2);
-    			append_dev(div10, t23);
+    			append_dev(div10, t24);
     			append_dev(div10, p3);
-    			append_dev(p3, t24);
+    			append_dev(p3, t25);
     			append_dev(p3, a2);
-    			append_dev(p3, t26);
-    			append_dev(div13, t27);
+    			append_dev(p3, t27);
+    			append_dev(div13, t28);
     			append_dev(div13, img1);
-    			append_dev(main, t28);
-    			mount_component(projectcard, main, null);
     			append_dev(main, t29);
+    			mount_component(projectcard, main, null);
+    			append_dev(main, t30);
     			append_dev(main, div14);
     			mount_component(contactform, div14, null);
     			current = true;
@@ -60842,7 +60858,7 @@ var app = (function () {
 
     			if (!current || dirty & /*meModelLoaded*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(/*meModelLoaded*/ ctx[0]
     			? ' animate__animated animate__fadeIn animate__delay-3s nameContainer rounded'
-    			: 'nameContainer rounded') + " svelte-17mujvc"))) {
+    			: 'nameContainer rounded') + " svelte-g9gco0"))) {
     				attr_dev(div1, "class", div1_class_value);
     			}
 
@@ -60858,35 +60874,45 @@ var app = (function () {
     				toggle_class(p0, "animate__delay-4s", /*meModelLoaded*/ ctx[0]);
     			}
 
-    			const devicedetector_changes = {};
+    			const devicedetector0_changes = {};
 
     			if (dirty & /*$$scope*/ 256) {
-    				devicedetector_changes.$$scope = { dirty, ctx };
+    				devicedetector0_changes.$$scope = { dirty, ctx };
     			}
 
-    			devicedetector.$set(devicedetector_changes);
+    			devicedetector0.$set(devicedetector0_changes);
 
     			if (/*meModelLoaded*/ ctx[0]) {
     				if (if_block) ; else {
     					if_block = create_if_block_1(ctx);
     					if_block.c();
-    					if_block.m(h30, null);
+    					if_block.m(h30, t14);
     				}
     			} else if (if_block) {
     				if_block.d(1);
     				if_block = null;
     			}
+
+    			const devicedetector1_changes = {};
+
+    			if (dirty & /*$$scope*/ 256) {
+    				devicedetector1_changes.$$scope = { dirty, ctx };
+    			}
+
+    			devicedetector1.$set(devicedetector1_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(devicedetector.$$.fragment, local);
+    			transition_in(devicedetector0.$$.fragment, local);
+    			transition_in(devicedetector1.$$.fragment, local);
     			transition_in(skills.$$.fragment, local);
     			transition_in(projectcard.$$.fragment, local);
     			transition_in(contactform.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(devicedetector.$$.fragment, local);
+    			transition_out(devicedetector0.$$.fragment, local);
+    			transition_out(devicedetector1.$$.fragment, local);
     			transition_out(skills.$$.fragment, local);
     			transition_out(projectcard.$$.fragment, local);
     			transition_out(contactform.$$.fragment, local);
@@ -60895,8 +60921,9 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
     			destroy_each(each_blocks, detaching);
-    			destroy_component(devicedetector);
+    			destroy_component(devicedetector0);
     			if (if_block) if_block.d();
+    			destroy_component(devicedetector1);
     			destroy_component(skills);
     			destroy_component(projectcard);
     			destroy_component(contactform);
@@ -60924,7 +60951,7 @@ var app = (function () {
     			span = element("span");
     			t = text(/*char*/ ctx[5]);
     			attr_dev(span, "aria-hidden", "true");
-    			attr_dev(span, "class", "svelte-17mujvc");
+    			attr_dev(span, "class", "svelte-g9gco0");
     			add_location(span, file, 108, 10, 5411);
     		},
     		m: function mount(target, anchor) {
@@ -61014,7 +61041,7 @@ var app = (function () {
     }
 
     // (136:4) <DeviceDetector showInDevice="desktop">
-    function create_default_slot(ctx) {
+    function create_default_slot_1(ctx) {
     	let memodel;
     	let current;
     	memodel = new MeModel({ $$inline: true });
@@ -61045,7 +61072,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot.name,
+    		id: create_default_slot_1.name,
     		type: "slot",
     		source: "(136:4) <DeviceDetector showInDevice=\\\"desktop\\\">",
     		ctx
@@ -61061,7 +61088,7 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "position-absolute w-100 h-100 start-0 top-0 underlineTarget svelte-17mujvc");
+    			attr_dev(div, "class", "position-absolute w-100 h-100 start-0 top-0 underlineTarget svelte-g9gco0");
     			add_location(div, file, 148, 7, 7167);
     		},
     		m: function mount(target, anchor) {
@@ -61083,6 +61110,35 @@ var app = (function () {
     	return block;
     }
 
+    // (151:6) <DeviceDetector showInDevice="mobile">
+    function create_default_slot(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "position-absolute w-100 h-100 start-0 top-0 underlineTarget svelte-g9gco0");
+    			add_location(div, file, 151, 7, 7314);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(151:6) <DeviceDetector showInDevice=\\\"mobile\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment(ctx) {
     	let devicedetector;
     	let t;
@@ -61092,7 +61148,7 @@ var app = (function () {
     	devicedetector = new DeviceDetector({
     			props: {
     				showInDevice: "desktop",
-    				$$slots: { default: [create_default_slot_1] },
+    				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
