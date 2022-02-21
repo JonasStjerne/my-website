@@ -2,29 +2,43 @@
 
     const projects = [
         {
+            "title" : "Platform to buy and sell meals",
+            "text" : "As a part of my 3th semester project I developed a big part of a full stack platform to buy and sell surplus food portions. The meals could be sorted by both distance and category and a simple authentication system was in place",
+            "tech" : "C#, .Net Core, Blazor",
+            "src" : "assets/projectImages/mealsPlatform.png",
+            "colorsHex" : ["A0C75E", "DCFFA0"]
+        },
+        {
+            "title" : "Live Raider",
+            "text" : "Website for raiding small Twitch.tv streamers. The website displays how many users are waiting for a raid and a countdown to the raid. Twitch.tv is continuously scanned for streams under x-amount of viewers.",
+            "tech" : "Vue, Node, Express and Socket.io",
+            "srcGithub" : "https://github.com/JonasStjerne/liveRaider",
+            "src" : "assets/projectImages/LiveRaider.png",
+            "colorsHex" : ["CFD1FF", "1F004D"]
+        },
+        {
+            "title" : "Program to make stock corrections",
+            "text" : "Small Windows application to make it easier to request stock corrections. Used at Aarhus University Hospital's warehouse.",
+            "tech" : "C#",
+            "src" : "assets/projectImages/lagerRettelse.jpg",
+            "colorsHex" : ["0074D6", "94CEFF"]
+        },
+        {
             "title" : "Chat app",
-            "text" : "Small chat app made with Socket.io to get familiar with it",
+            "text" : "Small chat app made with Socket.io to get familiar with it. Chat global or join private rooms",
             "tech" : "Socket.io & JavaScript",
             "srcGithub" : "https://github.com/",
             "src" : "assets/projectImages/Chatter.png",
-            "colorsHex" : ["00C9FF", "00FF8B"]
+            "colorsHex" : ["00EBA3", "00DEE6"]
         },
         {
-            "title" : "Chat app2",
-            "text" : "Small chat app made with Socket.io to get familiar with it",
-            "tech" : "Socket.io & JavaScript",
-            "srcGithub" : "https://github.com/",
-            "src" : "assets/projectImages/Chatter.png",
-            "colorsHex" : ["FF9900", "FF00A8"]
+            "title" : "DSB Travel Time Guarantee Requester",
+            "text" : "STILL IN DEVELOPMENT. Service that automatically requests compensation tickets from DSB's Travel Time Guarantee when your train gets delayed.",
+            "tech" : "C#",
+            "srcGithub" : "https://github.com/JonasStjerne/dsb_bad_dog",
+            "src" : "assets/projectImages/dsbBadDog.png",
+            "colorsHex" : ["B41730", "FF2548"]
         },
-        {
-            "title" : "Chat app3",
-            "text" : "Small chat app made with Socket.io to get familiar with it",
-            "tech" : "Socket.io & JavaScript",
-            "srcGithub" : "https://github.com/",
-            "src" : "assets/projectImages/Chatter.png",
-            "colorsHex" : ["00FFE0", "BD00FF"]
-        }
     ];
 
     function fade2(node, {
@@ -97,7 +111,7 @@
 
 
 </script>
-<div style="margin: 10vh 0;" class="projectShowcaseWrapper" data-aos="fade-in" data-aos-duration="800">
+<div style="margin: 10vh 0;" class="projectShowcaseWrapper" data-aos="fade-in" data-aos-duration="800" data-aos-offset="200">
     <h1 class="text-center my-5">See my work</h1>
     <div class="d-flex justify-content-center overflow-hidden">
         <div class="position-relative m-0" style="height:0;" id="projectCardSizeContainer">
@@ -105,13 +119,21 @@
                 <div class="p-4">
                     {#each projects as project, i}
                         {#if i == selectedProject}
-                            <h3 class="row pb-2 text-white"  in:fade2="{{delay: 1000}}">{project.title}</h3>
+                            {#if project.whiteText ?? true}
+                                <h3 class="row pb-2 text-white"  in:fade2="{{delay: 1000}}">{project.title}</h3>
+                            {:else}
+                                <h3 class="row pb-2"  in:fade2="{{delay: 1000}}">{project.title}</h3>
+                            {/if}
                         {/if}
                     {/each}
                     <div class="row">
                         {#each projects as project, i}
                             {#if i == selectedProject}
-                                <p class="col-7 p-0 text-white" in:fade2="{{delay: 1200}}">{project.text}</p>
+                                {#if project.whiteText ?? true}
+                                    <p class="col-7 p-0 text-white" in:fade2="{{delay: 1200}}">{project.text}</p>
+                                {:else}
+                                <p class="col-7 p-0" in:fade2="{{delay: 1200}}">{project.text}</p>
+                                {/if}
                             {/if}
                         {/each}        
                         <div class="col-5"></div>
@@ -136,9 +158,11 @@
                     {#if i == selectedProject}
                         <div class="d-flex justify-content-between align-items-center "  in:fade2="{{delay: 1400}}">
                             <p class="m-0">Made with {project.tech}</p>
-                            <a href="{project.srcGithub}">
-                                <img src="assets/github.svg" alt="github" height="30px" width="30px">
-                            </a>
+                            {#if project.srcGithub ?? false}
+                                <a href="{project.srcGithub}">
+                                    <img src="assets/github.svg" alt="github" height="30px" width="30px">
+                                </a>
+                            {/if}
                         </div>
                     {/if}
                 {/each}
