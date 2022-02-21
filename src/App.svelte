@@ -40,6 +40,7 @@ function handleLoad(element) {
 	if (element.detail == "meModel") { 
 		meModelLoaded = true;
 		addEventListnersText();
+		document.querySelector('body').style="overflow: visible; width: 100vw; height: 100vh;"
 	} else if ( element.detail == "skills") {
 		skillsLoaded = true;
 	} 
@@ -47,8 +48,6 @@ function handleLoad(element) {
 
 function mobileLoad() {
 	meModelLoaded = true;
-    console.log("🚀 ~ file: App.svelte ~ line 50 ~ mobileLoad ~ meModelLoaded", meModelLoaded)
-	
 }
 
 </script>
@@ -162,7 +161,7 @@ function mobileLoad() {
 					<h3 class="w-100">About me</h3>
 					<div>
 						<p>
-							My name is Jonas Stjerne I'm a student on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to IT including UI design, front & backend development and many more! <br>
+							My name is Jonas Stjerne I'm a student on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to IT including UI design, front & backend development! <br>
 							I strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.</p> <br>
 							<p>I’m currently working <a class="text-white" style="text-decoration: none;" href="https://openomic.dk/">@Openomic</a> as a full stack junior developer & doing freelance.</p><br>
 							<p>Feel free to <a class="text-white" href="#contactForm">contact me</a> if you have any questions or would like me to work on a project</p>

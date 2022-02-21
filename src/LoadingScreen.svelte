@@ -5,7 +5,7 @@ import { onMount } from "svelte";
     export let loaded;
 
     onMount(() => {
-        document.querySelector('main').style="overflow: hidden; width: 100vw; height: 100vh;"
+        document.querySelector('body').style="overflow: hidden; width: 100vw; height: 100vh;"
     })
 </script>
 
