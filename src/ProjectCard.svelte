@@ -146,7 +146,7 @@
         </div>
         <div class="col-2 ms-4">
             <div class="d-flex flex-column justify-content-end h-100">
-                <div class="d-flex justify-content-center align-items-center w-100" style="gap: 10px;">
+                <div class="d-flex justify-content-center align-items-center w-100" style="gap: 10px; z-index: 999;">
                         <small>{selectedProject+1}</small>
                         <div style="width: 80%; position: relative;">
                             <div class="w-100 rounded-3" style="height: 5px; background-color: var(--secondaryColor);"></div>
@@ -154,8 +154,8 @@
                         </div>
                         <small>{projects.length}</small>
                 </div>
-                <div class="d-flex justify-content-center mb-2">
-                    <button type="button" class="btn bg-transparent noHighLight" on:click={prevProject}>
+                <div class="d-flex justify-content-center mb-2 z-index: 999;">
+                    <button type="button" class="btn bg-transparent noHighLight" on:click={prevProject} style="z-index: 9999;">
                         <img src="assets/arrow.png" alt="left arrow(see previous project)">
                     </button>
                     <button type="button" class="btn bg-transparent noHighLight" on:click={nextProject}>

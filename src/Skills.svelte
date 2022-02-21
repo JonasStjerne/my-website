@@ -82,7 +82,6 @@ function getNodeYCoordinate(y, r) {
 }
 onMount(() => {
   w = document.querySelector("#skillsWrapper").clientWidth;
-  console.log(w);
   h = document.querySelector("#skillsWrapper").clientHeight;
 
   // initialize simulation
