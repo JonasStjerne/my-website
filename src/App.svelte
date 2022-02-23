@@ -5,6 +5,8 @@ import "../node_modules/aos/dist/aos.css";
 import 'animate.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import DeviceDetector from "svelte-device-detector";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
@@ -14,6 +16,9 @@ import LoadingScreen from "./LoadingScreen.svelte";
 
 let meModelLoaded, skillsLoaded, loadElements = false;
 onMount(() => {
+	const app = initializeApp(firebaseConfig);
+	const analytics = getAnalytics(app);
+
 	AOS.init();
 	setTimeout(() => {
 		loadElements = true;
