@@ -20,7 +20,7 @@
             "title" : "Program to make stock corrections",
             "text" : "Small Windows application to make it easier to request stock corrections. Used at Aarhus University Hospital's warehouse.",
             "tech" : "C#",
-            "src" : "assets/projectImages/lagerRettelse.jpg",
+            "src" : "assets/projectImages/lagerRettelse.JPG",
             "colorsHex" : ["0074D6", "94CEFF"]
         },
         {
