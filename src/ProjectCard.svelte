@@ -56,13 +56,14 @@
 
 
     let selectedProject = 0;
-    let animationDirection;
+    let animationDirection, prevSelectedProject;
     $ : percentProjectBar = ( (selectedProject + 1) / projects.length ) * 100;
 
 
 
     function nextProject() {
         if (selectedProject < projects.length - 1) {
+            prevSelectedProject = selectedProject;
             //Increment to new project index
             selectedProject++;
             animationDirection = "Right";
@@ -71,6 +72,7 @@
 
     function prevProject() {
         if (selectedProject > 0) {
+            prevSelectedProject = selectedProject;
             //Increment to prev project index
             selectedProject--;
             animationDirection = "Left";
@@ -120,9 +122,9 @@
                     {#each projects as project, i}
                         {#if i == selectedProject}
                             {#if project.whiteText ?? true}
-                                <h3 class="row pb-2 text-white"  in:fade2="{{delay: 1000}}">{project.title}</h3>
+                                <h3 class="row pb-2 text-white me-40 me-md-0"  in:fade2="{{delay: 1000}}">{project.title}</h3>
                             {:else}
-                                <h3 class="row pb-2"  in:fade2="{{delay: 1000}}">{project.title}</h3>
+                                <h3 class="row pb-2 mr-40"  in:fade2="{{delay: 1000}}">{project.title}</h3>
                             {/if}
                         {/if}
                     {/each}
@@ -142,9 +144,9 @@
                             fitter
                             {(selectedProject == i && animationDirection == "Left" ) ? 'c_slideInLeft' : ''}
                             {(selectedProject == i && animationDirection == "Right" ) ? 'c_slideInRight' : ''}
-                            {(selectedProject != i && animationDirection == "Left" ) ? 'c_slideOutRight' : ''}
-                            {(selectedProject != i && animationDirection == "Right" ) ? 'c_slideOutLeft' : ''}
-                            {(selectedProject != i && animationDirection == null ) ? 'outside' : ''}" style="width: fit-content; perspective: 1000px;">
+                            {(prevSelectedProject == i && animationDirection == "Left" ) ? 'c_slideOutRight' : ''}
+                            {(prevSelectedProject == i && animationDirection == "Right" ) ? 'c_slideOutLeft' : ''}
+                            {(selectedProject != i ) ? 'outside' : ''}" style="width: fit-content; perspective: 1000px;">
                                 <img class="h-100 projectImage shadowDarker" id="projectImageId{i}"
                                 style=" border-radius: 8px;" src="{projectImage.src}" alt="" on:mouseleave={mouseLeft} on:mousemove={rotateToMouse} on:mouseenter={mouseEnter}>
                             </div>
