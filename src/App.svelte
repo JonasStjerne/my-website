@@ -5,8 +5,6 @@ import "../node_modules/aos/dist/aos.css";
 import 'animate.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import DeviceDetector from "svelte-device-detector";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 
 import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
@@ -16,8 +14,6 @@ import LoadingScreen from "./LoadingScreen.svelte";
 
 let meModelLoaded, skillsLoaded, loadElements = false;
 onMount(() => {
-	const app = initializeApp(firebaseConfig);
-	const analytics = getAnalytics(app);
 
 	AOS.init();
 	setTimeout(() => {
@@ -97,7 +93,7 @@ function mobileLoad() {
 					<img src="assets/linkedin.svg" alt="Github logo" height="30">
 				</a> -->
 			</div>
-			<div class="d-flex justify-content-center flex-column-reverse flex-md-row pb-5">
+			<div class="d-flex justify-content-center flex-md-row pb-5 w-100">
 				<div class="content">
 					<div class="introContainer">
 						<h1 class="{meModelLoaded ? ' animate__animated animate__fadeIn animate__delay-2s' : ''}" aria-label="Hi">
@@ -147,8 +143,8 @@ function mobileLoad() {
 		</div>
 		<div class="container-fluid p-0" style="background-color: var(--mainColor); margin-top: -2px; padding-top: 1px;">
 			<div class="row py-5 py-md-0 g-0 w-100">
-				<div class="col-10 col-md-6 m-auto d-flex  justify-content-center position-relative">
-					<h3 class="skillsText text-white text-center text-md-start" data-aos="fade-in" data-aos-duration="800">I work in alot of different technolgies and love learning new ones
+				<div class="col-12 col-md-6 d-flex  justify-content-center position-relative">
+					<h3 class="skillsText text-white text-center m-auto text-md-start" data-aos="fade-in" data-aos-duration="800">I work in alot of different technolgies and love learning new ones
 						{#if meModelLoaded}
 							<div class="position-absolute w-100 h-100 start-0 top-0 underlineTarget"></div>
 						{/if}
@@ -157,7 +153,7 @@ function mobileLoad() {
 						</DeviceDetector>
 					</h3>
 				</div>
-				<div class="col-10 col-md-6 m-auto p-0" id="skillsWrapper">
+				<div class="col-12 col-md-6 p-0" id="skillsWrapper">
 					<Skills/>
 				</div>
 			</div>

@@ -60,34 +60,34 @@
         let m = 1000; //Depth distance to the model. The lower the more head movement
     
         // //Simple version of head calc
-        skeleton.bones[5].rotation.y = -0.6+(x/originX)*0.6;
-        skeleton.bones[5].rotation.x = -0.05+(y/originY)*0.05;
+        // skeleton.bones[5].rotation.y = -0.6+(x/originX)*0.6;
+        // skeleton.bones[5].rotation.x = -0.05+(y/originY)*0.05;
     
         
         // //Calculates the estimated angle of head rotation according to curser movement
-        // if (y > originY) {
-        // 	skeleton.bones[5].rotation.x = 
-        // 	calcAngle(window.innerHeight-originY, m)*
-        // 	degRatio*
-        // 	((y-originY)/(window.innerHeight-originY));
-        // } else {
-        // 	skeleton.bones[5].rotation.x = 
-        // 	-calcAngle(originY, m)*
-        // 	degRatio*
-        // 	((originY-y)/originY);
-        // }
+        if (y > originY) {
+        	skeleton.bones[5].rotation.x = 
+        	calcAngle(window.innerHeight-originY, m)*
+        	degRatio*
+        	((y-originY)/(window.innerHeight-originY));
+        } else {
+        	skeleton.bones[5].rotation.x = 
+        	-calcAngle(originY, m)*
+        	degRatio*
+        	((originY-y)/originY);
+        }
     
-        // if (x > originX) {
-        // 	skeleton.bones[5].rotation.y = 
-        // 	calcAngle(window.innerWidth-originX, m)*
-        // 	degRatio*
-        // 	((x-originX)/(window.innerWidth-originX));
-        // } else {
-        // 	skeleton.bones[5].rotation.y = 
-        // 	-calcAngle(originX, m)*
-        // 	degRatio*
-        // 	((originX-x)/originX);
-        // }
+        if (x > originX) {
+        	skeleton.bones[5].rotation.y = 
+        	calcAngle(window.innerWidth-originX, m)*
+        	degRatio*
+        	((x-originX)/(window.innerWidth-originX));
+        } else {
+        	skeleton.bones[5].rotation.y = 
+        	-calcAngle(originX, m)*
+        	degRatio*
+        	((originX-x)/originX);
+        }
     }
     
     
