@@ -19,7 +19,6 @@ onMount(() => {
 	setTimeout(() => {
 		loadElements = true;
 	}, 1500)
-	
 })
 
 function addEventListnersText() {
@@ -42,6 +41,7 @@ function handleLoad(element) {
 		meModelLoaded = true;
 		addEventListnersText();
 		document.querySelector('body').style="overflow: visible; width: 100vw; height: 100vh;"
+
 	} else if ( element.detail == "skills") {
 		skillsLoaded = true;
 	} 

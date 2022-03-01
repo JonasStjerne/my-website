@@ -1,5 +1,6 @@
 <script>
-
+    import { onMount } from "svelte";
+    import BigPicture from 'bigpicture'
     const projects = [
         {
             "title" : "Platform to buy and sell meals",
@@ -111,6 +112,11 @@
         card.style.transitionDuration = '300ms';
     }
 
+    function zoomImg(e) {
+        BigPicture({
+            el: e.target
+        })
+    }
 
 </script>
 <div style="margin: 10vh 0;" class="projectShowcaseWrapper" data-aos="fade-in" data-aos-duration="800" data-aos-offset="200">
@@ -148,7 +154,7 @@
                             {(prevSelectedProject == i && animationDirection == "Right" ) ? 'c_slideOutLeft' : ''}
                             {(selectedProject != i ) ? 'outside' : ''}" style="width: fit-content; perspective: 1000px;">
                                 <img class="h-100 projectImage shadowDarker" id="projectImageId{i}"
-                                style=" border-radius: 8px;" src="{projectImage.src}" alt="" on:mouseleave={mouseLeft} on:mousemove={rotateToMouse} on:mouseenter={mouseEnter}>
+                                style=" border-radius: 8px;" src="{projectImage.src}" alt="" on:mouseleave={mouseLeft} on:mousemove={rotateToMouse} on:mouseenter={mouseEnter} on:click={zoomImg}>
                             </div>
                         {/each}
                     </div>
@@ -172,7 +178,7 @@
         </div>
         <div class="col-2 ms-4">
             <div class="d-flex flex-column justify-content-end h-100">
-                <div class="d-flex justify-content-center align-items-center w-100" style="gap: 10px; z-index: 999;">
+                <div class="d-flex justify-content-center align-items-center w-100" style="gap: 10px; z-index: 1;">
                         <small>{selectedProject+1}</small>
                         <div style="width: 80%; position: relative;">
                             <div class="w-100 rounded-3" style="height: 5px; background-color: var(--secondaryColor);"></div>
@@ -180,8 +186,8 @@
                         </div>
                         <small>{projects.length}</small>
                 </div>
-                <div class="d-flex justify-content-center mb-2 z-index: 999;">
-                    <button type="button" class="btn bg-transparent noHighLight" on:click={prevProject} style="z-index: 9999;">
+                <div class="d-flex justify-content-center mb-2 z-index: 1;">
+                    <button type="button" class="btn bg-transparent noHighLight" on:click={prevProject} style="z-index: 1;">
                         <img src="assets/arrow.png" alt="left arrow(see previous project)">
                     </button>
                     <button type="button" class="btn bg-transparent noHighLight" on:click={nextProject}>
