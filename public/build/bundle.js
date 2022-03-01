@@ -60036,7 +60036,7 @@ var app = (function () {
     			div = element("div");
     			img = element("img");
     			t = space();
-    			attr_dev(img, "class", "h-100 projectImage shadowDarker svelte-7nb2e3");
+    			attr_dev(img, "class", "h-100 projectImage shadowDarker zoomCursor svelte-zlodb6");
     			attr_dev(img, "id", "projectImageId" + /*i*/ ctx[15]);
     			set_style(img, "border-radius", "8px");
     			if (!src_url_equal(img.src, img_src_value = /*projectImage*/ ctx[16].src)) attr_dev(img, "src", img_src_value);
@@ -60053,7 +60053,7 @@ var app = (function () {
     			? 'c_slideOutLeft'
     			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[15]
     			? 'outside'
-    			: '') + " svelte-7nb2e3");
+    			: '') + " svelte-zlodb6");
 
     			set_style(div, "width", "fit-content");
     			set_style(div, "perspective", "1000px");
@@ -60086,7 +60086,7 @@ var app = (function () {
     			? 'c_slideOutLeft'
     			: '') + " " + (/*selectedProject*/ ctx[0] != /*i*/ ctx[15]
     			? 'outside'
-    			: '') + " svelte-7nb2e3")) {
+    			: '') + " svelte-zlodb6")) {
     				attr_dev(div, "class", div_class_value);
     			}
     		},
@@ -60130,9 +60130,9 @@ var app = (function () {
     			if (if_block) if_block.c();
     			t3 = space();
     			attr_dev(p, "class", "m-0");
-    			add_location(p, file$3, 167, 28, 8723);
+    			add_location(p, file$3, 167, 28, 8734);
     			attr_dev(div, "class", "d-flex justify-content-between align-items-center ");
-    			add_location(div, file$3, 166, 24, 8601);
+    			add_location(div, file$3, 166, 24, 8612);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -60186,9 +60186,9 @@ var app = (function () {
     			attr_dev(img, "alt", "github");
     			attr_dev(img, "height", "30px");
     			attr_dev(img, "width", "30px");
-    			add_location(img, file$3, 170, 36, 8930);
+    			add_location(img, file$3, 170, 36, 8941);
     			attr_dev(a, "href", /*project*/ ctx[13].srcGithub);
-    			add_location(a, file$3, 169, 32, 8862);
+    			add_location(a, file$3, 169, 32, 8873);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -60438,66 +60438,66 @@ var app = (function () {
     			add_location(div1, file$3, 136, 20, 5413);
     			attr_dev(feFlood, "flood-opacity", "0");
     			attr_dev(feFlood, "result", "BackgroundImageFix");
-    			add_location(feFlood, file$3, 160, 311, 7479);
+    			add_location(feFlood, file$3, 160, 311, 7490);
     			attr_dev(feBlend, "mode", "normal");
     			attr_dev(feBlend, "in", "SourceGraphic");
     			attr_dev(feBlend, "in2", "BackgroundImageFix");
     			attr_dev(feBlend, "result", "shape");
-    			add_location(feBlend, file$3, 160, 376, 7544);
+    			add_location(feBlend, file$3, 160, 376, 7555);
     			attr_dev(feGaussianBlur, "stdDeviation", "161");
     			attr_dev(feGaussianBlur, "result", "effect1_foregroundBlur");
-    			add_location(feGaussianBlur, file$3, 160, 468, 7636);
+    			add_location(feGaussianBlur, file$3, 160, 468, 7647);
     			attr_dev(filter, "id", "blur1");
     			attr_dev(filter, "x", "-10%");
     			attr_dev(filter, "y", "-10%");
     			attr_dev(filter, "width", "120%");
     			attr_dev(filter, "height", "120%");
-    			add_location(filter, file$3, 160, 247, 7415);
-    			add_location(defs, file$3, 160, 241, 7409);
+    			add_location(filter, file$3, 160, 247, 7426);
+    			add_location(defs, file$3, 160, 241, 7420);
     			attr_dev(rect, "width", "900");
     			attr_dev(rect, "height", "600");
     			attr_dev(rect, "fill", rect_fill_value = "#" + /*projects*/ ctx[4][/*selectedProject*/ ctx[0]].colorsHex[1]);
-    			attr_dev(rect, "class", "svelte-7nb2e3");
-    			add_location(rect, file$3, 160, 568, 7736);
+    			attr_dev(rect, "class", "svelte-zlodb6");
+    			add_location(rect, file$3, 160, 568, 7747);
     			attr_dev(circle0, "cx", "877");
     			attr_dev(circle0, "cy", "11");
     			attr_dev(circle0, "fill", circle0_fill_value = "#" + /*projects*/ ctx[4][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle0, "r", "357");
-    			attr_dev(circle0, "class", "svelte-7nb2e3");
-    			add_location(circle0, file$3, 161, 24, 7873);
+    			attr_dev(circle0, "class", "svelte-zlodb6");
+    			add_location(circle0, file$3, 161, 24, 7884);
     			attr_dev(circle1, "cx", "259");
     			attr_dev(circle1, "cy", "45");
     			attr_dev(circle1, "fill", circle1_fill_value = "#" + /*projects*/ ctx[4][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle1, "r", "357");
-    			attr_dev(circle1, "class", "svelte-7nb2e3");
-    			add_location(circle1, file$3, 161, 115, 7964);
+    			attr_dev(circle1, "class", "svelte-zlodb6");
+    			add_location(circle1, file$3, 161, 115, 7975);
     			attr_dev(circle2, "cx", "866");
     			attr_dev(circle2, "cy", "592");
     			attr_dev(circle2, "fill", circle2_fill_value = "#" + /*projects*/ ctx[4][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle2, "r", "357");
-    			attr_dev(circle2, "class", "svelte-7nb2e3");
-    			add_location(circle2, file$3, 161, 206, 8055);
+    			attr_dev(circle2, "class", "svelte-zlodb6");
+    			add_location(circle2, file$3, 161, 206, 8066);
     			attr_dev(circle3, "cx", "743");
     			attr_dev(circle3, "cy", "302");
     			attr_dev(circle3, "fill", circle3_fill_value = "#" + /*projects*/ ctx[4][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle3, "r", "357");
-    			attr_dev(circle3, "class", "svelte-7nb2e3");
-    			add_location(circle3, file$3, 161, 298, 8147);
+    			attr_dev(circle3, "class", "svelte-zlodb6");
+    			add_location(circle3, file$3, 161, 298, 8158);
     			attr_dev(circle4, "cx", "288");
     			attr_dev(circle4, "cy", "498");
     			attr_dev(circle4, "fill", circle4_fill_value = "#" + /*projects*/ ctx[4][/*selectedProject*/ ctx[0]].colorsHex[1]);
     			attr_dev(circle4, "r", "357");
-    			attr_dev(circle4, "class", "svelte-7nb2e3");
-    			add_location(circle4, file$3, 161, 390, 8239);
+    			attr_dev(circle4, "class", "svelte-zlodb6");
+    			add_location(circle4, file$3, 161, 390, 8250);
     			attr_dev(circle5, "cx", "192");
     			attr_dev(circle5, "cy", "260");
     			attr_dev(circle5, "fill", circle5_fill_value = "#" + /*projects*/ ctx[4][/*selectedProject*/ ctx[0]].colorsHex[0]);
     			attr_dev(circle5, "r", "357");
-    			attr_dev(circle5, "class", "svelte-7nb2e3");
-    			add_location(circle5, file$3, 161, 482, 8331);
+    			attr_dev(circle5, "class", "svelte-zlodb6");
+    			add_location(circle5, file$3, 161, 482, 8342);
     			attr_dev(g, "filter", "url(#blur1)");
-    			add_location(g, file$3, 160, 655, 7823);
-    			attr_dev(svg, "class", "position-absolute w-100 h-100 backgroundSquare svelte-7nb2e3");
+    			add_location(g, file$3, 160, 655, 7834);
+    			attr_dev(svg, "class", "position-absolute w-100 h-100 backgroundSquare svelte-zlodb6");
     			set_style(svg, "top", "0");
     			set_style(svg, "left", "0");
     			set_style(svg, "z-index", "-1");
@@ -60506,54 +60506,54 @@ var app = (function () {
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
     			attr_dev(svg, "version", "1.1");
-    			add_location(svg, file$3, 160, 20, 7188);
+    			add_location(svg, file$3, 160, 20, 7199);
     			attr_dev(div2, "class", "p-4");
     			add_location(div2, file$3, 126, 16, 4840);
     			attr_dev(div3, "class", "position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative");
     			add_location(div3, file$3, 125, 12, 4700);
-    			attr_dev(div4, "class", "position-relative m-0 svelte-7nb2e3");
+    			attr_dev(div4, "class", "position-relative m-0 svelte-zlodb6");
     			set_style(div4, "height", "0");
     			attr_dev(div4, "id", "projectCardSizeContainer");
     			add_location(div4, file$3, 124, 8, 4603);
-    			add_location(small0, file$3, 181, 24, 9441);
+    			add_location(small0, file$3, 181, 24, 9452);
     			attr_dev(div5, "class", "w-100 rounded-3");
     			set_style(div5, "height", "5px");
     			set_style(div5, "background-color", "var(--secondaryColor)");
-    			add_location(div5, file$3, 183, 28, 9576);
-    			attr_dev(div6, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-7nb2e3");
+    			add_location(div5, file$3, 183, 28, 9587);
+    			attr_dev(div6, "class", "projectProgressBar position-absolute rounded-3 top-50 svelte-zlodb6");
     			set_style(div6, "background-image", "var(--gradient)");
     			set_style(div6, "width", /*percentProjectBar*/ ctx[3] + "%");
     			set_style(div6, "height", "8px");
     			set_style(div6, "transform", "translateY(-50%)");
-    			add_location(div6, file$3, 184, 28, 9703);
+    			add_location(div6, file$3, 184, 28, 9714);
     			set_style(div7, "width", "80%");
     			set_style(div7, "position", "relative");
-    			add_location(div7, file$3, 182, 24, 9501);
-    			add_location(small1, file$3, 186, 24, 9950);
+    			add_location(div7, file$3, 182, 24, 9512);
+    			add_location(small1, file$3, 186, 24, 9961);
     			attr_dev(div8, "class", "d-flex justify-content-center align-items-center w-100");
     			set_style(div8, "gap", "10px");
     			set_style(div8, "z-index", "1");
-    			add_location(div8, file$3, 180, 16, 9316);
+    			add_location(div8, file$3, 180, 16, 9327);
     			if (!src_url_equal(img0.src, img0_src_value = "assets/arrow.png")) attr_dev(img0, "src", img0_src_value);
     			attr_dev(img0, "alt", "left arrow(see previous project)");
-    			add_location(img0, file$3, 190, 24, 10236);
+    			add_location(img0, file$3, 190, 24, 10247);
     			attr_dev(button0, "type", "button");
-    			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-7nb2e3");
+    			attr_dev(button0, "class", "btn bg-transparent noHighLight svelte-zlodb6");
     			set_style(button0, "z-index", "1");
-    			add_location(button0, file$3, 189, 20, 10106);
+    			add_location(button0, file$3, 189, 20, 10117);
     			set_style(img1, "transform", "rotate(180deg)");
     			if (!src_url_equal(img1.src, img1_src_value = "assets/arrow.png")) attr_dev(img1, "src", img1_src_value);
     			attr_dev(img1, "alt", "right arrow(see next project)");
-    			add_location(img1, file$3, 193, 24, 10466);
+    			add_location(img1, file$3, 193, 24, 10477);
     			attr_dev(button1, "type", "button");
-    			attr_dev(button1, "class", "btn bg-transparent noHighLight svelte-7nb2e3");
-    			add_location(button1, file$3, 192, 20, 10356);
+    			attr_dev(button1, "class", "btn bg-transparent noHighLight svelte-zlodb6");
+    			add_location(button1, file$3, 192, 20, 10367);
     			attr_dev(div9, "class", "d-flex justify-content-center mb-2 z-index: 1;");
-    			add_location(div9, file$3, 188, 16, 10024);
+    			add_location(div9, file$3, 188, 16, 10035);
     			attr_dev(div10, "class", "d-flex flex-column justify-content-end h-100");
-    			add_location(div10, file$3, 179, 12, 9240);
+    			add_location(div10, file$3, 179, 12, 9251);
     			attr_dev(div11, "class", "col-2 ms-4");
-    			add_location(div11, file$3, 178, 8, 9202);
+    			add_location(div11, file$3, 178, 8, 9213);
     			attr_dev(div12, "class", "d-flex justify-content-center overflow-hidden");
     			add_location(div12, file$3, 123, 4, 4534);
     			set_style(div13, "margin", "10vh 0");

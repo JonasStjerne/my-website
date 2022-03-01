@@ -153,7 +153,7 @@
                             {(prevSelectedProject == i && animationDirection == "Left" ) ? 'c_slideOutRight' : ''}
                             {(prevSelectedProject == i && animationDirection == "Right" ) ? 'c_slideOutLeft' : ''}
                             {(selectedProject != i ) ? 'outside' : ''}" style="width: fit-content; perspective: 1000px;">
-                                <img class="h-100 projectImage shadowDarker" id="projectImageId{i}"
+                                <img class="h-100 projectImage shadowDarker zoomCursor" id="projectImageId{i}"
                                 style=" border-radius: 8px;" src="{projectImage.src}" alt="" on:mouseleave={mouseLeft} on:mousemove={rotateToMouse} on:mouseenter={mouseEnter} on:click={zoomImg}>
                             </div>
                         {/each}
@@ -232,6 +232,10 @@
 
     .outside {
         left: 100vw;
+    }
+
+    .zoomCursor {
+        cursor: zoom-in;
     }
 
 
