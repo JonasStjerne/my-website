@@ -7,15 +7,17 @@
 
                 const request = new XMLHttpRequest();
 
-                request.open("post", "http://localhost/my_website_backend/sendForm.php");
+                request.open("post", "http://localhost:3000/sendMessage");
+
+                request.setRequestHeader("Content-Type", "application/json");
 
                 request.onload = function () {
                     responeMessage = request.responseText;
                 }
 
-                const data = document.getElementById("contactForm");
-
-                request.send(new FormData(data));
+                const data = new FormData(document.getElementById("contactForm"));
+               
+                request.send(JSON.stringify(Object.fromEntries(data.entries())));
 
                 
                 // document.getElementById("contactForm").submit();
@@ -30,9 +32,9 @@
         style="border-radius: 10px; gap:20px; background-color: white;">
             <input type="hidden" id="g-token" name="g-token">
             <h2 class="text-center">Get in touch</h2>
-            <input required type="text" style="border-radius: 5px;" name="name" placeholder="Name">
-            <input required type="email" style="border-radius: 5px;" name="email" placeholder="Email">
-            <textarea name="message" id="" cols="30" rows="10" required style="resize:none; border-radius: 5px;" placeholder="Message"></textarea>
+            <input required type="text" style="border-radius: 5px;" id="name" name="name" placeholder="Name">
+            <input required type="email" style="border-radius: 5px;" id="email" name="email" placeholder="Email">
+            <textarea name="message" id="message" cols="30" rows="10" required style="resize:none; border-radius: 5px;" placeholder="Message"></textarea>
             <button type="submit" class="w-80 round text-white" style="background-image: var(--gradient); border-radius: 5px;" >Send</button>
             {#if responeMessage}
                 <p class="text-center ">{responeMessage}</p>
