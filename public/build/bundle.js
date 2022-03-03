@@ -61010,7 +61010,7 @@ var app = (function () {
     const { Object: Object_1 } = globals;
     const file$2 = "src\\ContactForm.svelte";
 
-    // (39:12) {#if responeMessage}
+    // (38:12) {#if responeMessage}
     function create_if_block$1(ctx) {
     	let p;
     	let t;
@@ -61020,7 +61020,7 @@ var app = (function () {
     			p = element("p");
     			t = text(/*responeMessage*/ ctx[0]);
     			attr_dev(p, "class", "text-center ");
-    			add_location(p, file$2, 39, 16, 2110);
+    			add_location(p, file$2, 38, 16, 2084);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -61038,7 +61038,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(39:12) {#if responeMessage}",
+    		source: "(38:12) {#if responeMessage}",
     		ctx
     	});
 
@@ -61088,23 +61088,23 @@ var app = (function () {
     			attr_dev(input0, "type", "hidden");
     			attr_dev(input0, "id", "g-token");
     			attr_dev(input0, "name", "g-token");
-    			add_location(input0, file$2, 32, 12, 1430);
+    			add_location(input0, file$2, 31, 12, 1404);
     			attr_dev(h2, "class", "text-center");
-    			add_location(h2, file$2, 33, 12, 1493);
+    			add_location(h2, file$2, 32, 12, 1467);
     			input1.required = true;
     			attr_dev(input1, "type", "text");
     			set_style(input1, "border-radius", "5px");
     			attr_dev(input1, "id", "name");
     			attr_dev(input1, "name", "name");
     			attr_dev(input1, "placeholder", "Name");
-    			add_location(input1, file$2, 34, 12, 1548);
+    			add_location(input1, file$2, 33, 12, 1522);
     			input2.required = true;
     			attr_dev(input2, "type", "email");
     			set_style(input2, "border-radius", "5px");
     			attr_dev(input2, "id", "email");
     			attr_dev(input2, "name", "email");
     			attr_dev(input2, "placeholder", "Email");
-    			add_location(input2, file$2, 35, 12, 1659);
+    			add_location(input2, file$2, 34, 12, 1633);
     			attr_dev(textarea, "name", "message");
     			attr_dev(textarea, "id", "message");
     			attr_dev(textarea, "cols", "30");
@@ -61113,26 +61113,26 @@ var app = (function () {
     			set_style(textarea, "resize", "none");
     			set_style(textarea, "border-radius", "5px");
     			attr_dev(textarea, "placeholder", "Message");
-    			add_location(textarea, file$2, 36, 12, 1774);
+    			add_location(textarea, file$2, 35, 12, 1748);
     			attr_dev(button, "type", "submit");
     			attr_dev(button, "class", "w-80 round text-white");
     			set_style(button, "background-image", "var(--gradient)");
     			set_style(button, "border-radius", "5px");
-    			add_location(button, file$2, 37, 12, 1929);
+    			add_location(button, file$2, 36, 12, 1903);
     			attr_dev(form, "id", "contactForm");
     			attr_dev(form, "method", "POST");
     			attr_dev(form, "class", "d-flex flex-column flex alig-items-center col-12 col-md-8 col-lg-6 shadow p-5");
     			set_style(form, "border-radius", "10px");
     			set_style(form, "gap", "20px");
     			set_style(form, "background-color", "white");
-    			add_location(form, file$2, 30, 8, 1182);
+    			add_location(form, file$2, 29, 8, 1156);
     			attr_dev(div0, "class", "row justify-content-center w-100 m-0");
-    			add_location(div0, file$2, 29, 4, 1122);
+    			add_location(div0, file$2, 28, 4, 1096);
     			attr_dev(div1, "class", "w-100 my-5");
     			attr_dev(div1, "data-aos", "fade-up");
     			attr_dev(div1, "data-aos-duration", "800");
     			attr_dev(div1, "data-aos-offset", "200");
-    			add_location(div1, file$2, 28, 0, 1027);
+    			add_location(div1, file$2, 27, 0, 1001);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -61205,16 +61205,17 @@ var app = (function () {
     			grecaptcha.execute('6LfMGWMeAAAAABozdCIiE0gMNyJXqAZFOyiZ1WF7', { action: 'submit' }).then(function (token) {
     				document.getElementById("g-token").value = token;
     				const request = new XMLHttpRequest();
-    				request.open("post", "http://localhost:3000/sendMessage");
+    				request.open("post", "https://us-central1-personal-website-65dab.cloudfunctions.net/widgets/sendMessage");
     				request.setRequestHeader("Content-Type", "application/json");
 
     				request.onload = function () {
-    					$$invalidate(0, responeMessage = request.responseText);
+    					const { errors } = JSON.parse(request.responseText);
+    					$$invalidate(0, responeMessage = errors[0].msg);
     				};
 
     				const data = new FormData(document.getElementById("contactForm"));
     				request.send(JSON.stringify(Object.fromEntries(data.entries())));
-    			}); // document.getElementById("contactForm").submit();
+    			});
     		});
     	}
 

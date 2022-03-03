@@ -7,7 +7,8 @@
 
                 const request = new XMLHttpRequest();
 
-                request.open("post", "http://localhost:3000/sendMessage");
+                request.open("post", "https://us-central1-personal-website-65dab.cloudfunctions.net/widgets/sendMessage");
+                
 
                 request.setRequestHeader("Content-Type", "application/json");
 
