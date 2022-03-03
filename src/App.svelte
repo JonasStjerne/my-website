@@ -320,11 +320,11 @@ function mobileLoad() {
 	#skillsWrapper::before {
     content: '';
     background-image: url('/assets/dragUs.png');
-    width: 109px;
-    height: 81px;
+    width: 125px;
+    height: 100px;
     position: absolute;
-    z-index: 9;
-    top: 10%;
+    z-index: 0;
+    top: 5%;
     left: 20%;
 	display: block;
 	background-repeat: no-repeat;

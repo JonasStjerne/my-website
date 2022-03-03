@@ -222,6 +222,8 @@ const ticked = () => {
   #svgchart {
     width: 100%;
     height: 500px;
+    z-index: 1;
+    position: relative;
   }
 
 </style>
