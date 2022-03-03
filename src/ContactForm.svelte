@@ -12,19 +12,17 @@
                 request.setRequestHeader("Content-Type", "application/json");
 
                 request.onload = function () {
-                    responeMessage = request.responseText;
+                   const { errors } = JSON.parse(request.responseText);
+                   responeMessage = errors[0].msg;
                 }
 
                 const data = new FormData(document.getElementById("contactForm"));
                
                 request.send(JSON.stringify(Object.fromEntries(data.entries())));
 
-                
-                // document.getElementById("contactForm").submit();
             });
         });
     }
-        // action="http://localhost/my_website_backend/sendForm.php"
 </script>
 <div class="w-100 my-5" data-aos="fade-up" data-aos-duration="800" data-aos-offset="200">
     <div class="row justify-content-center w-100 m-0">
