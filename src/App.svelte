@@ -153,7 +153,7 @@ function mobileLoad() {
 						</DeviceDetector>
 					</h3>
 				</div>
-				<div class="col-12 col-md-6 p-0" id="skillsWrapper">
+				<div class="col-12 col-md-6 p-0 position-relative" id="skillsWrapper">
 					<Skills/>
 				</div>
 			</div>
@@ -316,5 +316,18 @@ function mobileLoad() {
 		transform: scale(1.1);
 		transition: all 0.45s;
 	}
+
+	#skillsWrapper::before {
+    content: '';
+    background-image: url('/assets/dragUs.png');
+    width: 109px;
+    height: 81px;
+    position: absolute;
+    z-index: 9;
+    top: 10%;
+    left: 20%;
+	display: block;
+	background-repeat: no-repeat;
+  }
 </style>
 

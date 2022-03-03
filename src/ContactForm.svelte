@@ -14,6 +14,7 @@
 
                 request.onload = function () {
                    const { errors } = JSON.parse(request.responseText);
+                   console.log(errors);
                    responeMessage = errors[0].msg;
                 }
 
