@@ -125,7 +125,7 @@
 
         //Load custom object
         const loader = new GLTFLoader(manager);
-        loader.load( 'assets/model3.gltf', function ( gltf ) {
+        loader.load( 'assets/model.glb', function ( gltf ) {
             
             model = gltf.scene;
             //Add to scene
@@ -140,7 +140,7 @@
             mixer = new THREE.AnimationMixer( model );
             //Start hello animation
             setTimeout(() => {
-                mixer.clipAction(gltf.animations[0]).play(); //Change this to hello animation
+                mixer.clipAction(gltf.animations[0]).play();
             }, 1000);
             
             //Magic to get three.js to render the model correctly.
