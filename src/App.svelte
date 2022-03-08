@@ -5,6 +5,8 @@ import "../node_modules/aos/dist/aos.css";
 import 'animate.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import DeviceDetector from "svelte-device-detector";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 import Skills from './Skills.svelte';
 import MeModel from './MeModel.svelte';
@@ -13,6 +15,22 @@ import ContactForm from "./ContactForm.svelte";
 import LoadingScreen from "./LoadingScreen.svelte";
 
 let meModelLoaded, skillsLoaded, loadElements = false;
+
+//Firebase and analytics
+const firebaseConfig = {
+  apiKey: "AIzaSyCoZpqG5ebK-V4nW-jQOPyPq29kNy12slI",
+  authDomain: "personal-website-65dab.firebaseapp.com",
+  projectId: "personal-website-65dab",
+  storageBucket: "personal-website-65dab.appspot.com",
+  messagingSenderId: "71712709220",
+  appId: "1:71712709220:web:ac6ca1b54e594bd6e05d71",
+  measurementId: "G-KBHGMH8BHW"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
 onMount(() => {
 
 	AOS.init();
