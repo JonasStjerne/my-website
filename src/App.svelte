@@ -18,7 +18,7 @@ onMount(() => {
 	AOS.init();
 	setTimeout(() => {
 		loadElements = true;
-	}, 1500)
+	}, 1200)
 })
 
 function addEventListnersText() {

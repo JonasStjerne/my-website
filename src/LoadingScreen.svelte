@@ -20,12 +20,12 @@ import { onMount } from "svelte";
 
 <style>
     .fadeUpBaground {
-        animation: fillOut 1s ease-in-out forwards 0.5s;
+        animation: fillOut 1s ease-in-out forwards 0.2s;
         bottom: 0;
     }
 
     .loadDone {
-        animation: foldUp 1s ease-in-out forwards;
+        animation: foldUp 0.8s ease-in-out forwards;
         bottom: unset;
         top: 0;
         height: 100%;
