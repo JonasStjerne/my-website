@@ -4,6 +4,7 @@
         {
             "title" : "Platform to buy and sell meals",
             "text" : "As a part of my 3th semester project I developed a big part of a full stack platform to buy and sell surplus food portions. The meals could be sorted by both distance and category and a simple authentication system was in place",
+            "shortText" : "Full stack application to buy and sell surplus meals",
             "tech" : "C#, .Net Core, Blazor",
             "src" : "assets/projectImages/mealsPlatform.png",
             "colorsHex" : ["A0C75E", "DCFFA0"]
@@ -11,6 +12,7 @@
         {
             "title" : "Live Raider",
             "text" : "Website for raiding small Twitch.tv streamers. The website displays how many users are waiting for a raid and a countdown to the raid. Twitch.tv is continuously scanned for streams under x-amount of viewers.",
+            "shortText" : "Website to raid small twitch streamers.",
             "tech" : "Vue, Node, Express and Socket.io",
             "srcGithub" : "https://github.com/JonasStjerne/liveRaider",
             "src" : "assets/projectImages/LiveRaider.png",
@@ -19,6 +21,7 @@
         {
             "title" : "Program to make stock corrections",
             "text" : "Small Windows application to make it easier to request stock corrections. Used at Aarhus University Hospital's warehouse.",
+            "shortText" : "Application to request stock corrections at AUH's warehouse",
             "tech" : "C#",
             "src" : "assets/projectImages/lagerRettelse.JPG",
             "colorsHex" : ["0074D6", "94CEFF"]
@@ -26,14 +29,16 @@
         {
             "title" : "Chat app",
             "text" : "Small chat app made with Socket.io to get familiar with it. Chat global or join private rooms",
+            "shortText" : "Chat app where you can chat global or in rooms",
             "tech" : "Socket.io & JavaScript",
             "srcGithub" : "https://github.com/",
             "src" : "assets/projectImages/Chatter.png",
             "colorsHex" : ["00EBA3", "00DEE6"]
         },
         {
-            "title" : "DSB Travel Time Guarantee Requester",
+            "title" : "DSB Refund Requester",
             "text" : "STILL IN DEVELOPMENT. Service that automatically requests compensation tickets from DSB's Travel Time Guarantee when your train gets delayed.",
+            "shortText" : "Automatically requests refunds for delayed train rides",
             "tech" : "C#",
             "srcGithub" : "https://github.com/JonasStjerne/dsb_bad_dog",
             "src" : "assets/projectImages/dsbBadDog.png",
@@ -124,29 +129,35 @@
         <div class="position-relative m-0" style="height:0;" id="projectCardSizeContainer">
             <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-between p-2 top-0 left-0 position-relative" >
                 <div class="p-4">
-                    {#each projects as project, i}
-                        {#if i == selectedProject}
-                            {#if project.whiteText ?? true}
-                                <h3 class="row pb-2 text-white me-40 me-md-0"  in:fade2="{{delay: 1000}}">{project.title}</h3>
-                            {:else}
-                                <h3 class="row pb-2 mr-40"  in:fade2="{{delay: 1000}}">{project.title}</h3>
-                            {/if}
-                        {/if}
-                    {/each}
                     <div class="row">
                         {#each projects as project, i}
                             {#if i == selectedProject}
                                 {#if project.whiteText ?? true}
-                                    <p class="col-7 p-0 text-white" in:fade2="{{delay: 1200}}">{project.text}</p>
+                                    <h3 class="col-10 col-md-12 pb-2 text-white me-40 me-md-0 d-none d-md-inline" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h3>
+                                    <h5 class="col-10 col-md-12 text-white me-40 me-md-0 d-inline d-md-none" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h5>
                                 {:else}
-                                <p class="col-7 p-0" in:fade2="{{delay: 1200}}">{project.text}</p>
+                                    <h3 class="col-10 col-md-12 pb-2 mr-40 d-none d-md-inline" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h3>
+                                    <h5 class="col-10 col-md-12 mr-40 d-inline d-md-none" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h5>
+                                {/if}
+                            {/if}
+                        {/each}
+                    </div>
+                    <div class="row">
+                        {#each projects as project, i}
+                            {#if i == selectedProject}
+                                {#if project.whiteText ?? true}
+                                    <p class="col-10 col-md-7 p-0 text-white d-none d-md-block" in:fade2="{{delay: 1200}}">{project.text}</p>
+                                    <p class="col-10 col-md-7 p-0 text-white d-block d-md-none" in:fade2="{{delay: 1200}}">{project.shortText}</p>
+                                {:else}
+                                <p class="col-10 col-md-7 p-0 d-none d-md-block" in:fade2="{{delay: 1200}}">{project.text}</p>
+                                <p class="col-10 col-md-7 p-0 d-block d-md-none" in:fade2="{{delay: 1200}}">{project.shortText}</p>
                                 {/if}
                             {/if}
                         {/each}        
-                        <div class="col-5"></div>
+                        <div class="col-5 d-none d-md-block"></div>
                         {#each projects as projectImage, i}
                             <div class="h-50 position-absolute p-0 
-                            fitter
+                            fitter top-50 mobilePos
                             {(selectedProject == i && animationDirection == "Left" ) ? 'c_slideInLeft' : ''}
                             {(selectedProject == i && animationDirection == "Right" ) ? 'c_slideInRight' : ''}
                             {(prevSelectedProject == i && animationDirection == "Left" ) ? 'c_slideOutRight' : ''}
@@ -163,7 +174,7 @@
                 </div>
                 {#each projects as project, i}
                     {#if i == selectedProject}
-                        <div class="d-flex justify-content-between align-items-center "  in:fade2="{{delay: 1400}}">
+                        <div class="d-flex justify-content-between align-items-center d-none d-md-block"  in:fade2="{{delay: 1400}}">
                             <p class="m-0">Made with {project.tech}</p>
                             {#if project.srcGithub ?? false}
                                 <a href="{project.srcGithub}">
@@ -242,6 +253,10 @@
         #projectCardSizeContainer {
             padding-bottom: 60%;
             width: 60%;
+        }
+
+        .mobilePos {
+            transform:translate(10vw,-50%);
         }
     }
 
