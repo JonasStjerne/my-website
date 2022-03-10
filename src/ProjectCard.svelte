@@ -157,7 +157,7 @@
                         <div class="col-5 d-none d-md-block"></div>
                         {#each projects as projectImage, i}
                             <div class="h-50 position-absolute p-0 
-                            fitter top-50 mobilePos
+                            fitter mobilePos
                             {(selectedProject == i && animationDirection == "Left" ) ? 'c_slideInLeft' : ''}
                             {(selectedProject == i && animationDirection == "Right" ) ? 'c_slideInRight' : ''}
                             {(prevSelectedProject == i && animationDirection == "Left" ) ? 'c_slideOutRight' : ''}
@@ -174,8 +174,8 @@
                 </div>
                 {#each projects as project, i}
                     {#if i == selectedProject}
-                        <div class="d-flex justify-content-between align-items-center d-none d-md-block"  in:fade2="{{delay: 1400}}">
-                            <p class="m-0">Made with {project.tech}</p>
+                        <div class="justify-content-between align-items-center d-none d-md-flex"  in:fade2="{{delay: 1400}}">
+                            <p class="m-0 d-inline">Made with {project.tech}</p>
                             {#if project.srcGithub ?? false}
                                 <a href="{project.srcGithub}">
                                     <img src="assets/github.svg" alt="github" height="30px" width="30px">
@@ -257,6 +257,7 @@
 
         .mobilePos {
             transform:translate(10vw,-50%);
+            top: 50%;
         }
     }
 
