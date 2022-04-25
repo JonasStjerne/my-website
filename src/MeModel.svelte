@@ -191,7 +191,7 @@
         -webkit-mask-repeat: no-repeat;
         -webkit-mask-position: bottom;
 
-        mask-image: url("assets/modelMask.png");
+        mask-image: url("/assets/modelMask.png");
         mask-repeat: no-repeat; 
         mask-position: bottom;
        }
