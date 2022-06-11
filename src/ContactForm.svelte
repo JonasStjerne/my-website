@@ -6,7 +6,7 @@
         console.log("sending..");
         loading = true;
         grecaptcha.ready(function() {
-            grecaptcha.execute('6LfMGWMeAAAAABozdCIiE0gMNyJXqAZFOyiZ1WF7', {action: 'submit'}).then(function(token) {
+            grecaptcha.execute('6Ldyql4gAAAAAM5gAXa0PZcWFHFSFm-5M82H5Y-A', {action: 'submit'}).then(function(token) {
                 document.getElementById("g-token").value = token;
 
                 const request = new XMLHttpRequest();
