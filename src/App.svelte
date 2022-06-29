@@ -162,7 +162,7 @@ function mobileLoad() {
 		<div class="container-fluid p-0" style="background-color: var(--mainColor); margin-top: -2px; padding-top: 1px;">
 			<div class="row py-5 py-md-0 g-0 w-100">
 				<div class="col-12 col-md-6 d-flex  justify-content-center position-relative">
-					<h3 class="skillsText text-white text-center m-auto text-md-start" data-aos="fade-in" data-aos-duration="800">I work in alot of different technolgies and love learning new ones
+					<h3 class="skillsText text-white text-center m-auto text-md-start" data-aos="fade-in" data-aos-duration="800">I work in a lot of different technologies and love learning new ones
 						{#if meModelLoaded}
 							<div class="position-absolute w-100 h-100 start-0 top-0 underlineTarget"></div>
 						{/if}
@@ -180,8 +180,8 @@ function mobileLoad() {
 					<h3 class="w-100">About me</h3>
 					<div>
 						<p>
-							My name is Jonas Stjerne I'm a student on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid businees foundation. My interests includes a wide variety of things related to IT including UI design, front & backend development! <br>
-							I strive to build the web of the future with a core focus on user expirence. I'm always interested in learning new technolgies and be the best at what I do.</p> <br>
+							My name is Jonas Stjerne I'm a student on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid business foundation. My interests includes a wide variety of things related to IT including UI design, front & backend development! <br>
+							I strive to build the web of the future with a core focus on user experience. I'm always interested in learning new technologies and be the best at what I do.</p> <br>
 							<p>I’m currently working <a class="text-white" style="text-decoration: none;" href="https://openomic.dk/">@Openomic</a> as a full stack junior developer & doing freelance.</p><br>
 							<p>Feel free to <a class="text-white" href="#contactForm">contact me</a> if you have any questions or would like me to work on a project</p>
 					</div>
