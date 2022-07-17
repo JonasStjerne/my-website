@@ -180,7 +180,7 @@ function mobileLoad() {
 					<h3 class="w-100">About me</h3>
 					<div>
 						<p>
-							My name is Jonas Stjerne I'm a student on my 4th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid business foundation. My interests includes a wide variety of things related to IT including UI design, front & backend development! <br>
+							My name is Jonas Stjerne I'm a student on my 5th semester in Informations Technology at Aalborg University in Denmark. I’m passionate about building IT solutions with a solid business foundation. My interests includes a wide variety of things related to IT including UI design, front & backend development! <br>
 							I strive to build the web of the future with a core focus on user experience. I'm always interested in learning new technologies and be the best at what I do.</p> <br>
 							<p>I’m currently working <a class="text-white" style="text-decoration: none;" href="https://openomic.dk/">@Openomic</a> as a full stack junior developer & doing freelance.</p><br>
 							<p>Feel free to <a class="text-white" href="#contactForm">contact me</a> if you have any questions or would like me to work on a project</p>
