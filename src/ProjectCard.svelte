@@ -5,9 +5,19 @@
             "title" : "Platform to buy and sell meals",
             "text" : "As a part of my 3th semester project I developed a big part of a full stack platform to buy and sell surplus food portions. The meals could be sorted by both distance and category and a simple authentication system was in place",
             "shortText" : "Full stack application to buy and sell surplus meals",
-            "tech" : "C#, .Net Core, Blazor",
+            "tech" : "C#, .Net Core, Blazor, MySQL",
+            "srcGithub" : "https://github.com/JonasStjerne/P3",
             "src" : "assets/projectImages/mealsPlatform.png",
             "colorsHex" : ["A0C75E", "DCFFA0"]
+        },
+        {
+            "title" : "Android app for Himmerland Housing Association",
+            "text" : "A mobile application where an admin user can publish information for the housing association's residents in markdown language and make dropdown items to a residents app. Each page can be edited and deleted as needed.",
+            "shortText" : "App for shareing information with residents",
+            "tech" : "Java, Firebase",
+            "srcGithub" : "https://github.com/JonasStjerne/P4",
+            "src" : "assets/projectImages/p4.jpeg",
+            "colorsHex" : ["51AD57", "2EB337"]
         },
         {
             "title" : "Live Raider",
@@ -31,15 +41,15 @@
             "text" : "Small chat app made with Socket.io to get familiar with it. Chat global or join private rooms",
             "shortText" : "Chat app where you can chat global or in rooms",
             "tech" : "Socket.io & JavaScript",
-            "srcGithub" : "https://github.com/",
+            "srcGithub" : "https://github.com/JonasStjerne/chatter",
             "src" : "assets/projectImages/Chatter.png",
             "colorsHex" : ["00EBA3", "00DEE6"]
         },
         {
             "title" : "DSB Refund Requester",
-            "text" : "STILL IN DEVELOPMENT. Service that automatically requests compensation tickets from DSB's Travel Time Guarantee when your train gets delayed.",
+            "text" : "Service that automatically requests compensation tickets from DSB's Travel Time Guarantee when your train gets delayed.",
             "shortText" : "Automatically requests refunds for delayed train rides",
-            "tech" : "C#",
+            "tech" : "C#, Azure Functions, MySQL",
             "srcGithub" : "https://github.com/JonasStjerne/dsb_bad_dog",
             "src" : "assets/projectImages/dsbBadDog.png",
             "colorsHex" : ["B41730", "FF2548"]
