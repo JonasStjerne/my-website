@@ -11,13 +11,13 @@
             "colorsHex" : ["A0C75E", "DCFFA0"]
         },
         {
-            "title" : "Android app for Himmerland Housing Association",
-            "text" : "A mobile application where an admin user can publish information for the housing association's residents in markdown language and make dropdown items to a residents app. Each page can be edited and deleted as needed.",
+            "title" : "App for Himmerland Housing Association",
+            "text" : "A andorid app where an admin user can publish information for the housing association's residents in markdown language and make dropdown items to a residents app. Each page can be edited and deleted as needed.",
             "shortText" : "App for shareing information with residents",
             "tech" : "Java, Firebase",
             "srcGithub" : "https://github.com/JonasStjerne/P4",
             "src" : "assets/projectImages/p4.jpeg",
-            "colorsHex" : ["51AD57", "2EB337"]
+            "colorsHex" : ["51AD57", "80FF88"]
         },
         {
             "title" : "Live Raider",
@@ -144,10 +144,14 @@
                             {#if i == selectedProject}
                                 {#if project.whiteText ?? true}
                                     <h3 class="col-10 col-md-12 pb-2 text-white me-40 me-md-0 d-none d-md-inline" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h3>
-                                    <h5 class="col-10 col-md-12 text-white me-40 me-md-0 d-inline d-md-none" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h5>
+                                    <a href="{project.srcGithub}" class="col-10 col-md-12 text-white me-40 me-md-0 d-inline d-md-none p-0">
+                                        <h5 style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h5>
+                                    </a>
                                 {:else}
                                     <h3 class="col-10 col-md-12 pb-2 mr-40 d-none d-md-inline" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h3>
-                                    <h5 class="col-10 col-md-12 mr-40 d-inline d-md-none" style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h5>
+                                    <a href="{project.srcGithub}" class="col-10 col-md-12 mr-40 d-inline d-md-none p-0">
+                                        <h5 style="padding-left: 0;" in:fade2="{{delay: 1000}}">{project.title}</h5>
+                                    </a>
                                 {/if}
                             {/if}
                         {/each}
