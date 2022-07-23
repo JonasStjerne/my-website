@@ -58,7 +58,7 @@ function handleLoad(element) {
 	if (element.detail == "meModel") { 
 		meModelLoaded = true;
 		addEventListnersText();
-		document.querySelector('body').style="overflow: visible; width: 100vw; height: 100vh;"
+		document.querySelector('body').style="overflow: visible; max-width: 100vw; height: initial;"
 
 	} else if ( element.detail == "skills") {
 		skillsLoaded = true;
