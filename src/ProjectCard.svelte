@@ -7,7 +7,7 @@
             "shortText" : "Full stack application to buy and sell surplus meals",
             "tech" : "C#, .Net Core, Blazor, MySQL",
             "srcGithub" : "https://github.com/JonasStjerne/P3",
-            "src" : "assets/projectImages/mealsPlatform.png",
+            "src" : "assets/projectImages/mealsPlatform.jpg",
             "colorsHex" : ["A0C75E", "DCFFA0"]
         },
         {
@@ -25,7 +25,7 @@
             "shortText" : "Website to raid small twitch streamers.",
             "tech" : "Vue, Node, Express and Socket.io",
             "srcGithub" : "https://github.com/JonasStjerne/liveRaider",
-            "src" : "assets/projectImages/LiveRaider.png",
+            "src" : "assets/projectImages/LiveRaider.jpg",
             "colorsHex" : ["CFD1FF", "1F004D"]
         },
         {
@@ -42,7 +42,7 @@
             "shortText" : "Chat app where you can chat global or in rooms",
             "tech" : "Socket.io & JavaScript",
             "srcGithub" : "https://github.com/JonasStjerne/chatter",
-            "src" : "assets/projectImages/Chatter.png",
+            "src" : "assets/projectImages/Chatter.jpg",
             "colorsHex" : ["00EBA3", "00DEE6"]
         },
         {
@@ -51,7 +51,7 @@
             "shortText" : "Automatically requests refunds for delayed train rides",
             "tech" : "C#, Azure Functions, MySQL",
             "srcGithub" : "https://github.com/JonasStjerne/dsb_bad_dog",
-            "src" : "assets/projectImages/dsbBadDog.png",
+            "src" : "assets/projectImages/dsbBadDog.jpg",
             "colorsHex" : ["B41730", "FF2548"]
         },
     ];
