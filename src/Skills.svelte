@@ -88,7 +88,7 @@
       },
       {
         id: 11,
-        text: "Nest.js",
+        text: "NestJS",
         r: "45",
         types: "RPA",
         initialX: "278.7683508949712",
@@ -124,16 +124,7 @@
 
   const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
-  const types = [
-    "Framework",
-    "Language",
-    "Markup",
-    "Source Control",
-    "RPA",
-    "Database",
-    "Design",
-    ".Net",
-  ];
+  const types = ["Framework", "Language", "Markup", "Source Control", "RPA", "Database", "Design", ".Net"];
 
   // define constants
   const { nodes, links } = data;
@@ -224,13 +215,7 @@
         d.x = w / 2;
         d.y = h / 2;
       })
-      .call(
-        d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended)
-      );
+      .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
 
     //Initialize text
     text = svg
@@ -244,13 +229,7 @@
       .text((d) => d.text)
       .attr("color", "black")
       .attr("font-size", 15)
-      .call(
-        d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended)
-      );
+      .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
 
     //Set gradient colors
     const color1 = "#FF9900";
@@ -285,9 +264,7 @@
 
   // define tick function
   const ticked = () => {
-    node
-      .attr("cx", (d) => getNodeXCoordinate(d.x, d.r) + "px")
-      .attr("cy", (d) => getNodeYCoordinate(d.y, d.r) + "px");
+    node.attr("cx", (d) => getNodeXCoordinate(d.x, d.r) + "px").attr("cy", (d) => getNodeYCoordinate(d.y, d.r) + "px");
 
     text
       .attr("x", (d) => getNodeXCoordinate(d.x, d.r) + "px")
@@ -296,15 +273,11 @@
     //Update node color according to pos
     grade
       .selectAll(".startGrade")
-      .attr("stop-color", (d) =>
-        colorGradient.getColor(Math.max(0.1, ((d.x - d.r) / w) * 10))
-      );
+      .attr("stop-color", (d) => colorGradient.getColor(Math.max(0.1, ((d.x - d.r) / w) * 10)));
 
     grade
       .selectAll(".endGrade")
-      .attr("stop-color", (d) =>
-        colorGradient.getColor(Math.max(0.1, ((d.x + d.r) / w) * 10))
-      );
+      .attr("stop-color", (d) => colorGradient.getColor(Math.max(0.1, ((d.x + d.r) / w) * 10)));
   };
 </script>
 
