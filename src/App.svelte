@@ -195,7 +195,7 @@
           <h3 class="w-100">About me</h3>
           <div>
             <p>
-              My name is Jonas Stjerne I'm a student on my 6th semester in Informations Technology at Aalborg University
+              My name is Jonas Stjerne I'm a Computer Science student at Aalborg University
               in Denmark. I’m passionate about building IT solutions with a solid business foundation. My interests
               includes a wide variety of things related to IT including UI design, front & backend development! <br />
               I strive to build the web of the future with a core focus on user experience. I'm always interested in learning
