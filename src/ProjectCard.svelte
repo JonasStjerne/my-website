@@ -12,7 +12,7 @@
         },
         {
             "title" : "App for Himmerland Housing Association",
-            "text" : "A android app where an admin user can publish information for the housing association's residents in markdown language and make dropdown items to a residents app. Each page can be edited and deleted as needed.",
+            "text" : "An Android app where an admin user can publish information for the housing association's residents in markdown language and make dropdown items to a residents app. Each page can be edited and deleted as needed.",
             "shortText" : "App for shareing information with residents",
             "tech" : "Java, Firebase",
             "srcGithub" : "https://github.com/JonasStjerne/P4",
